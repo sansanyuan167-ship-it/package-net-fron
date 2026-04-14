@@ -1,0 +1,233 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "Game"
+			}
+		},
+		{
+			"path": "pages/base/country",
+			"style": {
+				"navigationBarTitleText": "选择国家"
+			}
+		},
+		{
+			"path": "pages/base/register",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
+		},
+		{
+			"path": "pages/base/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path": "pages/base/success",
+			"style": {
+				"navigationBarTitleText": "成功"
+			}
+		},
+		{
+			"path": "pages/base/cropper",
+			"style": {
+				"navigationBarTitleText": "图片裁剪"
+			}
+		},
+		{
+			"path": "pages/game/supplierGame",
+			"style": {
+				"navigationBarTitleText": "厂商游戏"
+			}
+		},
+		{
+			"path": "pages/game/categoryGame",
+			"style": {
+				"navigationBarTitleText": "游戏分类"
+			}
+		},
+		{
+			"path": "pages/game/gameView",
+			"style": {
+				"navigationBarTitleText": "游戏"
+			}
+		},
+		{
+			"path": "pages/lottery/lottery",
+			"style": {
+				"navigationBarTitleText": "抽奖转盘"
+			}
+		},
+		{
+			"path": "pages/lottery/lotteryRegister",
+			"style": {
+				"navigationBarTitleText": "注册抽奖"
+			}
+		},
+		{
+			"path": "pages/lottery/lotteryInvite",
+			"style": {
+				"navigationBarTitleText": "邀请抽奖"
+			}
+		},
+		{
+			"path": "pages/lottery/lotteryRecharge",
+			"style": {
+				"navigationBarTitleText": "充值抽奖"
+			}
+		},
+		{
+			"path": "pages/lottery/records",
+			"style": {
+				"navigationBarTitleText": "抽奖记录"
+			}
+		},
+		{
+			"path": "pages/game/activityDetail",
+			"style": {
+				"navigationBarTitleText": "活动详情"
+			}
+		},
+		{
+			"path": "pages/mine/info",
+			"style": {
+				"navigationBarTitleText": "个人信息"
+			}
+		},
+		{
+			"path": "pages/mine/recharge",
+			"style": {
+				"navigationBarTitleText": "充值中心"
+			}
+		},
+		{
+			"path": "pages/mine/withdraw",
+			"style": {
+				"navigationBarTitleText": "提现"
+			}
+		},
+		{
+			"path": "pages/mine/assetRecords",
+			"style": {
+				"navigationBarTitleText": "资产记录"
+			}
+		},
+		{
+			"path": "pages/mine/gameRecords",
+			"style": {
+				"navigationBarTitleText": "游戏"
+			}
+		},
+		{
+			"path": "pages/mine/coinRecords",
+			"style": {
+				"navigationBarTitleText": "余额明细"
+			}
+		},
+		{
+			"path": "pages/mine/message",
+			"style": {
+				"navigationBarTitleText": "我的消息"
+			}
+		},
+		{
+			"path": "pages/mine/question",
+			"style": {
+				"navigationBarTitleText": "常见问题"
+			}
+		},
+		{
+			"path": "pages/mine/partner",
+			"style": {
+				"navigationBarTitleText": "成为合伙人"
+			}
+		},
+		{
+			"path": "pages/mine/service",
+			"style": {
+				"navigationBarTitleText": "联系客服"
+			}
+		},
+		{
+			"path": "pages/mine/setting",
+			"style": {
+				"navigationBarTitleText": "通用设置"
+			}
+		},
+		{
+			"path": "pages/mine/articles",
+			"style": {
+				"navigationBarTitleText": "articles"
+			}
+		},
+		{
+			"path": "pages/mine/editEmail",
+			"style": {
+				"navigationBarTitleText": "修改邮箱"
+			}
+		},
+		{
+			"path": "pages/mine/editPassword",
+			"style": {
+				"navigationBarTitleText": "修改登录密码"
+			}
+		},
+		{
+			"path": "pages/mine/editWithdraw",
+			"style": {
+				"navigationBarTitleText": "修改提现信息"
+			}
+		},
+		{
+			"path": "pages/mine/findPassword",
+			"style": {
+				"navigationBarTitleText": "找回登录密码"
+			}
+		},
+		{
+			"path": "pages/mine/friends",
+			"style": {
+				"navigationBarTitleText": "我的好友"
+			}
+		},
+		{
+			"path": "pages/game/ranking",
+			"style": {
+				"navigationBarTitleText": "排行榜"
+			}
+		},
+		{
+			"path": "pages/base/invite",
+			"style": {
+				"navigationBarTitleText": "邀请"
+			}
+		},
+		{
+			"path": "pages/mine/wallet",
+			"style": {
+				"navigationBarTitleText": "邀请奖励"
+			}
+		},
+		{
+			"path": "pages/mine/walletRecords",
+			"style": {
+				"navigationBarTitleText": "邀请奖励记录"
+			}
+		},
+		{
+			"path": "pages/mine/vipDetail",
+			"style": {
+				"navigationBarTitleText": "VIP介绍"
+			}
+		}
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"navigationStyle": "custom" //取消默认导航
+	}
+}
