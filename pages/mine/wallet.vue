@@ -7,7 +7,7 @@
 				<view class="value">{{inviteReward || 0}}</view>
 				<view class="key">{{getLanguage('我的邀请奖励金额')}}</view>
 			</view>
-			<view class="question cuIcon-question"></view>
+			<view class="question cuIcon-question" @click="tipShow"></view>
 		</view>
 		<view class="choose-card panel-item" @click="$refs['changeCardPopup'].show()">
 			<image src="/static/activity/lottery-card.png"></image>
@@ -136,6 +136,9 @@ export default {
 			this.$refs['confirm'].hide()
 			this.goPage('/pages/mine/editWithdraw')
 		},
+		tipShow(){
+			this.showMsg(this.getLanguage('抽中的现金存入该钱包，待抽中提现卡现金即可立即提现！'),3000);
+		}
 	}
 };
 </script>

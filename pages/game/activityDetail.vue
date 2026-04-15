@@ -3,7 +3,7 @@
 		'has-bottom':info.show_button
 	}">
 		<com-page-title :title="getLanguage('活动')" />
-		<view class="title bold text-orange">{{info.title}}</view>
+		<!-- <view class="title bold text-orange">{{info.title}}</view> -->
 		<view class="content">
 			<rich-text :nodes="info.content"></rich-text>
 		</view>

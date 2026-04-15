@@ -13,7 +13,7 @@
 				<view class="account-title">{{getLanguage('可提现余额')}}：</view>
 				<view class="count bold">{{bankInfo.coin || 0}}</view>
 			</view>
-			<view class="channel">
+			<!-- <view class="channel">
 				<view class="key bold">{{getLanguage('开户国家编码')}}</view>
 				<view class="value">{{bankInfo.bank_country_code_name}}</view>
 			</view>
@@ -36,7 +36,7 @@
 			<view class="channel">
 				<view class="key bold">{{getLanguage('开户银行邮箱')}}</view>
 				<view class="value">{{bankInfo.bank_email}}</view>
-			</view>
+			</view> -->
 			<view class="amount">
 				<view class="key bold">{{getLanguage('金额')}}</view>
 				<input v-model="amount" type="text" :placeholder="getLanguage('请输入提现金额')" placeholder-style="color:#9D9B9B;">

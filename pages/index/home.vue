@@ -45,8 +45,9 @@
 			</view>
 			<!--END 轮播图-->
 			<view class="index-panel">
-				<image src="/static/test/index-panel1.png" mode="widthFix"></image>
-				<image src="/static/test/index-panel2.png" mode="widthFix"></image>
+				<!-- <image src="/static/test/index-panel1.png" mode="widthFix"></image>
+				<image src="/static/test/index-panel2.png" mode="widthFix"></image> -->
+				<image :src="item.image" mode="widthFix" v-for="(item,index) in activityList" :key="index" @click="goPage('/pages/game/activityDetail?id='+item.id)"></image>
 			</view>
 			<view class="notice">
 				<image src="/static/notice.png"></image>
@@ -123,7 +124,7 @@
 						<view class="list">
 							
 								<image :src="item.image" mode="widthFix" v-for="(item,index) in activityList" :key="index"
-													@click="goPage(item.button_path)"></image>
+													@click="goPage('/pages/game/activityDetail?id='+item.id)"></image>
 													
 							
 					
@@ -207,8 +208,8 @@
 									<view class="value">{{activityData.invite_count}}</view>
 								</view>
 								<view class="key-value">
-									<view class="key">{{getLanguage('已获奖励')}}</view>
-									<view class="value">{{activityData.invite_coin}}</view>
+									<view class="key">{{getLanguage('已获现金红包')}}</view>
+									<view class="value">{{activityData.wallet}}</view>
 								</view>
 							</view>
 						</view>
