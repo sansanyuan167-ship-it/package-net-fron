@@ -33,10 +33,10 @@
 				<text class="open cuIcon-right"></text>
 			</view>
 			<view class="account-box panel-item">
-				<view class="title" @click="goPageCheck('/pages/mine/coinRecords')">
+				<view class="title" @click="goPageCheck('/pages/mine/coinRecords',true)">
 					<image src="/static/mine-icons/asset.png"></image>
 					<text>{{getLanguage('我的余额')}}：</text>
-					<text class="count">{{info.coin}}</text>
+					<text class="count">{{info.coin || '0.00'}}</text>
 					<text class="open cuIcon-right"></text>
 				</view>
 				<view class="buttons">
@@ -67,7 +67,7 @@
 				<view class="item" @click="goPageCheck('/pages/mine/wallet',true)">
 					<image src="/static/activity/lottery-wallet.png"></image>
 					<view>{{getLanguage('邀请奖励')}}</view>
-					<view class="text">{{inviteReward || 0}}</view>
+					<view class="text">{{info.wallet || 0}}</view>
 					<text class="open cuIcon-right"></text>
 				</view>
 			</view>

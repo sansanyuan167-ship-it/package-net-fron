@@ -69,6 +69,12 @@
 		</com-popup> -->
 		<!-- END 选择渠道弹窗 -->
 		<com-loading-msg ref="loadingMsg" />
+		<com-confirm 
+			ref="confirm" 
+			:content="getLanguage('请完善提现信息后再操作')"
+			@onCancel="$refs['confirm'].hide()" 
+			@onConfirm="confirm" 
+		/>
 	</view>
 </template>
 
@@ -76,6 +82,7 @@
 export default {
 	data() {
 		return {
+			have_empty:false,
 			amount:'',
 			currentChannel:{},
 			bankInfo:{},
@@ -88,10 +95,9 @@ export default {
 		};
 	},
 	async onLoad(options) {
-		this.loadBankInfo()
 	},
 	onShow(){
-		
+		this.loadBankInfo()
 	},
 	methods: {
 		loadBankInfo(){
@@ -107,25 +113,25 @@ export default {
 					  "bank_phone",
 					  "bank_email"
 					]
-					let have_empty=false;
 					for(let i=0;i<obj.length;i++){
 						let k=obj[i]
 						if(res.data[k]==''){
-							have_empty=true;
+							this.have_empty=true;
 							break;
 						}
 					}
-					if(have_empty){
-						uni.showToast({
-							icon:"none",
-							title:this.getLanguage('请完善提现信息后再操作'),
-							duration:3000,
-							success:()=>{
-								uni.redirectTo({
-									url:"/pages/mine/editWithdraw"
-								})
-							}
-						})
+					if(this.have_empty){
+						this.$refs['confirm'].show();
+						// uni.showToast({
+						// 	icon:"none",
+						// 	title:this.getLanguage('请完善提现信息后再操作'),
+						// 	duration:3000,
+						// 	success:()=>{
+						// 		// uni.redirectTo({
+						// 		// 	url:"/pages/mine/editWithdraw"
+						// 		// })
+						// 	}
+						// })
 					}
 				}
 			});
@@ -135,11 +141,17 @@ export default {
 			this.currentChannel = item;
 			this.$refs['changeChannelPopup'].hide();
 		},
+		// 确认去绑定银行卡
+		confirm(){
+			this.$refs['confirm'].hide()
+			this.goPage('/pages/mine/editWithdraw')
+		},
 		// 提现
 		async withdraw(){
 			// if(!this.currentChannel.id) return this.showMsg(this.getLanguage('请选择提现渠道'));
 			if(!this.amount) return this.showMsg(this.getLanguage('请输入提现金额'));
 			if(!/^[0-9]+$/.test(this.amount)) return this.showMsg(this.getLanguage('提现金额必须为整数'));
+			if(this.have_empty) return this.$refs['confirm'].show();
 			this.$refs['loadingMsg'].show(this.getLanguage('提交中'));
 			let result = await this.assetApi.withdraw({
 				amount:this.amount

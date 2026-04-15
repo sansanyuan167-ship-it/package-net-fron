@@ -35,8 +35,10 @@
 						<text class="value text-blue" v-if="item.type == 'RECHARGE'">{{getLanguage('充值')}}</text>
 						<text class="value text-yellow" v-if="item.type == 'LOTTERY'">{{getLanguage('抽奖')}}</text>
 						<text class="value text-green" v-if="item.type == 'WITHDRAW'">{{getLanguage('提现')}}</text>
-						<text class="value text-green" v-if="item.type == 'RETURN'">{{getLanguage('俱乐部返利')}}</text>
+						<text class="value text-green" v-if="item.type == 'RETURN'">{{getLanguage('vip')}}</text>
 						<text class="value text-green" v-if="item.type == 'SELF_RETURN'">{{getLanguage('每日返利')}}</text>
+						<text class="value text-green" v-if="item.type == 'CLUB_REWARD'">{{getLanguage('俱乐部返利')}}</text>
+						<text class="value text-green" v-if="item.type == 'RANK_REWARD'">{{getLanguage('排行榜')}}</text>
 					</view>
 					<view>
 						<text class="key">{{getLanguage('变动金额')}}：</text>
@@ -99,10 +101,16 @@
 						name: this.getLanguage('提现')
 					}, {
 						type: 'RETURN',
-						name: this.getLanguage('俱乐部返利')
+						name: this.getLanguage('vip')
 					},{
 						type:'SELF_RETURN',
 						name: this.getLanguage('每日返利')
+					},{
+						type:'CLUB_REWARD',
+						name: this.getLanguage('俱乐部返利')
+					},{
+						type:'RANK_REWARD',
+						name: this.getLanguage('排行榜')
 					}
 				],
 				list: []
