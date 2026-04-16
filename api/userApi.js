@@ -75,6 +75,14 @@ export let userApi = {
 		})
 	},
 	
+	// 修改资金密码
+	async cashPassword(data = {}) {
+		return await service.post({
+			url: '/user?cmd=cash_password',
+			data: data
+		})
+	},
+	
 	// 找回登录密码
 	async findPassword(data = {}) {
 		return await service.post({
