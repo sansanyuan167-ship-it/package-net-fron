@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<com-page-title :title="getLanguage('修改登录密码')" />
+		<com-page-title :title="getLanguage('修改资金密码')" />
 		<view class="info-box panel-item">
 			<view class="item">
 				<view class="key">
@@ -12,6 +12,7 @@
 				</view>
 			</view>
 		</view>
+		<view class="explain text-red">{{getLanguage('初始密码')}}：123456</view>
 		<view class="info-box panel-item">
 			<view class="item">
 				<view class="key">
@@ -32,10 +33,10 @@
 				</view>
 			</view>
 		</view>
-		<view class="explain text-red">登录密码长度为6~12位，每位为数字或字母大小写</view>
+		<view class="explain text-red">{{getLanguage('密码长度为6位数字')}}</view>
 		<view class="btn-block" @click="submit">{{getLanguage('确认提交')}}</view>
 		<view class="find-password text-gray">
-			<view @click="goPage('/pages/mine/findPassword','redirect')">{{getLanguage('找回登录密码')}}</view>
+			<view @click="goPage('/pages/mine/findPassword?type=cash','redirect')">{{getLanguage('找回资金密码')}}</view>
 		</view>
 	</view>
 </template>
@@ -64,7 +65,7 @@
 				if(!this.info.password) return this.showMsg(this.getLanguage('请输入新密码'));
 				if(!this.info.confirmPassword) return this.showMsg(this.getLanguage('请确认新密码'));
 				if(this.info.password !== this.info.confirmPassword) return this.showMsg(this.getLanguage('两次密码不一致'));
-				let result = await this.userApi.editPassword({
+				let result = await this.userApi.cashPassword({
 					old_password:this.info.oldPassword,
 					password:this.info.password
 				});

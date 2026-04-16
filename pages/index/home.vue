@@ -149,7 +149,7 @@
 							<text>{{getLanguage('通用设置')}}</text>
 						</view>
 						<view class="item" @click="goPageCheck('/pages/lottery/lottery')">
-							<image src="/static/icon.png"></image>
+							<image src="/static/mine-icons/lottery.png"></image>
 							<text>{{getLanguage('转盘抽奖')}}</text>
 						</view>
 					</view>

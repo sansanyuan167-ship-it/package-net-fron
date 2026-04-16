@@ -115,6 +115,8 @@ export default {
 		},
 		// 提现
 		async withdraw(){
+			if(this.inviteReward <= 0) return this.showMsg(this.getLanguage('可提现余额')+'：'+this.inviteReward,3000);
+			if(this.cardList.length==0) return this.showMsg(this.getLanguage('暂无提现卡'));
 			if(!this.currentCard.id) return this.showMsg(this.getLanguage('请选择提现渠道'));
 			if(!this.amount) return this.showMsg(this.getLanguage('请输入提现金额'));
 			if(!/^[0-9]+$/.test(this.amount)) return this.showMsg(this.getLanguage('提现金额必须为整数')+this.amount);

@@ -13,6 +13,11 @@
 				<view class="key">{{getLanguage('修改登录密码')}}</view>
 				<text class="open cuIcon-right"></text>
 			</view>
+			<view class="item" @click="goPage('/pages/mine/cashPassword')">
+				<text class="icon cuIcon-lock"></text>
+				<view class="key">{{getLanguage('修改资金密码')}}</view>
+				<text class="open cuIcon-right"></text>
+			</view>
 			<view class="item" @click="goPage('/pages/mine/editWithdraw')">
 				<text class="icon cuIcon-pay"></text>
 				<view class="key">{{getLanguage('修改提现信息')}}</view>

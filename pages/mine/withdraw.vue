@@ -11,7 +11,7 @@
 		<view class="info-bar panel-item">
 			<view class="account">
 				<view class="account-title">{{getLanguage('可提现余额')}}：</view>
-				<view class="count bold">{{bankInfo.coin || 0}}</view>
+				<view class="count bold">{{(bankInfo.withdraw_info && bankInfo.withdraw_info.can_total_withdraw) || 0}}</view>
 			</view>
 			<!-- <view class="channel">
 				<view class="key bold">{{getLanguage('开户国家编码')}}</view>
@@ -149,7 +149,8 @@ export default {
 		// 提现
 		async withdraw(){
 			// if(!this.currentChannel.id) return this.showMsg(this.getLanguage('请选择提现渠道'));
-			if(!this.amount) return this.showMsg(this.getLanguage('请输入提现金额'));
+			if(!this.amount || this.amount <= 0) return this.showMsg(this.getLanguage('请输入提现金额'));
+			if(this.amount > (this.bankInfo.withdraw_info && this.bankInfo.withdraw_info.can_total_withdraw)) return this.showMsg(this.getLanguage('可提现余额')+'：'+(this.bankInfo.withdraw_info && this.bankInfo.withdraw_info.can_total_withdraw),3000);
 			if(!/^[0-9]+$/.test(this.amount)) return this.showMsg(this.getLanguage('提现金额必须为整数'));
 			if(this.have_empty) return this.$refs['confirm'].show();
 			this.$refs['loadingMsg'].show(this.getLanguage('提交中'));

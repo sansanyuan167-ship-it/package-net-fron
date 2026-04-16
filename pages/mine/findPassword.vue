@@ -1,6 +1,7 @@
 <template>
 	<view class="page-container">
-		<com-page-title title="找回登录密码" />
+		<com-page-title v-if="type=='login'" :title="getLanguage('找回登录密码')" />
+		<com-page-title v-if="type=='cash'" :title="getLanguage('找回资金密码')" />
 		<view class="info-box panel-item">
 			<view class="item" @click="$refs['countryPopup'].show()">
 				<view class="key">
@@ -56,7 +57,8 @@
 				</view>
 			</view>
 		</view>
-		<view class="explain text-red">登录密码长度为6~12位，每位为数字或字母大小写</view>
+		<view class="explain text-red" v-if="type=='login'">登录密码长度为6~12位，每位为数字或字母大小写</view>
+		<view class="explain text-red" v-if="type=='cash'">{{getLanguage('密码长度为6位数字')}}</view>
 		<view class="btn-block" @click="submit">{{getLanguage('确认提交')}}</view>
 		
 		<!-- START 选择国家弹窗 -->
@@ -90,10 +92,14 @@
 				buttonText:'获取验证码',
 				time:60,
 				timer:null,
-				isDis:false
+				isDis:false,
+				type:'login'
 			}
 		},
-		async onLoad() {
+		async onLoad(options) {
+			if(options.type == 'cash'){
+				this.type = 'cash';
+			}
 			await this.getCountryList();
 			this.languageKey = uni.getStorageSync('language') || 'zh-CN';
 			let result = await this.baseApi.getLanguageList();
@@ -145,6 +151,7 @@
 				if(!this.info.confirmPassword) return this.showMsg(this.getLanguage('请确认新密码'));
 				if(this.info.password !== this.info.confirmPassword) return this.showMsg(this.getLanguage('两次密码不一致'));
 				let result = await this.userApi.findPassword({
+					type:this.type,
 					country_id:this.selectedCountry.id,
 					phone:this.info.phone,
 					code:this.info.code,

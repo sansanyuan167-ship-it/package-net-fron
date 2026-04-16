@@ -175,6 +175,12 @@
 			}
 		},
 		{
+			"path": "pages/mine/cashPassword",
+			"style": {
+				"navigationBarTitleText": "修改资金密码"
+			}
+		},
+		{
 			"path": "pages/mine/editWithdraw",
 			"style": {
 				"navigationBarTitleText": "修改提现信息"
