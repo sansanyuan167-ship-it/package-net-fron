@@ -1,5 +1,5 @@
 <template>
-	<view class="page-container">
+	<view class="page-container" style="padding-bottom:0;">
 		<home ref="home" v-show="current == 'home'" @showLoading="showLoading" @hideLoading="hideLoading"
 			@showLanguage="showLanguage" />
 		<activity ref="activity" v-show="current == 'activity'" @showLoading="showLoading" @hideLoading="hideLoading" />
