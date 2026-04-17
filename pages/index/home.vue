@@ -27,71 +27,73 @@
 				</view>
 			</view>
 		</view>
-		<scroll-view class="home-container" scroll-y refresher-enabled :refresher-threshold="80"
+		<scroll-view class="scroll-view" scroll-y refresher-enabled :refresher-threshold="80"
 			refresher-background="#363948" :refresher-triggered="refreshStatus" @refresherrefresh="refreshHandle"
 			@scrolltolower="bottomHandle">
-			<!--START 轮播图-->
-			<view class="uni-padding-wrap banner">
-				<view class="bg"></view>
-				<swiper class="swiper" :circular="true" :autoplay="true" interval="5000" duration="500"
-					@change="bannerIndex = $event.detail.current">
-					<swiper-item v-for="(v,i) in info.banner" :key="i">
-						<image :src="v.image" mode="aspectFill"></image>
-					</swiper-item>
-				</swiper>
-				<view class="dots">
-					<view v-for="(v,i) in info.banner" :key="i" :class="bannerIndex == i ? 'on' : ''"></view>
-				</view>
-			</view>
-			<!--END 轮播图-->
-			<view class="index-panel">
-				<!-- <image src="/static/test/index-panel1.png" mode="widthFix"></image>
-				<image src="/static/test/index-panel2.png" mode="widthFix"></image> -->
-				<image :src="item.image" mode="widthFix" v-for="(item,index) in activityList" :key="index" @click="goPage('/pages/game/activityDetail?id='+item.id)"></image>
-			</view>
-			<view class="notice">
-				<image src="/static/notice.png"></image>
-				<view class="text-box">
-					<view class="text" id="scrollText" ref="scrollText" :style="`
-					animation: scrollText ${scrollTime}s linear infinite;
-					-webkit-animation: scrollText ${scrollTime}s linear infinite;
-					`">{{info.notice}}</view>
-				</view>
-			</view>
-			<view class="supplier-box">
-				<view class="scroll-box">
-					<view class="image-box" v-for="(item,index) in info.supplier" :key="index"
-						@click="goPageCheck('/pages/game/supplierGame?id='+item.id)">
-						<image :src="item.icon" mode="aspectFill"></image>
+			<view class="is-content">
+				<!--START 轮播图-->
+				<view class="uni-padding-wrap banner">
+					<view class="bg"></view>
+					<swiper class="swiper" :circular="true" :autoplay="true" interval="5000" duration="500"
+						@change="bannerIndex = $event.detail.current">
+						<swiper-item v-for="(v,i) in info.banner" :key="i">
+							<image :src="v.image" mode="aspectFill"></image>
+						</swiper-item>
+					</swiper>
+					<view class="dots">
+						<view v-for="(v,i) in info.banner" :key="i" :class="bannerIndex == i ? 'on' : ''"></view>
 					</view>
 				</view>
-			</view>
-			<view class="group-box" v-for="(v,i) in info.list" :key="i">
-				<view class="title-box">
-					<image :src="v.icon"></image>
-					<view class="title bold">{{v.name}}</view>
-					<view class="more" @click="goPageCheck('/pages/game/categoryGame?id='+v.id)">
-						<text>{{getLanguage('查看更多')}}</text>
-						<text class="open cuIcon-right"></text>
+				<!--END 轮播图-->
+				<view class="index-panel">
+					<!-- <image src="/static/test/index-panel1.png" mode="widthFix"></image>
+					<image src="/static/test/index-panel2.png" mode="widthFix"></image> -->
+					<image :src="item.image" mode="widthFix" v-for="(item,index) in activityList" :key="index" @click="goPage('/pages/game/activityDetail?id='+item.id)"></image>
+				</view>
+				<view class="notice">
+					<image src="/static/notice.png"></image>
+					<view class="text-box">
+						<view class="text" id="scrollText" ref="scrollText" :style="`
+						animation: scrollText ${scrollTime}s linear infinite;
+						-webkit-animation: scrollText ${scrollTime}s linear infinite;
+						`">{{info.notice}}</view>
 					</view>
 				</view>
-				<view class="list">
-					<view class="item" v-for="(vv,ii) in v.game_list" :key="ii"
-						@click="goPageCheck('/pages/game/gameView?id='+vv.game_id,true)">
-						<image class="image-bg" :src="vv.cover" mode="widthFix"></image>
-						<view class="collect text-gray cuIcon-likefill" :class="{'text-red':vv.is_collect}"
-							@click.stop="actionGameCollect(i,ii)"></view>
+				<view class="supplier-box">
+					<view class="scroll-box">
+						<view class="image-box" v-for="(item,index) in info.supplier" :key="index"
+							@click="goPageCheck('/pages/game/supplierGame?id='+item.id)">
+							<image :src="item.icon" mode="aspectFill"></image>
+						</view>
 					</view>
 				</view>
+				<view class="group-box" v-for="(v,i) in info.list" :key="i">
+					<view class="title-box">
+						<image :src="v.icon"></image>
+						<view class="title bold">{{v.name}}</view>
+						<view class="more" @click="goPageCheck('/pages/game/categoryGame?id='+v.id)">
+							<text>{{getLanguage('查看更多')}}</text>
+							<text class="open cuIcon-right"></text>
+						</view>
+					</view>
+					<view class="list">
+						<view class="item" v-for="(vv,ii) in v.game_list" :key="ii"
+							@click="goPageCheck('/pages/game/gameView?id='+vv.game_id,true)">
+							<image class="image-bg" :src="vv.cover" mode="widthFix"></image>
+							<view class="collect text-gray cuIcon-likefill" :class="{'text-red':vv.is_collect}"
+								@click.stop="actionGameCollect(i,ii)"></view>
+						</view>
+					</view>
+				</view>
+				<view class="title-bar">
+					<image src="/static/title-left.png"></image>
+					<view>合作伙伴</view>
+					<image src="/static/title-right.png"></image>
+				</view>
+				<image class="partners" src="/static/partners.png" mode="widthFix"
+					@click="goPageCheck('/pages/game/supplierGame')"></image>
+				<view class="tab-bar-place"></view>
 			</view>
-			<view class="title-bar">
-				<image src="/static/title-left.png"></image>
-				<view>合作伙伴</view>
-				<image src="/static/title-right.png"></image>
-			</view>
-			<image class="partners" src="/static/partners.png" mode="widthFix"
-				@click="goPageCheck('/pages/game/supplierGame')"></image>
-			<view class="tab-bar-place"></view>
 		</scroll-view>
 
 		<view class="ranking" @click="goPageCheck('/pages/game/ranking')">
@@ -434,16 +436,29 @@
 	.home-page {
 		height: 100vh;
 		display: flex;
-		justify-content: space-between;
-		align-items: center;
 		flex-direction: column;
 	}
 
-	.home-container {
+	.scroll-view {
 		position: relative;
 		flex: 1;
-		width: 100%;
 		height: 0;
+	}
+	
+	@media screen and (min-width: 768px) {
+		.scroll-view {
+			position: relative;
+			width: calc(100% + 25px);
+			&::-webkit-scrollbar {
+				display: none !important;
+				width: 0 !important;
+				height: 0 !important;
+				background: transparent !important;
+			}
+			.is-content{
+				width:500px;
+			}
+		}
 	}
 
 	.header {
@@ -779,7 +794,7 @@
 	}
 
 	.ranking {
-		position: fixed;
+		position: absolute;
 		width: 110rpx;
 		height: 120rpx;
 		bottom: 360rpx;
@@ -808,7 +823,7 @@
 	}
 
 	.lottery {
-		position: fixed;
+		position: absolute;
 		width: 110rpx;
 		height: 120rpx;
 		bottom: 180rpx;

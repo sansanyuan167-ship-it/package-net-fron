@@ -1,96 +1,5 @@
 <template>
 	<view>
-		<!-- #ifdef MP-WEIXIN -->
-		<view class="com-page-title" :class="{'com-shadow':showShadow}" :style="{background:bgColor,color:color}">
-			<view class="com-title-box" :style="{
-				paddingTop:`${menuButton.top}px`,
-				paddingBottom:'10px',
-				height:`${menuButton.height}px`,
-				lineHeight:`${menuButton.height}px`
-			}">
-				<!--START 返回按键-->
-				<view :style="{
-					height:`${menuButton.height}px`,
-					lineHeight:`${menuButton.height}px`,
-					textAlign:'center',
-					width:`${menuButton.height}px`,
-					top:`${menuButton.top}px`,
-					left:'10px'
-				 }" class="com-back cuIcon-back" @click="goBack()" v-if="showBack && !showHome"></view>
-				<!--END 返回按键-->
-				<!--START 回首页按键-->
-				<view :style="{
-					height:`${menuButton.height}px`,
-					lineHeight:`${menuButton.height}px`,
-					textAlign:'center',
-					width:`${menuButton.height}px`,
-					top:`${menuButton.top}px`,
-					left:'10px'
-				 }" class="com-go-home cuIcon-homefill" @click="goHome" v-if="showHome"></view>
-				<!--END 回首页按键-->
-				<!--START 圆圈按键（商品详情使用的示例，隐藏页面头部是出现）-->
-				<view :style="{
-					height:`${menuButton.height}px`,
-					lineHeight:`${menuButton.height}px`,
-					textAlign:'center',
-					width:`${menuButton.height}px`,
-					top:`${menuButton.top}px`,
-					left:'10px'
-				 }" class="com-back-circle cuIcon-back" :class="{show:showCircle}" v-if="showBack && !showHome" @click="goBack()"></view>
-				 <view :style="{
-				 	height:`${menuButton.height}px`,
-				 	lineHeight:`${menuButton.height}px`,
-				 	textAlign:'center',
-				 	width:`${menuButton.height}px`,
-				 	top:`${menuButton.top}px`,
-				 	left:'10px'
-				  }" class="com-back-circle cuIcon-homefill" :class="{show:showCircle}" v-if="showHome" @click="goHome"></view>
-				<!--END 圆圈按键（商品详情使用的示例，隐藏页面头部是出现）-->
-				<!--START 页面标题-->
-				<view class="com-title ell1" v-if="!isSearch">{{title}}</view>
-				<!--END 页面标题-->
-				<!--START 搜索框-->
-				<view :style="{
-				 	height:`${menuButton.height}px`,
-				 	lineHeight:`${menuButton.height}px`,
-				 	textAlign:'center',
-					margin:`0 ${menuButton.width + 18}px 0 ${(showBack || showHome) ? (menuButton.height + 15) : 15}px`,
-					padding:`0 ${'calc('+menuButton.height + 'px + '+ (showSearchButton ? 92 : 0) +'rpx)'} 0 ${menuButton.height}px`
-				}" class="com-input-box" v-if="isSearch" @click="clickSearch">
-					<view :style="{
-						height:`${menuButton.height}px`,
-						lineHeight:`${menuButton.height}px`,
-						textAlign:'center',
-						width:`${menuButton.height}px`,
-						top:`0`,
-						left:'0'
-					 }" class="com-search-icon cuIcon-search"></view>
-					<input class="com-input" type="text" :placeholder="placeholder" :value="keyword" @input="onInput"
-						@confirm="onSearch" :disabled="searchUrl !== ''">
-					<view :style="{
-						height:`${menuButton.height}px`,
-						lineHeight:`${menuButton.height}px`,
-						textAlign:'center',
-						width:`${menuButton.height}px`,
-						top:`0`,
-						right:`${showSearchButton ? 92 : 0}rpx`
-					 }" class="com-clear-icon cuIcon-roundclose" v-if="keyword" @click="clearKeyword"></view>
-					<view class="com-button" v-if="showSearchButton" @click="onSearch">搜索</view>
-					<view :style="{
-						height:`${menuButton.height}px`,
-						lineHeight:`${menuButton.height}px`,
-						top:`${menuButton.top}px`,
-						right:'15px'
-					 }" class="right-text" v-if="rightText" @click="$emit('rightTextClick')">{{rightText}}</view>
-				</view>
-				<!--END 搜索框-->
-			</view>
-		</view>
-		<view class="com-placeholder" :style="{
-			height:(menuButton.top + menuButton.height + 10)+'px'
-		}"></view>
-		<!-- #endif -->
-		
 		<!-- #ifdef H5 || APP-PLUS -->
 		<view class="com-page-title" :class="{'com-shadow':showShadow}" :style="{background:bgColor,color:color}">
 			<view class="status_bar">
@@ -222,17 +131,7 @@
 			}
 		},
 		async mounted() {
-			//获取小程序胶囊按键信息
-			// #ifdef MP-WEIXIN
-			let menuButtonInfo = uni.getStorageSync('menuButtonInfo');
-			if (menuButtonInfo) {
-				this.menuButton = menuButtonInfo;
-			} else {
-				let info = await wx.getMenuButtonBoundingClientRect();
-				uni.setStorageSync('menuButtonInfo', info);
-				this.menuButton = info;
-			}
-			// #endif
+			
 		},
 		//监听父组件值得变化
 		watch: {
@@ -274,6 +173,13 @@
 	.status_bar {
 		height: var(--status-bar-height);
 		width: 100%;
+	}
+	
+	@media screen and (min-width: 768px) {
+		.com-page-title {
+		    max-width: 500px !important;
+			left:calc((100vw - 500px) / 2) !important;
+		}
 	}
 
 	.com-page-title {

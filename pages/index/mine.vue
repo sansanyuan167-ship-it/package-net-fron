@@ -1,113 +1,115 @@
 <template>
 	<view>
-		<scroll-view scroll-y @scroll="scroll">
-			<com-page-title :title="getLanguage('我的')" :showBack="false" :bgColor="bgColor" :showShadow="showShadow" :rightText="getLanguage('语言切换')" @rightTextClick="$emit('showLanguage')" />
-			<view class="header-bg">
-				<image class="bg" src="/static/mine-icons/mine-bg.png" :style="{
-					top:`-${pageTitleHeight}rpx`
-				}"></image>
-			</view>
-			<view v-if="!getToken()" class="user-box panel-item" @click="goPage('/pages/base/login','reLaunch')">
-				<view class="avatar">
-					<image src="/static/avatar.png"></image>
+		<scroll-view class="scroll-view" scroll-y @scroll="scroll">
+			<view class="is-content">
+				<com-page-title :title="getLanguage('我的')" :showBack="false" :bgColor="bgColor" :showShadow="showShadow" :rightText="getLanguage('语言切换')" @rightTextClick="$emit('showLanguage')" />
+				<view class="header-bg">
+					<image class="bg" src="/static/mine-icons/mine-bg.png" :style="{
+						top:`-${pageTitleHeight}rpx`
+					}"></image>
 				</view>
-				<view class="info">
-					<view class="username">
-						<text class="bold">{{getLanguage('请先登录')}}</text>
+				<view v-if="!getToken()" class="user-box panel-item" @click="goPage('/pages/base/login','reLaunch')">
+					<view class="avatar">
+						<image src="/static/avatar.png"></image>
 					</view>
-					<view class="phone text-gray">{{getLanguage('登录享受更多福利')}}</view>
-				</view>
-				<text class="open cuIcon-right"></text>
-			</view>
-			<view v-else class="user-box panel-item" @click="goPageCheck('/pages/mine/info',true)">
-				<view class="avatar">
-					<image :src="info.avatar"></image>
-				</view>
-				<view class="info">
-					<view class="username">
-						<text class="bold">{{info.nickname}}</text>
-						<image v-if="info.vip_info" :src="info.vip_info.icon"></image>
+					<view class="info">
+						<view class="username">
+							<text class="bold">{{getLanguage('请先登录')}}</text>
+						</view>
+						<view class="phone text-gray">{{getLanguage('登录享受更多福利')}}</view>
 					</view>
-					<view class="phone text-gray">{{info.phone}}</view>
+					<text class="open cuIcon-right"></text>
 				</view>
-				<text class="open cuIcon-right"></text>
+				<view v-else class="user-box panel-item" @click="goPageCheck('/pages/mine/info',true)">
+					<view class="avatar">
+						<image :src="info.avatar"></image>
+					</view>
+					<view class="info">
+						<view class="username">
+							<text class="bold">{{info.nickname}}</text>
+							<image v-if="info.vip_info" :src="info.vip_info.icon"></image>
+						</view>
+						<view class="phone text-gray">{{info.phone}}</view>
+					</view>
+					<text class="open cuIcon-right"></text>
+				</view>
+				<view class="account-box panel-item">
+					<view class="title" @click="goPageCheck('/pages/mine/coinRecords',true)">
+						<image src="/static/mine-icons/asset.png"></image>
+						<text>{{getLanguage('我的余额')}}：</text>
+						<text class="count">{{info.coin || '0.00'}}</text>
+						<text class="open cuIcon-right"></text>
+					</view>
+					<view class="buttons">
+						<view class="recharge" @click="goPageCheck('/pages/mine/recharge',true)">{{getLanguage('充值')}}</view>
+						<view class="withdraw" @click="goPageCheck('/pages/mine/withdraw',true)">{{getLanguage('提现')}}</view>
+					</view>
+				</view>
+				<view class="records-box panel-item">
+					<view class="item" @click="goPageCheck('/pages/mine/assetRecords?type=RECHARGE',true)">
+						<image src="/static/mine-icons/recharge.png"></image>
+						<view>{{getLanguage('充值记录')}}</view>
+					</view>
+					<view class="item" @click="goPageCheck('/pages/mine/assetRecords?type=WITHDRAW',true)">
+						<image src="/static/mine-icons/withdraw.png"></image>
+						<view>{{getLanguage('提现记录')}}</view>
+					</view>
+					<view class="item" @click="goPageCheck('/pages/mine/gameRecords?type=BROWSE',true)">
+						<image src="/static/mine-icons/game.png"></image>
+						<view>{{getLanguage('游戏记录')}}</view>
+					</view>
+				</view>
+				<view class="menu-box panel-item">
+					<view class="item" @click="goPageCheck('/pages/mine/coinRecords',true)">
+						<image src="/static/mine-icons/coin.png"></image>
+						<view>{{getLanguage('余额明细')}}</view>
+						<text class="open cuIcon-right"></text>
+					</view>
+					<view class="item" @click="goPageCheck('/pages/mine/wallet',true)">
+						<image src="/static/activity/lottery-wallet.png"></image>
+						<view>{{getLanguage('邀请奖励')}}</view>
+						<view class="text">{{info.wallet || 0}}</view>
+						<text class="open cuIcon-right"></text>
+					</view>
+				</view>
+				<view class="menu-box panel-item">
+					<!-- <view class="item" @click="goPageCheck('/pages/mine/message',true)">
+						<image src="/static/mine-icons/message.png"></image>
+						<view>{{getLanguage('我的消息')}}</view>
+						<text class="open cuIcon-right"></text>
+					</view> -->
+					<view class="item" @click="goPageCheck('/pages/mine/gameRecords?type=COLLECT',true)">
+						<image src="/static/mine-icons/collect.png"></image>
+						<view>{{getLanguage('游戏收藏')}}</view>
+						<text class="open cuIcon-right"></text>
+					</view>
+					<view class="item" @click="goPageCheck('/pages/mine/question')">
+						<image src="/static/mine-icons/question.png"></image>
+						<view>{{getLanguage('常见问题')}}</view>
+						<text class="open cuIcon-right"></text>
+					</view>
+					<view class="item" @click="goPageCheck('/pages/mine/partner')">
+						<image src="/static/mine-icons/partner.png"></image>
+						<view>{{getLanguage('成为合伙人')}}</view>
+						<text class="open cuIcon-right"></text>
+					</view>
+				</view>
+				<view class="menu-box panel-item">
+					<view class="item" @click="goPageCheck('/pages/mine/service')">
+						<image src="/static/mine-icons/service.png"></image>
+						<view>{{getLanguage('联系客服')}}</view>
+						<text class="open cuIcon-right"></text>
+					</view>
+				</view>
+				<view class="menu-box panel-item">
+					<view class="item" @click="goPageCheck('/pages/mine/setting',true)">
+						<image src="/static/mine-icons/setting.png"></image>
+						<view>{{getLanguage('通用设置')}}</view>
+						<text class="open cuIcon-right"></text>
+					</view>
+				</view>
+				<view class="tab-bar-place"></view>
 			</view>
-			<view class="account-box panel-item">
-				<view class="title" @click="goPageCheck('/pages/mine/coinRecords',true)">
-					<image src="/static/mine-icons/asset.png"></image>
-					<text>{{getLanguage('我的余额')}}：</text>
-					<text class="count">{{info.coin || '0.00'}}</text>
-					<text class="open cuIcon-right"></text>
-				</view>
-				<view class="buttons">
-					<view class="recharge" @click="goPageCheck('/pages/mine/recharge',true)">{{getLanguage('充值')}}</view>
-					<view class="withdraw" @click="goPageCheck('/pages/mine/withdraw',true)">{{getLanguage('提现')}}</view>
-				</view>
-			</view>
-			<view class="records-box panel-item">
-				<view class="item" @click="goPageCheck('/pages/mine/assetRecords?type=RECHARGE',true)">
-					<image src="/static/mine-icons/recharge.png"></image>
-					<view>{{getLanguage('充值记录')}}</view>
-				</view>
-				<view class="item" @click="goPageCheck('/pages/mine/assetRecords?type=WITHDRAW',true)">
-					<image src="/static/mine-icons/withdraw.png"></image>
-					<view>{{getLanguage('提现记录')}}</view>
-				</view>
-				<view class="item" @click="goPageCheck('/pages/mine/gameRecords?type=BROWSE',true)">
-					<image src="/static/mine-icons/game.png"></image>
-					<view>{{getLanguage('游戏记录')}}</view>
-				</view>
-			</view>
-			<view class="menu-box panel-item">
-				<view class="item" @click="goPageCheck('/pages/mine/coinRecords',true)">
-					<image src="/static/mine-icons/coin.png"></image>
-					<view>{{getLanguage('余额明细')}}</view>
-					<text class="open cuIcon-right"></text>
-				</view>
-				<view class="item" @click="goPageCheck('/pages/mine/wallet',true)">
-					<image src="/static/activity/lottery-wallet.png"></image>
-					<view>{{getLanguage('邀请奖励')}}</view>
-					<view class="text">{{info.wallet || 0}}</view>
-					<text class="open cuIcon-right"></text>
-				</view>
-			</view>
-			<view class="menu-box panel-item">
-				<!-- <view class="item" @click="goPageCheck('/pages/mine/message',true)">
-					<image src="/static/mine-icons/message.png"></image>
-					<view>{{getLanguage('我的消息')}}</view>
-					<text class="open cuIcon-right"></text>
-				</view> -->
-				<view class="item" @click="goPageCheck('/pages/mine/gameRecords?type=COLLECT',true)">
-					<image src="/static/mine-icons/collect.png"></image>
-					<view>{{getLanguage('游戏收藏')}}</view>
-					<text class="open cuIcon-right"></text>
-				</view>
-				<view class="item" @click="goPageCheck('/pages/mine/question')">
-					<image src="/static/mine-icons/question.png"></image>
-					<view>{{getLanguage('常见问题')}}</view>
-					<text class="open cuIcon-right"></text>
-				</view>
-				<view class="item" @click="goPageCheck('/pages/mine/partner')">
-					<image src="/static/mine-icons/partner.png"></image>
-					<view>{{getLanguage('成为合伙人')}}</view>
-					<text class="open cuIcon-right"></text>
-				</view>
-			</view>
-			<view class="menu-box panel-item">
-				<view class="item" @click="goPageCheck('/pages/mine/service')">
-					<image src="/static/mine-icons/service.png"></image>
-					<view>{{getLanguage('联系客服')}}</view>
-					<text class="open cuIcon-right"></text>
-				</view>
-			</view>
-			<view class="menu-box panel-item">
-				<view class="item" @click="goPageCheck('/pages/mine/setting',true)">
-					<image src="/static/mine-icons/setting.png"></image>
-					<view>{{getLanguage('通用设置')}}</view>
-					<text class="open cuIcon-right"></text>
-				</view>
-			</view>
-			<view class="tab-bar-place"></view>
 		</scroll-view>
 		<com-login-popup ref="loginPopup" @onCancel="$refs['loginPopup'].hide()" @onConfirm="goPage('/pages/base/login','reLaunch')" />
 	</view>
@@ -179,6 +181,21 @@ export default {
 <style lang="scss" scoped>
 	scroll-view{
 		height:100vh;
+	}
+	@media screen and (min-width: 768px) {
+		.scroll-view {
+			position: relative;
+			width: calc(100% + 25px);
+			&::-webkit-scrollbar {
+				display: none !important;
+				width: 0 !important;
+				height: 0 !important;
+				background: transparent !important;
+			}
+			.is-content{
+				width:500px;
+			}
+		}
 	}
 	.header-bg{
 		position:relative;

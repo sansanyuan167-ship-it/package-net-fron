@@ -23,6 +23,16 @@
 	right: 0;
 }
 
+@media screen and (min-width: 768px) {
+	.z-paging-content-fixed, .zp-loading-fixed {
+		position: absolute;
+	}
+}
+
+.uni-scroll-view::-webkit-scrollbar {
+	display: none;  /* Chrome/Safari/Opera */
+}
+
 .zp-page-top,.zp-page-bottom {
 	/* #ifndef APP-NVUE */
 	width: auto;
@@ -95,6 +105,16 @@
 	width: 100%;
 	height: 100%;
 	position: relative;
+}
+
+.zp-scroll-view{
+	width:calc(100% + 25px);
+}
+
+@media screen and (min-width: 768px) {
+	.zp-paging-touch-view {
+		width: 500px;
+	}
 }
 
 .zp-fixed-bac-view {

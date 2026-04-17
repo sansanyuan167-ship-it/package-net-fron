@@ -1,125 +1,127 @@
 <template>
 	<view>
-		<scroll-view scroll-y @scroll="scroll">
-			<com-page-title :title="getLanguage('vip')" :showBack="false" :bgColor="bgColor" :showShadow="showShadow" />
-			<view class="header-box">
-				<image class="bg" src="/static/vip-icons/vip-bg.png" :style="{
-					top:`-${pageTitleHeight}rpx`
-				}"></image>
-				<view class="not-login text-orange" v-if="!getToken()" @click="goPage('/pages/base/login','reLaunch')">
-					<text>{{getLanguage('你暂未登录，请先登录哦')}}</text>
-					<text class="open cuIcon-right"></text>
-				</view>
-				<view class="vip-club">
-					<image class="club-image" src="/static/vip-icons/vip-club.png"></image>
-					<view class="text">
-						<view>每日现金返还 - 特权</view>
+		<scroll-view class="scroll-view" scroll-y @scroll="scroll">
+			<view class="is-content">
+				<com-page-title :title="getLanguage('vip')" :showBack="false" :bgColor="bgColor" :showShadow="showShadow" />
+				<view class="header-box">
+					<image class="bg" src="/static/vip-icons/vip-bg.png" :style="{
+						top:`-${pageTitleHeight}rpx`
+					}"></image>
+					<view class="not-login text-orange" v-if="!getToken()" @click="goPage('/pages/base/login','reLaunch')">
+						<text>{{getLanguage('你暂未登录，请先登录哦')}}</text>
+						<text class="open cuIcon-right"></text>
 					</view>
-				</view>
-				<view class="info text-gray">通过投注，您可以提高您的ViP级别。 等级越高，返现越多，升级奖励和各种特权越多，还有你可以享受的福利！</view>
-				<view class="see-detail text-green" @click="goPage('/pages/mine/vipDetail')">查看 VIP 特权的详细信息</view>
-			</view>
-			<view class="current-vip shine-gradient" v-if="currentVip.id">
-				<image class="bg" :src="currentVip.bg_image"></image>
-				<view class="question cuIcon-question" @click="goPage('/pages/mine/vipDetail')"></view>
-				<view class="content">
-					<image class="vip-icon" :src="currentVip.icon"></image>
-					<view class="progress-panel">
-						<view class="progress-item">
-							<view class="key">总充值 {{retainDecimals(currentVip.recharge_amount,2)}}</view>
-							<view class="progress-box">
-								<view :style="{
-									width:`${currentVip.recharge_amount == 0 || (info.total_recharge / currentVip.recharge_amount) >= 1 ? 100 : ((info.total_recharge / currentVip.recharge_amount) * 100)}%`
-								}"></view>
-							</view>
-							<view class="msg-box">
-								<view class="msg">当前：{{retainDecimals(info.total_recharge,2)}}</view>
-								<view class="msg text-red" v-if="(currentVip.recharge_amount - info.total_recharge) > 0">剩余：{{retainDecimals(currentVip.recharge_amount - info.total_recharge,2)}}</view>
-								<view class="msg text-green" v-else>已达标</view>
-							</view>
-						</view>
-						<view class="progress-item">
-							<view class="key">洗码量 {{retainDecimals(currentVip.bet_amount,2)}}</view>
-							<view class="progress-box">
-								<view :style="{
-									width:`${currentVip.bet_amount == 0 || (info.total_bet / currentVip.bet_amount) >= 1 ? 100 : ((info.total_bet / currentVip.bet_amount) * 100)}%`
-								}"></view>
-							</view>
-							<view class="msg-box">
-								<view class="msg">当前：{{retainDecimals(info.total_bet,2)}}</view>
-								<view class="msg text-red" v-if="(currentVip.bet_amount - info.total_bet) > 0">剩余：{{retainDecimals(currentVip.bet_amount - info.total_bet,2)}}</view>
-								<view class="msg text-green" v-else>已达标</view>
-							</view>
+					<view class="vip-club">
+						<image class="club-image" src="/static/vip-icons/vip-club.png"></image>
+						<view class="text">
+							<view>每日现金返还 - 特权</view>
 						</view>
 					</view>
-					<view class="button finish" v-if="(parseFloat(info.total_recharge) >= parseFloat(currentVip.recharge_amount)) && (parseFloat(info.total_bet) >= parseFloat(currentVip.bet_amount))">已解锁</view>
-					<view class="button" v-if="parseFloat(info.total_recharge) < parseFloat(currentVip.recharge_amount)" @click="goPageCheck('/pages/mine/recharge',true)">立即充值</view>
-					<view class="button" v-if="parseFloat(info.total_bet) < parseFloat(currentVip.bet_amount)" @click="goPage('/pages/game/categoryGame')">去投注</view>
+					<view class="info text-gray">通过投注，您可以提高您的ViP级别。 等级越高，返现越多，升级奖励和各种特权越多，还有你可以享受的福利！</view>
+					<view class="see-detail text-green" @click="goPage('/pages/mine/vipDetail')">查看 VIP 特权的详细信息</view>
 				</view>
-			</view>
-			<view class="vip-list">
-				<view class="item" :class="{active:currentVip.id == item.id}" v-for="(item,index) in info.list" :key="index" @click="currentVip = item">
-					<view class="image-box">
-						<image :src="item.badge_icon" mode="aspectFill"></image>
-					</view>
-					<view class="name">{{item.name}}</view>
-				</view>
-			</view>
-			<com-empty ref="empty" />
-			<view class="title-bar">
-				<image src="/static/title-left.png"></image>
-				<view>解锁更多权益</view>
-				<image src="/static/title-right.png"></image>
-			</view>
-			<view class="vip-panel">
-				<view class="item" v-for="(item,index) in info.list" :key="index">
-					<image class="bg" :src="item.bg_image"></image>
+				<view class="current-vip shine-gradient" v-if="currentVip.id">
+					<image class="bg" :src="currentVip.bg_image"></image>
 					<view class="question cuIcon-question" @click="goPage('/pages/mine/vipDetail')"></view>
 					<view class="content">
-						<image class="vip-icon" :src="item.icon"></image>
+						<image class="vip-icon" :src="currentVip.icon"></image>
 						<view class="progress-panel">
 							<view class="progress-item">
-								<view class="key">总充值 {{retainDecimals(item.recharge_amount,2)}}</view>
+								<view class="key">总充值 {{retainDecimals(currentVip.recharge_amount,2)}}</view>
 								<view class="progress-box">
 									<view :style="{
-										width:`${item.recharge_amount == 0 || (info.total_recharge / item.recharge_amount) >= 1 ? 100 : ((info.total_recharge / item.recharge_amount) * 100)}%`
+										width:`${currentVip.recharge_amount == 0 || (info.total_recharge / currentVip.recharge_amount) >= 1 ? 100 : ((info.total_recharge / currentVip.recharge_amount) * 100)}%`
 									}"></view>
 								</view>
 								<view class="msg-box">
 									<view class="msg">当前：{{retainDecimals(info.total_recharge,2)}}</view>
-									<view class="msg text-red" v-if="(item.recharge_amount - info.total_recharge) > 0">剩余：{{retainDecimals(item.recharge_amount - info.total_recharge,2)}}</view>
+									<view class="msg text-red" v-if="(currentVip.recharge_amount - info.total_recharge) > 0">剩余：{{retainDecimals(currentVip.recharge_amount - info.total_recharge,2)}}</view>
 									<view class="msg text-green" v-else>已达标</view>
 								</view>
 							</view>
 							<view class="progress-item">
-								<view class="key">洗码量 {{retainDecimals(item.bet_amount,2)}}</view>
+								<view class="key">洗码量 {{retainDecimals(currentVip.bet_amount,2)}}</view>
 								<view class="progress-box">
 									<view :style="{
-										width:`${item.bet_amount == 0 || (info.total_bet / item.bet_amount) >= 1 ? 100 : ((info.total_bet / item.bet_amount) * 100)}%`
+										width:`${currentVip.bet_amount == 0 || (info.total_bet / currentVip.bet_amount) >= 1 ? 100 : ((info.total_bet / currentVip.bet_amount) * 100)}%`
 									}"></view>
 								</view>
 								<view class="msg-box">
 									<view class="msg">当前：{{retainDecimals(info.total_bet,2)}}</view>
-									<view class="msg text-red" v-if="(item.bet_amount - info.total_bet) > 0">剩余：{{retainDecimals(item.bet_amount - info.total_bet,2)}}</view>
+									<view class="msg text-red" v-if="(currentVip.bet_amount - info.total_bet) > 0">剩余：{{retainDecimals(currentVip.bet_amount - info.total_bet,2)}}</view>
 									<view class="msg text-green" v-else>已达标</view>
 								</view>
 							</view>
 						</view>
-						<view class="button finish" v-if="(parseFloat(info.total_recharge) >= parseFloat(item.recharge_amount)) && (parseFloat(info.total_bet) >= parseFloat(item.bet_amount))">已解锁</view>
-						<view class="button" v-if="parseFloat(info.total_recharge) < parseFloat(item.recharge_amount)" @click="goPageCheck('/pages/mine/recharge',true)">立即充值</view>
-						<view class="button" v-if="parseFloat(info.total_bet) < parseFloat(item.bet_amount)" @click="goPage('/pages/game/categoryGame')">去投注</view>
+						<view class="button finish" v-if="(parseFloat(info.total_recharge) >= parseFloat(currentVip.recharge_amount)) && (parseFloat(info.total_bet) >= parseFloat(currentVip.bet_amount))">已解锁</view>
+						<view class="button" v-if="parseFloat(info.total_recharge) < parseFloat(currentVip.recharge_amount)" @click="goPageCheck('/pages/mine/recharge',true)">立即充值</view>
+						<view class="button" v-if="parseFloat(info.total_bet) < parseFloat(currentVip.bet_amount)" @click="goPage('/pages/game/categoryGame')">去投注</view>
 					</view>
 				</view>
-			</view>
-			<view class="remark text-gray">
-				<view class="title">描述说明：</view>
-				<view class="content">
-					<view>1. 工作服务时间：08:00 ~ 22:00。</view>
-					<view>2. 如你遇到任何问题，可咨询平台客服。</view>
-					<view>3. 我们将会第一时间协助你解答你的问题。</view>
+				<view class="vip-list">
+					<view class="item" :class="{active:currentVip.id == item.id}" v-for="(item,index) in info.list" :key="index" @click="currentVip = item">
+						<view class="image-box">
+							<image :src="item.badge_icon" mode="aspectFill"></image>
+						</view>
+						<view class="name">{{item.name}}</view>
+					</view>
 				</view>
+				<com-empty ref="empty" />
+				<view class="title-bar">
+					<image src="/static/title-left.png"></image>
+					<view>解锁更多权益</view>
+					<image src="/static/title-right.png"></image>
+				</view>
+				<view class="vip-panel">
+					<view class="item" v-for="(item,index) in info.list" :key="index">
+						<image class="bg" :src="item.bg_image"></image>
+						<view class="question cuIcon-question" @click="goPage('/pages/mine/vipDetail')"></view>
+						<view class="content">
+							<image class="vip-icon" :src="item.icon"></image>
+							<view class="progress-panel">
+								<view class="progress-item">
+									<view class="key">总充值 {{retainDecimals(item.recharge_amount,2)}}</view>
+									<view class="progress-box">
+										<view :style="{
+											width:`${item.recharge_amount == 0 || (info.total_recharge / item.recharge_amount) >= 1 ? 100 : ((info.total_recharge / item.recharge_amount) * 100)}%`
+										}"></view>
+									</view>
+									<view class="msg-box">
+										<view class="msg">当前：{{retainDecimals(info.total_recharge,2)}}</view>
+										<view class="msg text-red" v-if="(item.recharge_amount - info.total_recharge) > 0">剩余：{{retainDecimals(item.recharge_amount - info.total_recharge,2)}}</view>
+										<view class="msg text-green" v-else>已达标</view>
+									</view>
+								</view>
+								<view class="progress-item">
+									<view class="key">洗码量 {{retainDecimals(item.bet_amount,2)}}</view>
+									<view class="progress-box">
+										<view :style="{
+											width:`${item.bet_amount == 0 || (info.total_bet / item.bet_amount) >= 1 ? 100 : ((info.total_bet / item.bet_amount) * 100)}%`
+										}"></view>
+									</view>
+									<view class="msg-box">
+										<view class="msg">当前：{{retainDecimals(info.total_bet,2)}}</view>
+										<view class="msg text-red" v-if="(item.bet_amount - info.total_bet) > 0">剩余：{{retainDecimals(item.bet_amount - info.total_bet,2)}}</view>
+										<view class="msg text-green" v-else>已达标</view>
+									</view>
+								</view>
+							</view>
+							<view class="button finish" v-if="(parseFloat(info.total_recharge) >= parseFloat(item.recharge_amount)) && (parseFloat(info.total_bet) >= parseFloat(item.bet_amount))">已解锁</view>
+							<view class="button" v-if="parseFloat(info.total_recharge) < parseFloat(item.recharge_amount)" @click="goPageCheck('/pages/mine/recharge',true)">立即充值</view>
+							<view class="button" v-if="parseFloat(info.total_bet) < parseFloat(item.bet_amount)" @click="goPage('/pages/game/categoryGame')">去投注</view>
+						</view>
+					</view>
+				</view>
+				<view class="remark text-gray">
+					<view class="title">描述说明：</view>
+					<view class="content">
+						<view>1. 工作服务时间：08:00 ~ 22:00。</view>
+						<view>2. 如你遇到任何问题，可咨询平台客服。</view>
+						<view>3. 我们将会第一时间协助你解答你的问题。</view>
+					</view>
+				</view>
+				<view class="tab-bar-place"></view>
 			</view>
-			<view class="tab-bar-place"></view>
 		</scroll-view>
 		<com-login-popup ref="loginPopup" @onCancel="$refs['loginPopup'].hide()" @onConfirm="goPage('/pages/base/login','reLaunch')" />
 	</view>
@@ -184,6 +186,21 @@ export default {
 <style lang="scss" scoped>
 	scroll-view{
 		height:100vh;
+	}
+	@media screen and (min-width: 768px) {
+		.scroll-view {
+			position: relative;
+			width: calc(100% + 25px);
+			&::-webkit-scrollbar {
+				display: none !important;
+				width: 0 !important;
+				height: 0 !important;
+				background: transparent !important;
+			}
+			.is-content{
+				width:500px;
+			}
+		}
 	}
 	.header-box{
 		position:relative;

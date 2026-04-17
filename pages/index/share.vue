@@ -77,7 +77,7 @@ export default {
 		return {
 			pageTitleHeight: 96,
 			info:{},
-			showShareModal: false//
+			showShareModal: false
 		};
 	},
 	async mounted(){
@@ -99,9 +99,6 @@ export default {
 		},
 		pageOnShow(){
 			console.log('share show');
-		},
-		showShareModal(){
-			this.showShareModal = true;
 		},
 		// 分享到Telegram
 		shareToTelegram() {

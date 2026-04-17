@@ -47,10 +47,10 @@ export default {
 
 <style lang="scss" scoped>
 	.container{
-		position:fixed;
+		position:absolute;
 		top:96rpx;
 		left:0;
-		width:100vw;
+		width:100%;
 		height:calc(100vh - 96rpx);
 		background:url('/static/partnel-bg.jpg') center center no-repeat;
 		background-size:100% 100%;

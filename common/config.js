@@ -8,7 +8,7 @@ export const ENV = 'development';
 const config = {
 	development: {
 		// BASE_URL: '/api/game/public/index.php',
-		BASE_URL: '/api/index.php',
+		BASE_URL: '/api/game/public/index.php',
 		IMG_HOST: '/static/'
 	},
 	localhost: {

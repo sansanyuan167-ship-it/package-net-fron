@@ -1,21 +1,23 @@
 <template>
 	<view>
-		<scroll-view scroll-y  @scroll="scroll">
-			<com-page-title :title="getLanguage('活动')" :showBack="false" :bgColor="bgColor" :showShadow="showShadow" />
-			<view class="header-bg">
-				<image class="bg" src="/static/vip-icons/vip-bg.png" :style="{
-					top:`-${pageTitleHeight}rpx`
-				}"></image>
+		<scroll-view class="scroll-view" scroll-y  @scroll="scroll">
+			<view class="is-content">
+				<com-page-title :title="getLanguage('活动')" :showBack="false" :bgColor="bgColor" :showShadow="showShadow" />
+				<view class="header-bg">
+					<image class="bg" src="/static/vip-icons/vip-bg.png" :style="{
+						top:`-${pageTitleHeight}rpx`
+					}"></image>
+				</view>
+				<view class="item" :class="{
+					'shine-gradient':item.is_hot
+				}" v-for="(item,index) in list" :key="index" @click="goPage('/pages/game/activityDetail?id='+item.id)">
+					<image class="cover" :src="item.image" mode="aspectFill"></image>
+					<image class="hot" src="/static/activity-hot.png" v-if="item.is_hot"></image>
+					<view class="title">{{item.title}}</view>
+				</view>
+				<com-empty ref="empty" />
+				<view class="tab-bar-place"></view>
 			</view>
-			<view class="item" :class="{
-				'shine-gradient':item.is_hot
-			}" v-for="(item,index) in list" :key="index" @click="goPage('/pages/game/activityDetail?id='+item.id)">
-				<image class="cover" :src="item.image" mode="aspectFill"></image>
-				<image class="hot" src="/static/activity-hot.png" v-if="item.is_hot"></image>
-				<view class="title">{{item.title}}</view>
-			</view>
-			<com-empty ref="empty" />
-			<view class="tab-bar-place"></view>
 		</scroll-view>
 	</view>
 </template>
@@ -68,6 +70,21 @@ export default {
 <style lang="scss" scoped>
 	scroll-view{
 		height:100vh;
+	}
+	@media screen and (min-width: 768px) {
+		.scroll-view {
+			position: relative;
+			width: calc(100% + 25px);
+			&::-webkit-scrollbar {
+				display: none !important;
+				width: 0 !important;
+				height: 0 !important;
+				background: transparent !important;
+			}
+			.is-content{
+				width:500px;
+			}
+		}
 	}
 	.header-bg{
 		position:relative;

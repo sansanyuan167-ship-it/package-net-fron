@@ -171,7 +171,7 @@
 <style lang="scss" scoped>
 	/**高度160rpx**/
 	.tab-bar {
-		position: fixed;
+		position: absolute;
 		width: 100%;
 		left: 0;
 		bottom: 0;

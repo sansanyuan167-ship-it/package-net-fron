@@ -79,6 +79,12 @@
 </script>
 
 <style lang="scss">
+	@media screen and (min-width: 768px) {
+		.cu-modal {
+		    max-width: 500px !important;
+			left:calc((100vw - 500px) / 2) !important;
+		}
+	}
 	.cu-modal {
 		position: fixed;
 		top: 0;

@@ -1,24 +1,26 @@
 <!-- 标签导航栏 -->
 <template>
-	<scroll-view class="tui-scroll__view"
-		:class="[isFixed && !isSticky?'tui-tabs__fixed':'',isSticky?'tui-tabs__sticky':'',classView]"
-		:style="{height: height+'rpx',background:backgroundColor,top: isFixed || isSticky ? top + 'px' : 'auto',zIndex:isFixed || isSticky?zIndex:'auto'}"
-		:scroll-x="scrolling" :scroll-with-animation="scrolling" :scroll-left="scrollLeft">
-		<view class="tui-tabs__wrap">
-			<view class="tui-tabs__list" :class="[scroll ? 'tui-tabs__scroll' : '']" :style="{height: height+'rpx'}">
-				<view class="tui-tabs__item" :style="{height: height+'rpx'}" v-for="(item,index) in tabs" :key="index"
-					@tap="handleClick(item,index)">
-					<view class="tui-item__child" :class="[childClass]"
-						:style="{	color: currentTab == index ? selectedColor : color,fontSize: size + 'rpx',lineHeight: size + 'rpx',fontWeight: bold && currentTab == index ? 'bold' : 'normal'}">
-						{{item.name}}
+	<view class="tab-box">
+		<scroll-view class="tui-scroll__view"
+			:class="[isFixed && !isSticky?'tui-tabs__fixed':'',isSticky?'tui-tabs__sticky':'',classView]"
+			:style="{height: height+'rpx',background:backgroundColor,top: isFixed || isSticky ? top + 'px' : 'auto',zIndex:isFixed || isSticky?zIndex:'auto'}"
+			:scroll-x="scrolling" :scroll-with-animation="scrolling" :scroll-left="scrollLeft">
+			<view class="tui-tabs__wrap">
+				<view class="tui-tabs__list" :class="[scroll ? 'tui-tabs__scroll' : '']" :style="{height: height+'rpx'}">
+					<view class="tui-tabs__item" :style="{height: height+'rpx'}" v-for="(item,index) in tabs" :key="index"
+						@tap="handleClick(item,index)">
+						<view class="tui-item__child" :class="[childClass]"
+							:style="{	color: currentTab == index ? selectedColor : color,fontSize: size + 'rpx',lineHeight: size + 'rpx',fontWeight: bold && currentTab == index ? 'bold' : 'normal'}">
+							{{item.name}}
+						</view>
 					</view>
-				</view>
-				<view class="tui-tabs__line" :class="[needTransition ? 'tui-transition' : '']"
-					:style="{background: sliderBgColor,height:sliderHeight,borderRadius: sliderRadius,bottom: bottom,width: lineWidth+'px',transform: `translateX(${translateX}px)`}">
+					<!-- <view class="tui-tabs__line" :class="[needTransition ? 'tui-transition' : '']"
+						:style="{background: sliderBgColor,height:sliderHeight,borderRadius: sliderRadius,bottom: bottom,width: lineWidth+'px',transform: `translateX(${translateX}px)`}">
+					</view> -->
 				</view>
 			</view>
-		</view>
-	</scroll-view>
+		</scroll-view>
+	</view>
 </template>
 
 <script>
@@ -260,9 +262,13 @@
 </script>
 
 <style scoped>
+	.tab-box{
+		height:80rpx;
+		overflow: hidden;
+	}
 	.tui-scroll__view {
 		width: 100%;
-		height: 80rpx;
+		height: calc(80rpx + 25px) !important;
 		overflow: hidden;
 		border-bottom: 1rpx solid #1C1F2C;
 	}
