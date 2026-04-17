@@ -43,8 +43,19 @@
 					<text class="icon cuIcon-lock"></text>
 					<text>{{getLanguage('新密码')}}</text>
 				</view>
-				<view class="input">
+				<view class="input" v-if="showPassword">
 					<input v-model="info.password" type="text" :placeholder="getLanguage('请输入新密码')" placeholder-style="color:#AFAFAF;">
+					<text class="input-icon" :class="{
+						'cuIcon-attentionforbid':!showPassword,
+						'cuIcon-attention':showPassword
+					}" @click="showPassword = !showPassword"></text>
+				</view>
+				<view class="input" v-else>
+					<input v-model="info.password" type="password" :placeholder="getLanguage('请输入新密码')" placeholder-style="color:#AFAFAF;">
+					<text class="input-icon" :class="{
+						'cuIcon-attentionforbid':!showPassword,
+						'cuIcon-attention':showPassword
+					}" @click="showPassword = !showPassword"></text>
 				</view>
 			</view>
 			<view class="item">
@@ -52,8 +63,19 @@
 					<text class="icon cuIcon-lock"></text>
 					<text>{{getLanguage('确认新密码')}}</text>
 				</view>
-				<view class="input">
+				<view class="input" v-if="showConfirm">
 					<input v-model="info.confirmPassword" type="text" :placeholder="getLanguage('请确认新密码')" placeholder-style="color:#AFAFAF;">
+					<text class="input-icon" :class="{
+						'cuIcon-attentionforbid':!showConfirm,
+						'cuIcon-attention':showConfirm
+					}" @click="showConfirm = !showConfirm"></text>
+				</view>
+				<view class="input" v-else>
+					<input v-model="info.confirmPassword" type="password" :placeholder="getLanguage('请确认新密码')" placeholder-style="color:#AFAFAF;">
+					<text class="input-icon" :class="{
+						'cuIcon-attentionforbid':!showConfirm,
+						'cuIcon-attention':showConfirm
+					}" @click="showConfirm = !showConfirm"></text>
 				</view>
 			</view>
 		</view>
@@ -93,7 +115,9 @@
 				time:60,
 				timer:null,
 				isDis:false,
-				type:'login'
+				type:'login',
+				showPassword:false,
+				showConfirm:false
 			}
 		},
 		async onLoad(options) {

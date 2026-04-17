@@ -7,20 +7,42 @@
 					<text class="icon cuIcon-lock"></text>
 					<text>{{getLanguage('原密码')}}</text>
 				</view>
-				<view class="input">
+				<view class="input" v-if="showOld">
 					<input v-model="info.oldPassword" type="text" :placeholder="getLanguage('请输入原密码')" placeholder-style="color:#AFAFAF;">
+					<text class="input-icon" :class="{
+						'cuIcon-attentionforbid':!showOld,
+						'cuIcon-attention':showOld
+					}" @click="showOld = !showOld"></text>
+				</view>
+				<view class="input" v-else>
+					<input v-model="info.oldPassword" type="password" :placeholder="getLanguage('请输入原密码')" placeholder-style="color:#AFAFAF;">
+					<text class="input-icon" :class="{
+						'cuIcon-attentionforbid':!showOld,
+						'cuIcon-attention':showOld
+					}" @click="showOld = !showOld"></text>
 				</view>
 			</view>
 		</view>
-		<view class="explain text-red">{{getLanguage('初始密码')}}：123456</view>
+		<view class="explain text-red" v-if="cash_password">{{getLanguage('初始密码')}}：123456</view>
 		<view class="info-box panel-item">
 			<view class="item">
 				<view class="key">
 					<text class="icon cuIcon-lock"></text>
 					<text>{{getLanguage('新密码')}}</text>
 				</view>
-				<view class="input">
+				<view class="input" v-if="showPassword">
 					<input v-model="info.password" type="text" :placeholder="getLanguage('请输入新密码')" placeholder-style="color:#AFAFAF;">
+					<text class="input-icon" :class="{
+						'cuIcon-attentionforbid':!showPassword,
+						'cuIcon-attention':showPassword
+					}" @click="showPassword = !showPassword"></text>
+				</view>
+				<view class="input" v-else>
+					<input v-model="info.password" type="password" :placeholder="getLanguage('请输入新密码')" placeholder-style="color:#AFAFAF;">
+					<text class="input-icon" :class="{
+						'cuIcon-attentionforbid':!showPassword,
+						'cuIcon-attention':showPassword
+					}" @click="showPassword = !showPassword"></text>
 				</view>
 			</view>
 			<view class="item">
@@ -28,8 +50,19 @@
 					<text class="icon cuIcon-lock"></text>
 					<text>{{getLanguage('确认新密码')}}</text>
 				</view>
-				<view class="input">
+				<view class="input" v-if="showConfirm">
 					<input v-model="info.confirmPassword" type="text" :placeholder="getLanguage('请确认新密码')" placeholder-style="color:#AFAFAF;">
+					<text class="input-icon" :class="{
+						'cuIcon-attentionforbid':!showConfirm,
+						'cuIcon-attention':showConfirm
+					}" @click="showConfirm = !showConfirm"></text>
+				</view>
+				<view class="input" v-else>
+					<input v-model="info.confirmPassword" type="password" :placeholder="getLanguage('请确认新密码')" placeholder-style="color:#AFAFAF;">
+					<text class="input-icon" :class="{
+						'cuIcon-attentionforbid':!showConfirm,
+						'cuIcon-attention':showConfirm
+					}" @click="showConfirm = !showConfirm"></text>
 				</view>
 			</view>
 		</view>
@@ -45,20 +78,29 @@
 	export default {
 		data() {
 			return {
+				showOld: false,
+				showPassword: false,
+				showConfirm: false,
 				info:{
 					oldPassword:'',
 					password:'',
 					confirmPassword:''
-				}
+				},
+				cash_password:false
 			}
 		},
 		async onLoad() {
 			
 		},
 		onShow() {
-			
+			this.getUserInfo();
 		},
 		methods: {
+			// 获取用户信息
+			async getUserInfo(){
+				let result = await this.userApi.getUserInfo();
+				this.cash_password = result.data.cash_password;
+			},
 			// 提交
 			async submit(){
 				if(!this.info.oldPassword) return this.showMsg(this.getLanguage('请输入原密码'));
@@ -156,5 +198,12 @@
 		justify-content: center;
 		align-items: center;
 		margin-top:60rpx;
+	}
+	.input-icon{
+		width:60rpx;
+		height:60rpx;
+		line-height:60rpx;
+		text-align:center;
+		font-size:32rpx;
 	}
 </style>

@@ -100,41 +100,16 @@ export default {
 		this.loadBankInfo()
 	},
 	methods: {
-		loadBankInfo(){
-			this.assetApi.bankInfo().then(res=>{
-				if(res.status==1){
-					this.bankInfo=res.data
-					// 空值判断
-					let obj=[
-					  "bank_country_code_name",
-					  "bank_code_name",
-					  "bank_number",
-					  "bank_name",
-					  "bank_phone",
-					  "bank_email"
-					]
-					for(let i=0;i<obj.length;i++){
-						let k=obj[i]
-						if(res.data[k]==''){
-							this.have_empty=true;
-							break;
-						}
-					}
-					if(this.have_empty){
-						this.$refs['confirm'].show();
-						// uni.showToast({
-						// 	icon:"none",
-						// 	title:this.getLanguage('请完善提现信息后再操作'),
-						// 	duration:3000,
-						// 	success:()=>{
-						// 		// uni.redirectTo({
-						// 		// 	url:"/pages/mine/editWithdraw"
-						// 		// })
-						// 	}
-						// })
-					}
-				}
-			});
+		async loadBankInfo(){
+			let result = await this.assetApi.bankInfo();
+			this.bankInfo=result.data
+			console.log(this.bankInfo)
+			if(result.status==1&&result.data.bank_code_name&&result.data.bank_name&&result.data.bank_number&&result.data.bank_phone&&result.data.bank_email&&result.data.bank_country_code_name){
+				this.have_empty=false
+			}else{
+				this.have_empty=true
+				this.$refs['confirm'].show();
+			}
 		},
 		// 选择渠道
 		changeChannel(item){
