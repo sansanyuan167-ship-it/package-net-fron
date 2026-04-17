@@ -37,6 +37,12 @@
 </script>
 
 <style lang="scss">
+	@media screen and (min-width: 768px) {
+		.com-load-msg{
+			width:500px !important;
+			left:calc((100vw - 500px) / 2) !important;
+		}
+	}
 	.com-load-msg{
 		position:fixed;
 		width:100%;

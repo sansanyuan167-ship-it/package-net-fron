@@ -43,6 +43,13 @@
 		z-index: 60;
 	}
 	
+	@media screen and (min-width: 768px) {
+		.k-ball-holder3{
+			width:500px !important;
+			left:calc((100vw - 500px) / 2) !important;
+		}
+	}
+	
 	.k-ball-holder3 .vertical-line {
 		display: inline-block;
 		height: 100%;
