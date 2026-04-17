@@ -1,54 +1,56 @@
 <template>
 	<view>
-		<scroll-view scroll-y>
-			<com-page-title :title="getLanguage('分享赚钱')" :showBack="false" />
-			<view class="is-login" v-if="getToken()">
-				<view class="info-box panel-item">
-					<view class="image-box">
-						<image :src="info.avatar"></image>
+		<scroll-view class="scroll-view" scroll-y>
+			<view class="is-content">
+				<com-page-title :title="getLanguage('分享赚钱')" :showBack="false" />
+				<view class="is-login" v-if="getToken()">
+					<view class="info-box panel-item">
+						<view class="image-box">
+							<image :src="info.avatar"></image>
+						</view>
+						<view class="info">
+							<view class="name bold">{{info.nickname}}</view>
+							<view class="code-box text-gray">{{getLanguage('邀请码')}}：<text class="code text-green">{{info.code}}</text><text class="copy text-blue" @click="copyText(info.code)">{{getLanguage('复制')}}</text></view>
+						</view>
 					</view>
-					<view class="info">
-						<view class="name bold">{{info.nickname}}</view>
-						<view class="code-box text-gray">{{getLanguage('邀请码')}}：<text class="code text-green">{{info.code}}</text><text class="copy text-blue" @click="copyText(info.code)">{{getLanguage('复制')}}</text></view>
+					<view class="qrcode-box panel-item">
+						<view class="my-title">
+							<view class="title">{{getLanguage('我的推广链接')}}</view>
+							<image src="/static/share.png" class="share-icon" mode="widthFix" @click="showShareModal = true"></image>
+						</view>
+						<view class="my-code">
+							<canvas :style="{ width: getUnit(250,'px') + 'px', height: getUnit(250,'px') + 'px' }" canvas-id="my-canvas" id="my-canvas"></canvas>
+							<view class="code-info text-orange">{{getLanguage('扫一扫，注册绑定关系')}}</view>
+						</view>
+						<view class="link">
+							<text>{{info.link}}</text>
+							<image src="/static/copy.png" @click="copyText(info.link)"></image>
+						</view>
+					</view>
+					<view class="my-friends panel-item" @click="goPage('/pages/mine/friends')">
+						<text>{{getLanguage('我的好友')}}：</text>
+						<text class="count text-orange">{{info.friend_count}}</text>
+						<text class="open cuIcon-right"></text>
+					</view>
+					<view class="data-panel">
+						<view class="item" @click="goPage('/pages/mine/wallet')">
+							<view class="key">邀请奖励</view>
+							<view class="value bold text-orange">{{info.wallet}}</view>
+						</view>
+						<view class="item">
+							<view class="key">{{getLanguage('今日邀请')}}</view>
+							<view class="value bold text-orange">{{info.today_friend_count}}</view>
+						</view>
 					</view>
 				</view>
-				<view class="qrcode-box panel-item">
-					<view class="my-title">
-						<view class="title">{{getLanguage('我的推广链接')}}</view>
-						<image src="/static/share.png" class="share-icon" mode="widthFix" @click="showShareModal = true"></image>
-					</view>
-					<view class="my-code">
-						<canvas :style="{ width: getUnit(250,'px') + 'px', height: getUnit(250,'px') + 'px' }" canvas-id="my-canvas" id="my-canvas"></canvas>
-						<view class="code-info text-orange">{{getLanguage('扫一扫，注册绑定关系')}}</view>
-					</view>
-					<view class="link">
-						<text>{{info.link}}</text>
-						<image src="/static/copy.png" @click="copyText(info.link)"></image>
-					</view>
+				<view class="not-login" v-else>
+					<image src="/static/logo.png"></image>
+					<view class="name">678bom</view>
+					<view class="login" @click="goPage('/pages/base/login','reLaunch')">{{getLanguage('请先登录')}}</view>
 				</view>
-				<view class="my-friends panel-item" @click="goPage('/pages/mine/friends')">
-					<text>{{getLanguage('我的好友')}}：</text>
-					<text class="count text-orange">{{info.friend_count}}</text>
-					<text class="open cuIcon-right"></text>
-				</view>
-				<view class="data-panel">
-					<view class="item" @click="goPage('/pages/mine/wallet')">
-						<view class="key">邀请奖励</view>
-						<view class="value bold text-orange">{{info.wallet}}</view>
-					</view>
-					<view class="item">
-						<view class="key">{{getLanguage('今日邀请')}}</view>
-						<view class="value bold text-orange">{{info.today_friend_count}}</view>
-					</view>
-				</view>
+				<com-service />
+				<view class="tab-bar-place"></view>
 			</view>
-			<view class="not-login" v-else>
-				<image src="/static/logo.png"></image>
-				<view class="name">678bom</view>
-				<view class="login" @click="goPage('/pages/base/login','reLaunch')">{{getLanguage('请先登录')}}</view>
-			</view>
-			<com-service />
-			<view class="tab-bar-place"></view>
 		</scroll-view>
 		<!-- 分享弹窗 -->
 		<com-popup :model="'bottom'" :showModal="showShareModal" @onClose="showShareModal = false">
@@ -143,6 +145,21 @@ export default {
 <style lang="scss" scoped>
 	scroll-view{
 		height:100vh;
+	}
+	@media screen and (min-width: 768px) {
+		.scroll-view {
+			position: relative;
+			width: calc(100% + 25px);
+			&::-webkit-scrollbar {
+				display: none !important;
+				width: 0 !important;
+				height: 0 !important;
+				background: transparent !important;
+			}
+			.is-content{
+				width:500px;
+			}
+		}
 	}
 	.info-box{
 		padding:30rpx 25rpx;
