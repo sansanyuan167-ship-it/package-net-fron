@@ -219,6 +219,12 @@ export default {
 			}
 		}
 	}
+	@media screen and (min-width: 768px) {
+		.my-ranking{
+			width:500px !important;
+			left:calc((100vw - 500px) / 2) !important;
+		}
+	}
 	.my-ranking{
 		position:fixed;
 		width:100%;

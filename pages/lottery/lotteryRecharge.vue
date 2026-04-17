@@ -206,16 +206,16 @@
 </script>
 
 <style lang="scss" scoped>
-	.bg {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100vw;
-		height: 100vh;
-
-		image {
-			width: 100%;
-			height: 100%;
+	.bg{
+		position:absolute;
+		top:0;
+		left:0;
+		width:100%;
+		height:100vh;
+		image{
+			display:block;
+			width:100%;
+			height:100%;
 		}
 	}
 
@@ -289,7 +289,7 @@
 	}
 	
 	.sound{
-		position:fixed;
+		position:absolute;
 		top:126rpx;
 		right:30rpx;
 		width:50rpx;

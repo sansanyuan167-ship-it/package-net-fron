@@ -201,12 +201,13 @@
 
 <style lang="scss" scoped>
 	.bg{
-		position:fixed;
+		position:absolute;
 		top:0;
 		left:0;
-		width:100vw;
+		width:100%;
 		height:100vh;
 		image{
+			display:block;
 			width:100%;
 			height:100%;
 		}
@@ -266,7 +267,7 @@
 		}
 	}
 	.sound{
-		position:fixed;
+		position:absolute;
 		top:126rpx;
 		right:30rpx;
 		width:50rpx;
