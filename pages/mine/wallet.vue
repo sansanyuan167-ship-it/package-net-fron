@@ -180,6 +180,7 @@ export default {
 			this.$refs['passwordPopup'].hide();
 			this.$refs['loadingMsg'].show(this.getLanguage('提交中'));
 			let result = await this.assetApi.cashWithdraw({
+				card_id:this.currentCard.id,
 				amount:this.amount,
 				cash_password:this.password
 			});

@@ -62,7 +62,14 @@ export let assetApi = {
 			url: '/user?cmd=user_coin_records',
 			data: data
 		})
-	}
+	},
+	// 提现卡提现
+	async cashWithdraw(data = {}) {
+		return await service.post({
+			url: '/user?cmd=withdraw_card_wallet',
+			data: data
+		})
+	},
 
 
 }
