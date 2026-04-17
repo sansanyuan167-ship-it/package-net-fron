@@ -65,7 +65,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="explain text-red">登录密码长度为6~12位，每位为数字或字母大小写</view>
+		<view class="explain text-red">{{getLanguage('登录密码长度为6~12位，每位为数字或字母大小写')}}</view>
 		<view class="btn-block" @click="submit">{{getLanguage('确认提交')}}</view>
 		<view class="find-password text-gray">
 			<view @click="goPage('/pages/mine/findPassword','redirect')">{{getLanguage('找回登录密码')}}</view>

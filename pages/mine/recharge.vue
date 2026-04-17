@@ -26,7 +26,7 @@
 
 		<com-service />
 		<view class="bottom-btn">
-			<view @click="recharge">立即充值</view>
+			<view @click="recharge">{{getLanguage('立即充值')}}</view>
 		</view>
 		<com-page-loading ref="pageLoading" />
 		<com-loading-msg ref="loadingMsg" />

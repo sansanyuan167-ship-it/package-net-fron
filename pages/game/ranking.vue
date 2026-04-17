@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<com-page-title title="排行榜" :rightText="currentDate.name" @rightTextClick="$refs['changeDatePopup'].show()" />
+		<com-page-title :title="getLanguage('排行榜')" :rightText="currentDate.name" @rightTextClick="$refs['changeDatePopup'].show()" />
 		<view class="tabs">
 			<tui-tab :current="current" :tabs="tabs" @change="change"></tui-tab>
 		</view>
@@ -18,7 +18,7 @@
 			
 			<view class="empty" v-if="noData">
 				<image src="/static/empty-data.png"></image>
-				<view>暂无数据哦 ~</view>
+				<view>{{getLanguage('暂无数据哦 ~')}}</view>
 			</view>
 			
 			<view class="list-box">
@@ -29,11 +29,11 @@
 						<view class="name bold">{{item.username}}</view>
 						<view class="msg">
 							<view class="key-value">
-								<view class="key">总充值</view>
+								<view class="key">{{getLanguage('总充值')}}</view>
 								<view class="value">{{item.recharge_amount}}</view>
 							</view>
 							<view class="key-value">
-								<view class="key">总投注</view>
+								<view class="key">{{getLanguage('总投注')}}</view>
 								<view class="value">{{item.bet_amount}}</view>
 							</view>
 						</view>
@@ -46,11 +46,11 @@
 				<image :src="info.avatar"></image>
 				<view class="info">
 					<view class="key-value">
-						<view class="key">总充值</view>
+						<view class="key">{{getLanguage('总充值')}}</view>
 						<view class="value">{{(info.recharge_amount).toFixed(2)}}</view>
 					</view>
 					<view class="key-value">
-						<view class="key">总投注</view>
+						<view class="key">{{getLanguage('总投注')}}</view>
 						<view class="value">{{(info.bet_amount).toFixed(2)}}</view>
 					</view>
 				</view>
@@ -60,7 +60,7 @@
 		<com-popup ref="changeDatePopup" model="bottom">
 			<view class="change-date-popup panel-bg">
 				<text class="close cuIcon-close" @click="$refs['changeDatePopup'].hide()"></text>
-				<view class="popup-title">选择时间</view>
+				<view class="popup-title">{{getLanguage('选择时间')}}</view>
 				<scroll-view scroll-y class="list">
 					<view class="item" :class="{'active':item.key == currentDate.key}" v-for="(item,index) in date"
 						:key="index" @click="changeDate(item)">
@@ -84,11 +84,11 @@ export default {
 			current:0,
 			tabs: [{
 					type: 'RECHARGE',
-					name: '充值'
+					name: this.getLanguage('充值')
 				},
 				{
 					type: 'BET',
-					name: '投注'
+					name: this.getLanguage('投注')
 				}
 			],
 			info:{
@@ -97,11 +97,11 @@ export default {
 			},
 			list:[],
 			noData:false,
-			currentDate:{key:'today',name:'日榜'},
+			currentDate:{key:'today',name:this.getLanguage('日榜')},
 			date:[
-				{key:'today',name:'日榜'},
-				{key:'week',name:'周榜'},
-				{key:'month',name:'月榜'}
+				{key:'today',name:this.getLanguage('日榜')},
+				{key:'week',name:this.getLanguage('周榜')},
+				{key:'month',name:this.getLanguage('月榜')}
 			]
 		};
 	},

@@ -79,7 +79,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="explain text-red" v-if="type=='login'">登录密码长度为6~12位，每位为数字或字母大小写</view>
+		<view class="explain text-red" v-if="type=='login'">{{getLanguage('登录密码长度为6~12位，每位为数字或字母大小写')}}</view>
 		<view class="explain text-red" v-if="type=='cash'">{{getLanguage('密码长度为6位数字')}}</view>
 		<view class="btn-block" @click="submit">{{getLanguage('确认提交')}}</view>
 		
@@ -111,7 +111,7 @@
 				info:{
 					code:'1234'
 				},
-				buttonText:'获取验证码',
+				buttonText:this.getLanguage('获取验证码'),
 				time:60,
 				timer:null,
 				isDis:false,
@@ -146,15 +146,15 @@
 			// 倒计时
 			setTime(){
 				this.time = 60;
-				this.buttonText = `${this.time} 秒后再获取`;
+				this.buttonText = `${this.time} ${this.getLanguage('秒后再获取')}`;
 				this.timer = setInterval(() => {
 					this.time--;
 					if(this.time <= 0){
-						this.buttonText = `获取验证码`;
+						this.buttonText = this.getLanguage('获取验证码');
 						this.isDis = false;
 						clearInterval(this.timer);
 					}else{
-						this.buttonText = `${this.time} 秒后再获取`;
+						this.buttonText = `${this.time} ${this.getLanguage('秒后再获取')}`;
 					}
 				},1000);
 			},

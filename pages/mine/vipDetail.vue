@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<com-page-title title="VIP权益介绍" :bgColor="bgColor" :showShadow="showShadow" />
+		<com-page-title :title="getLanguage('VIP权益介绍')" :bgColor="bgColor" :showShadow="showShadow" />
 		<view class="header-bg">
 			<image class="bg" src="/static/vip-icons/vip-bg.png" :style="{
 				top:`-${pageTitleHeight}rpx`
@@ -8,22 +8,22 @@
 		</view>
 		<view class="table">
 			<view class="title bold">
-				<view>等级</view>
-				<view>升级条件</view>
-				<view>权益介绍</view>
+				<view>{{getLanguage('等级')}}</view>
+				<view>{{getLanguage('升级条件')}}</view>
+				<view>{{getLanguage('权益介绍')}}</view>
 			</view>
 			<view class="line" v-for="(item,index) in list" :key="index">
 				<view class="item">
 					<view class="bold">{{item.name}}</view>
 				</view>
 				<view class="item">
-					<view>充值：{{retainDecimals(item.recharge_amount,2)}}</view>
-					<view>投注：{{retainDecimals(item.recharge_amount,2)}}</view>
+					<view>{{getLanguage('充值')}}：{{retainDecimals(item.recharge_amount,2)}}</view>
+					<view>{{getLanguage('投注')}}：{{retainDecimals(item.recharge_amount,2)}}</view>
 				</view>
 				<view class="item">
-					<view>A级好友分佣：{{retainDecimals((item.level_a_rate * 100).toFixed(5),2)}}%</view>
-					<view>B级好友分佣：{{retainDecimals((item.level_b_rate * 100).toFixed(5),2)}}%</view>
-					<view>提现手续费：{{retainDecimals(item.withdrawal_fee * 100,2)}}%</view>
+					<view>{{getLanguage('A级好友分佣')}}：{{retainDecimals((item.level_a_rate * 100).toFixed(5),2)}}%</view>
+					<view>{{getLanguage('B级好友分佣')}}：{{retainDecimals((item.level_b_rate * 100).toFixed(5),2)}}%</view>
+					<view>{{getLanguage('提现手续费')}}：{{retainDecimals(item.withdrawal_fee * 100,2)}}%</view>
 				</view>
 			</view>
 		</view>
