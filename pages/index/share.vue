@@ -100,9 +100,6 @@ export default {
 		pageOnShow(){
 			console.log('share show');
 		},
-		showShareModal(){
-			this.showShareModal = true;
-		},
 		// 分享到Telegram
 		shareToTelegram() {
 			const shareText = `${this.getLanguage('分享赚钱 - 邀请好友注册，一起赚钱')}\n${this.info.link}`;
