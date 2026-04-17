@@ -188,7 +188,7 @@ export default {
 			if(!result.status) return this.showMsg(result.msg);
 			let info = {
 				msg:this.getLanguage('操作成功'),
-				path:''
+				path:'/pages/mine/walletRecords'
 			};
 			this.goPage('/pages/base/success?info=' + encodeURIComponent(JSON.stringify(info)),'redirect');
 		},

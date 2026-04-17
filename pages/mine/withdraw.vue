@@ -137,7 +137,6 @@ export default {
 		async loadBankInfo(){
 			let result = await this.assetApi.bankInfo();
 			this.bankInfo=result.data
-			console.log(this.bankInfo)
 			if(result.status==1&&result.data.bank_code_name&&result.data.bank_name&&result.data.bank_number&&result.data.bank_phone&&result.data.bank_email&&result.data.bank_country_code_name){
 				this.have_empty=false
 			}else{
@@ -194,7 +193,7 @@ export default {
 			if(!result.status) return this.showMsg(result.msg);
 			let info = {
 				msg:this.getLanguage('操作成功'),
-				path:''
+				path:'/pages/mine/assetRecords?type=WITHDRAW'
 			};
 			this.goPage('/pages/base/success?info=' + encodeURIComponent(JSON.stringify(info)),'redirect');
 		}

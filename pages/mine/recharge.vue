@@ -30,6 +30,12 @@
 		</view>
 		<com-page-loading ref="pageLoading" />
 		<com-loading-msg ref="loadingMsg" />
+		<com-confirm 
+			ref="confirm" 
+			:content="getLanguage('请完善提现信息后再操作')"
+			@onCancel="$refs['confirm'].hide()" 
+			@onConfirm="confirm" 
+		/>
 	</view>
 </template>
 
@@ -40,6 +46,8 @@ export default {
 			id:null,
 			// 自定义充值金额
 			amount:'',
+			have_empty:false,
+			bankInfo:{},
 			isFirstRecharge:false,
 			mini_recharge_amount:0,
 			currentItem:{id:1,amount:5,total:50,hot:true},
@@ -54,9 +62,24 @@ export default {
 		});
 	},
 	onShow(){
-		
+		this.loadBankInfo()
 	},
 	methods: {
+		async loadBankInfo(){
+			let result = await this.assetApi.bankInfo();
+			this.bankInfo=result.data
+			if(result.status==1&&result.data.bank_code_name&&result.data.bank_name&&result.data.bank_number&&result.data.bank_phone&&result.data.bank_email&&result.data.bank_country_code_name){
+				this.have_empty=false
+			}else{
+				this.have_empty=true
+				this.$refs['confirm'].show();
+			}
+		},
+		// 确认去绑定银行卡
+		confirm(){
+			this.$refs['confirm'].hide()
+			this.goPage('/pages/mine/editWithdraw')
+		},
 		// 获取充值选项列表
 		async getRechargeItems(){
 			let result = await this.assetApi.rechargeItems();
@@ -90,13 +113,14 @@ export default {
 					amount:this.amount
 				}
 			}
+			if(this.have_empty) return this.$refs['confirm'].show();
 			this.$refs['loadingMsg'].show(this.getLanguage('提交中'));
 			let result = await this.assetApi.recharge(data);
 			this.$refs['loadingMsg'].hide();
 			if(!result.status) return this.showMsg(result.msg);
 			let info = {
 				msg:this.getLanguage('操作成功'),
-				path:result.data.pay_url
+				path:result.data.pay_url///pages/mine/assetRecords?type=RECHARGE
 			};
 			this.goPage('/pages/base/success?info=' + encodeURIComponent(JSON.stringify(info)),'redirect');
 		}
