@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<com-page-title title="新人注册抽奖转盘" bgColor="rgba(33,47,63,0.6)" />
+		<com-page-title :title="getLanguage('新人注册抽奖转盘')" bgColor="rgba(33,47,63,0.6)" />
 		<view class="bg">
 			<image src="/static/activity/lottery-bg.png" mode="aspectFill"></image>
 		</view>
@@ -19,9 +19,9 @@
 		</view>
 		<view class="register-amount" v-if="registerAmount">
 			<view class="value scale">{{registerAmount}}</view>
-			<view class="title">您已抽奖成功获得</view>
-			<view v-if="!getToken()" class="register" @click="goPage('/pages/base/register','redirect')">注册生效</view>
-			<view v-else class="register" @click="goPage('/pages/index/index','reLaunch')">我知道了</view>
+			<view class="title">{{getLanguage('您已抽奖成功获得')}}</view>
+			<view v-if="!getToken()" class="register" @click="goPage('/pages/base/register','redirect')">{{getLanguage('注册生效')}}</view>
+			<view v-else class="register" @click="goPage('/pages/index/index','reLaunch')">{{getLanguage('我知道了')}}</view>
 		</view>
 		<view class="sound" :class="{
 			off:!sound
@@ -36,18 +36,18 @@
 				<image class="rotate-bg" src="/static/activity/rotate-bg.png"></image>
 				<image class="salute" src="/static/activity/salute-bg.webp"></image>
 				<view class="popup-content panel-bg">
-					<view class="title">恭喜中奖</view>
-					<view class="prize">
-						<image class="scale" :src="
-							currentItem.type == 'WALLET' ?
-							'/static/activity/lottery-wallet.png' :
-							currentItem.type == 'COIN' ?
-							'/static/activity/lottery-coin.png' :
-							'/static/activity/lottery-card.png'
-						"></image>
-						<view class="name">已获得<text>{{currentItem.amount}}</text></view>
-					</view>
-					<view class="button" @click="hidePopup">我知道了</view>
+					<view class="title">{{getLanguage('恭喜中奖')}}</view>
+				<view class="prize">
+					<image class="scale" :src="
+						currentItem.type == 'WALLET' ?
+						'/static/activity/lottery-wallet.png' :
+						currentItem.type == 'COIN' ?
+						'/static/activity/lottery-coin.png' :
+						'/static/activity/lottery-card.png'
+					"></image>
+					<view class="name">{{getLanguage('已获得')}}<text>{{currentItem.amount}}</text></view>
+				</view>
+				<view class="button" @click="hidePopup">{{getLanguage('我知道了')}}</view>
 				</view>
 			</view>
 		</com-popup>
@@ -124,7 +124,7 @@
 			// 本次抽奖开始
 			async handleDrawStart() {
 				if(!this.getToken() && uni.getStorageSync('register_coin')){
-					return this.showMsg('你获得奖励，注册后生效');
+					return this.showMsg(this.getLanguage('你获得奖励，注册后生效'));
 				}
 				let result = await this.activityApi.getLotteryId({
 					scene:'REGISTER'

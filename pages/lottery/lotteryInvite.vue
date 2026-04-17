@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container has-bottom">
-		<com-page-title title="邀请好友转盘" bgColor="rgba(33,47,63,0.6)" />
+		<com-page-title :title="getLanguage('邀请好友转盘')" bgColor="rgba(33,47,63,0.6)" />
 		<view class="bg">
 			<image src="/static/activity/lottery-bg.png" mode="aspectFill"></image>
 		</view>
@@ -20,23 +20,23 @@
 		<view class="info">
 			<view class="item">
 				<view class="value scale">{{info.user_friends_count || 0}}</view>
-				<view class="key">我的好友</view>
+				<view class="key">{{getLanguage('我的好友')}}</view>
 			</view>
 			<view class="item">
 				<view class="value scale">{{info.invite_lottery_times || 0}}</view>
-				<view class="key">剩余次数</view>
+				<view class="key">{{getLanguage('剩余次数')}}</view>
 			</view>
 			<view class="item">
 				<view class="value scale">{{info.wallet_amount || 0}}</view>
-				<view class="key">我的现金</view>
+				<view class="key">{{getLanguage('我的现金')}}</view>
 			</view>
 		</view>
 		<view class="remark text-gray">
-			<view class="title">描述说明：</view>
+			<view class="title">{{getLanguage('描述说明：')}}</view>
 			<view class="content">
-				<view>1. 邀请好友注册可获的抽奖机会。</view>
-				<view>2. 可抽奖现金或体现卡，每次100%中奖。</view>
-				<view>3. 如你遇到任何问题，可咨询平台客服。</view>
+				<view>{{getLanguage('1. 邀请好友注册可获的抽奖机会。')}}</view>
+				<view>{{getLanguage('2. 可抽奖现金或体现卡，每次100%中奖。')}}</view>
+				<view>{{getLanguage('3. 如你遇到任何问题，可咨询平台客服。')}}</view>
 			</view>
 		</view>
 		<view class="sound" :class="{
@@ -47,7 +47,7 @@
 			<image src="/static/notice.png"></image>
 		</view>
 		<view class="bottom-btn" style="opacity: 0.9;">
-			<view>邀请好友</view>
+			<view>{{getLanguage('邀请好友')}}</view>
 		</view>
 		<!-- START 中奖弹窗 -->
 		<com-popup ref="winPopup" model="middle" :maskClosable="false">
@@ -55,18 +55,18 @@
 				<image class="rotate-bg" src="/static/activity/rotate-bg.png"></image>
 				<image class="salute" src="/static/activity/salute-bg.webp"></image>
 				<view class="popup-content panel-bg">
-					<view class="title">恭喜中奖</view>
-					<view class="prize">
-						<image class="scale" :src="
-							currentItem.type == 'WALLET' ?
-							'/static/activity/lottery-wallet.png' :
-							currentItem.type == 'COIN' ?
-							'/static/activity/lottery-coin.png' :
-							'/static/activity/lottery-card.png'
-						"></image>
-						<view class="name">已获得<text>{{currentItem.amount}}</text></view>
-					</view>
-					<view class="button" @click="hidePopup">我知道了</view>
+					<view class="title">{{getLanguage('恭喜中奖')}}</view>
+				<view class="prize">
+					<image class="scale" :src="
+						currentItem.type == 'WALLET' ?
+						'/static/activity/lottery-wallet.png' :
+						currentItem.type == 'COIN' ?
+						'/static/activity/lottery-coin.png' :
+						'/static/activity/lottery-card.png'
+					"></image>
+					<view class="name">{{getLanguage('已获得')}}<text>{{currentItem.amount}}</text></view>
+				</view>
+				<view class="button" @click="hidePopup">{{getLanguage('我知道了')}}</view>
 				</view>
 			</view>
 		</com-popup>
@@ -143,7 +143,7 @@
 			// 本次抽奖开始
 			async handleDrawStart() {
 				if(!this.getToken() && uni.getStorageSync('register_wallet')){
-					return this.showMsg('你获得奖励，注册后生效');
+					return this.showMsg(this.getLanguage('你获得奖励，注册后生效'));
 				}
 				let result = await this.activityApi.getLotteryId({
 					scene:'INVITE'

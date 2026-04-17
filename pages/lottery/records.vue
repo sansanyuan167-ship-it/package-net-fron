@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<com-page-title title="抽奖记录" />
+		<com-page-title :title="getLanguage('抽奖记录')" />
 		<z-paging ref="paging" auto-show-back-to-top show-loading-more-when-reload :back-to-top-threshold="300" defaultThemeStyle="white"
 		:loading-more-default-text="getLanguage('点击加载更多')"
 		:loading-more-loading-text="getLanguage('正在加载')"
@@ -51,9 +51,9 @@ export default {
 	data() {
 		return {
 			sceneList:{
-				'REGISTER':'赠送转盘抽奖',
-				'INVITE':'邀请转盘抽奖',
-				'RECHARGE':'充值转盘抽奖',
+				'REGISTER':this.getLanguage('赠送转盘抽奖'),
+				'INVITE':this.getLanguage('邀请转盘抽奖'),
+				'RECHARGE':this.getLanguage('充值转盘抽奖'),
 			},
 			pageTitleHeight:96,
 			isRefresh:true, //用于记录是否整个页面数据加载刷新

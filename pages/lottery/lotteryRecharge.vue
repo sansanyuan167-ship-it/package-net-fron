@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container has-bottom">
-		<com-page-title title="充值赠送转盘" bgColor="rgba(33,47,63,0.6)" />
+		<com-page-title :title="getLanguage('充值赠送转盘')" bgColor="rgba(33,47,63,0.6)" />
 		<view class="bg">
 			<image src="/static/activity/lottery-bg.png" mode="aspectFill"></image>
 		</view>
@@ -19,23 +19,23 @@
 		<view class="info">
 			<view class="item">
 				<view class="value scale">{{info.cur_month_recharge_amount || 0}}</view>
-				<view class="key">当月充值</view>
+				<view class="key">{{getLanguage('当月充值')}}</view>
 			</view>
 			<view class="item">
 				<view class="value scale">{{info.recharge_lottery_times || 0}}</view>
-				<view class="key">剩余次数</view>
+				<view class="key">{{getLanguage('剩余次数')}}</view>
 			</view>
 			<view class="item">
 				<view class="value scale">{{info.all_recharge_amount || 0}}</view>
-				<view class="key">累计充值</view>
+				<view class="key">{{getLanguage('累计充值')}}</view>
 			</view>
 		</view>
 		<view class="remark text-gray">
-			<view class="title">描述说明：</view>
+			<view class="title">{{getLanguage('描述说明：')}}</view>
 			<view class="content">
-				<view>1. 每次充值达标后均可获得抽奖机会。</view>
-				<view>2. 可抽奖平台金额，每次100%中奖。</view>
-				<view>3. 如你遇到任何问题，可咨询平台客服。</view>
+				<view>{{getLanguage('1. 每次充值达标后均可获得抽奖机会。')}}</view>
+				<view>{{getLanguage('2. 可抽奖平台金额，每次100%中奖。')}}</view>
+				<view>{{getLanguage('3. 如你遇到任何问题，可咨询平台客服。')}}</view>
 			</view>
 		</view>
 		<view class="sound" :class="{
@@ -46,7 +46,7 @@
 			<image src="/static/notice.png"></image>
 		</view>
 		<view class="bottom-btn" style="opacity: 0.9;">
-			<view @click="goPageCheck('/pages/mine/recharge',true)">立即充值</view>
+			<view @click="goPageCheck('/pages/mine/recharge',true)">{{getLanguage('立即充值')}}</view>
 		</view>
 		<!-- START 中奖弹窗 -->
 		<com-popup ref="winPopup" model="middle" :maskClosable="false">
@@ -54,7 +54,7 @@
 				<image class="rotate-bg" src="/static/activity/rotate-bg.png"></image>
 				<image class="salute" src="/static/activity/salute-bg.webp"></image>
 				<view class="popup-content panel-bg">
-					<view class="title">恭喜中奖</view>
+					<view class="title">{{getLanguage('恭喜中奖')}}</view>
 					<view class="prize">
 						<image class="scale" :src="
 							currentItem.type == 'WALLET' ?
@@ -63,9 +63,9 @@
 							'/static/activity/lottery-coin.png' :
 							'/static/activity/lottery-card.png'
 						"></image>
-						<view class="name">已获得<text>{{currentItem.amount}}</text></view>
+						<view class="name">{{getLanguage('已获得')}}<text>{{currentItem.amount}}</text></view>
 					</view>
-					<view class="button" @click="hidePopup">我知道了</view>
+					<view class="button" @click="hidePopup">{{getLanguage('我知道了')}}</view>
 				</view>
 			</view>
 		</com-popup>
@@ -144,7 +144,7 @@
 			// 本次抽奖开始
 			async handleDrawStart() {
 				if (!this.getToken() && uni.getStorageSync('register_wallet')) {
-					return this.showMsg('你获得奖励，注册后生效');
+					return this.showMsg(this.getLanguage('你获得奖励，注册后生效'));
 				}
 				let result = await this.activityApi.getLotteryId({
 					scene: 'RECHARGE'
