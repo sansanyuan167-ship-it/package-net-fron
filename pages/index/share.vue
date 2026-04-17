@@ -13,7 +13,10 @@
 					</view>
 				</view>
 				<view class="qrcode-box panel-item">
-					<view class="title">{{getLanguage('我的推广链接')}}</view>
+					<view class="my-title">
+						<view class="title">{{getLanguage('我的推广链接')}}</view>
+						<image src="/static/share.png" class="share-icon" mode="widthFix" @click="showShareModal = true"></image>
+					</view>
 					<view class="my-code">
 						<canvas :style="{ width: getUnit(250,'px') + 'px', height: getUnit(250,'px') + 'px' }" canvas-id="my-canvas" id="my-canvas"></canvas>
 						<view class="code-info text-orange">{{getLanguage('扫一扫，注册绑定关系')}}</view>
@@ -47,6 +50,23 @@
 			<com-service />
 			<view class="tab-bar-place"></view>
 		</scroll-view>
+		<!-- 分享弹窗 -->
+		<com-popup :model="'bottom'" :showModal="showShareModal" @onClose="showShareModal = false">
+			<view class="share-popup">
+				<view class="share-title">{{getLanguage('分享至')}}</view>
+				<view class="share-icons">
+					<view class="share-item" @click="shareToTelegram">
+						<view class="icon telegram"></view>
+						<view class="name">Telegram</view>
+					</view>
+					<view class="share-item" @click="shareToWhatsApp">
+						<view class="icon whatsapp"></view>
+						<view class="name">WhatsApp</view>
+					</view>
+				</view>
+				<view class="share-cancel" @click="showShareModal = false">{{getLanguage('取消')}}</view>
+			</view>
+		</com-popup>		
 	</view>
 </template>
 
@@ -56,7 +76,8 @@ export default {
 	data() {
 		return {
 			pageTitleHeight: 96,
-			info:{}
+			info:{},
+			showShareModal: false//
 		};
 	},
 	async mounted(){
@@ -78,6 +99,33 @@ export default {
 		},
 		pageOnShow(){
 			console.log('share show');
+		},
+		showShareModal(){
+			this.showShareModal = true;
+		},
+		// 分享到Telegram
+		shareToTelegram() {
+			const shareText = `${this.getLanguage('分享赚钱 - 邀请好友注册，一起赚钱')}\n${this.info.link}`;
+			const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(this.info.link)}&text=${encodeURIComponent(this.getLanguage('分享赚钱 - 邀请好友注册，一起赚钱'))}`;
+
+			if (typeof window !== 'undefined') {
+				window.open(telegramUrl, '_blank');
+			} else {
+				plus.runtime.openURL(telegramUrl);
+			}
+			this.showShareModal = false;
+		},
+		// 分享到WhatsApp
+		shareToWhatsApp() {
+			const shareText = `${this.getLanguage('分享赚钱 - 邀请好友注册，一起赚钱')}\n${this.info.link}`;
+			const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+			
+			if (typeof window !== 'undefined') {
+				window.open(whatsappUrl, '_blank');
+			} else {
+				plus.runtime.openURL(whatsappUrl);
+			}
+			this.showShareModal = false;
 		},
 		// 二维码生成
 		couponQrCode(text) {
@@ -140,9 +188,20 @@ export default {
 	}
 	.qrcode-box{
 		padding:30rpx 25rpx;
-		.title{
-			font-size:32rpx;
+		.my-title{
+			display:flex;
+			flex-direction: row;
+			justify-content: space-between;
+			.title{
+				font-size:32rpx;
+			}
+			.share-icon{
+				width: 40rpx;
+				z-index: 10;
+				filter: drop-shadow(0 2rpx 4rpx rgba(0,0,0,0.2));
+			}
 		}
+		
 		.my-code{
 			position:relative;
 			margin-top:30rpx;
@@ -241,6 +300,66 @@ export default {
 			border-radius:100rpx;
 			font-size:32rpx;
 			font-weight:600;
+		}
+	}
+	
+	/* 分享弹窗样式 */
+	.share-popup{
+		background: #212434;
+		padding: 30rpx;
+		border-radius: 30rpx 30rpx 0 0;
+		
+		.share-title{
+			text-align: center;
+			font-size: 32rpx;
+			color: #FFFFFF;
+			margin-bottom: 30rpx;
+		}
+		
+		.share-icons{
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-around;
+			margin-bottom: 30rpx;
+			
+			.share-item{
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				margin: 20rpx 0;
+				width: 20%;
+				
+				.icon{
+					width: 80rpx;
+					height: 80rpx;
+					border-radius: 16rpx;
+					margin-bottom: 10rpx;
+					background-size: cover;
+					background-position: center;
+					background-repeat: no-repeat;
+				}
+				
+				.name{
+					font-size: 24rpx;
+					color: #FFFFFF;
+				}
+				
+				.icon.telegram{
+					background-image: url('/static/telegram.png');
+				}
+				.icon.whatsapp{
+					background-image: url('/static/whatsapp.png');
+				}
+			}
+		}
+		
+		.share-cancel{
+			text-align: center;
+			font-size: 32rpx;
+			color: #999999;
+			padding: 20rpx 0;
+			margin-top: 10rpx;
+			border-top: 1rpx solid #333333;
 		}
 	}
 </style>
