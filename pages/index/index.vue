@@ -171,7 +171,7 @@
 <style lang="scss" scoped>
 	/**高度160rpx**/
 	.tab-bar {
-		position: absolute;
+		position: fixed;
 		width: 100%;
 		left: 0;
 		bottom: 0;
@@ -256,6 +256,13 @@
 					}
 				}
 			}
+		}
+	}
+	
+	@media screen and (min-width: 768px) {
+		.tab-bar{
+			width:500px !important;
+			left:calc((100vw - 500px) / 2) !important;
 		}
 	}
 
