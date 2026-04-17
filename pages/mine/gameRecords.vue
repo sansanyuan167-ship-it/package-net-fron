@@ -31,7 +31,7 @@
 			
 			<view class="list-box">
 				<view class="item panel-item" v-for="(item,index) in list" :key="index" @click="goPage('/pages/game/gameView?id='+item.game_id)" @longpress="removeConfirm(index)">
-					<image :src="item.cover" mode="aspectFill"></image>
+					<image class="image-bg" :src="item.cover" mode="aspectFill"></image>
 					<view class="info">
 						<view class="title bold">{{item.name}}</view>
 						<view class="time text-gray">{{getLanguage('时间')}}：{{item.create_time}}</view>
