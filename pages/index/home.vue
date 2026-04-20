@@ -13,6 +13,15 @@
 					<image class="logo" src="/static/logo.png"></image>
 				</view>
 				<view class="right">
+					<!-- 登录和注册按钮 -->
+					<view class="auth-buttons" v-if="!getToken()">
+						<view class="auth-button login" @click="goPage('/pages/base/login','reLaunch')">
+							{{getLanguage('登录')}}
+						</view>
+						<view class="auth-button register" @click="goPage('/pages/base/register','reLaunch')">
+							{{getLanguage('注册')}}
+						</view>
+					</view>
 					<view class="icon-box scale" @click="openActivePopup()">
 						<image src="/static/activity/activity.png"></image>
 						<view class="dot"></view>
@@ -45,11 +54,9 @@
 					</view>
 				</view>
 				<!--END 轮播图-->
-				<view class="index-panel">
-					<!-- <image src="/static/test/index-panel1.png" mode="widthFix"></image>
-					<image src="/static/test/index-panel2.png" mode="widthFix"></image> -->
+				<!-- <view class="index-panel">
 					<image :src="item.image" mode="widthFix" v-for="(item,index) in activityList" :key="index" @click="goPage('/pages/game/activityDetail?id='+item.id)"></image>
-				</view>
+				</view> -->
 				<view class="notice">
 					<image src="/static/notice.png"></image>
 					<view class="text-box">
@@ -57,6 +64,29 @@
 						animation: scrollText ${scrollTime}s linear infinite;
 						-webkit-animation: scrollText ${scrollTime}s linear infinite;
 						`">{{info.notice}}</view>
+					</view>
+				</view>
+				<!-- 用户信息卡片 -->
+				<view class="user-info-card panel-item" v-if="getToken()">
+					<view class="left-section">
+						<image class="avatar" :src="userInfo.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
+						<view class="user-details">
+							<view class="user-id">{{userInfo.username || userInfo.nickname || getLanguage('用户')}}</view>
+							<view class="balance">
+								<text class="label">{{getLanguage('余额')}}：</text>
+								<text class="value">{{userInfo.balance || 0}}</text>
+							</view>
+						</view>
+					</view>
+					<view class="right-section">
+						<view class="action-btn recharge-btn" @click="goPageCheck('/pages/mine/recharge', true)">
+							<text class="cuIcon-moneybag"></text>
+							<text>{{getLanguage('充值')}}</text>
+						</view>
+						<view class="action-btn withdraw-btn" @click="goPageCheck('/pages/mine/withdraw', true)">
+							<text class="cuIcon-wallet"></text>
+							<text>{{getLanguage('提现')}}</text>
+						</view>
 					</view>
 				</view>
 				<view class="supplier-box">
@@ -111,51 +141,25 @@
 			<view class="list-popup panel-bg">
 				<scroll-view scroll-y>
 					<view class="status_bar"></view>
-					<view class="logo-box">
-						<image src="/static/logo.png"></image>
-						<view class="title">678bom</view>
-					</view>
-					<view class="buttons">
-						<view class="recharge" @click="goPageCheck('/pages/mine/recharge',true)">{{getLanguage('充值')}}
+					<view class="supplier-list">
+						<view class="supplier-item" 
+							:class="{'active': currentSupplierId === 'all'}"
+							@click="selectSupplier('all')">
+							<image src="/static/all-supplier.png" mode="aspectFill"></image>
 						</view>
-						<view class="withdraw" @click="goPageCheck('/pages/mine/withdraw',true)">{{getLanguage('提现')}}
-						</view>
-					</view>
-					<view class="activity">
-						<view class="title">{{getLanguage('精彩活动')}}</view>
-						<view class="list">
-							
-								<image :src="item.image" mode="widthFix" v-for="(item,index) in activityList" :key="index"
-													@click="goPage('/pages/game/activityDetail?id='+item.id)"></image>
-													
-							
-					
-
-						</view>
-					</view>
-					<view class="menu-list">
-						<view class="item" @click="goPageCheck('/pages/mine/partner')">
-							<image src="/static/mine-icons/game.png"></image>
-							<text>{{getLanguage('成为合伙人')}}</text>
-						</view>
-						<view class="item" @click="goPageCheck('/pages/mine/service')">
-							<image src="/static/mine-icons/service.png"></image>
-							<text>{{getLanguage('联系客服')}}</text>
-						</view>
-						<view class="item" @click="goPageCheck('/pages/mine/question')">
-							<image src="/static/mine-icons/question.png"></image>
-							<text>{{getLanguage('常见问题')}}</text>
-						</view>
-						<view class="item" @click="goPageCheck('/pages/mine/setting',true)">
-							<image src="/static/mine-icons/setting.png"></image>
-							<text>{{getLanguage('通用设置')}}</text>
-						</view>
-						<view class="item" @click="goPageCheck('/pages/lottery/lottery')">
-							<image src="/static/mine-icons/lottery.png"></image>
-							<text>{{getLanguage('转盘抽奖')}}</text>
+						<view class="supplier-item" 
+							v-for="(item,index) in info.supplier" 
+							:key="index"
+							:class="{'active': currentSupplierId === item.id}"
+							@click="selectSupplier(item.id)">
+							<image :src="item.icon" mode="aspectFill"></image>
+							<text class="name">{{item.name}}</text>
 						</view>
 					</view>
 				</scroll-view>
+				<view class="close-btn" @click="$refs['listPopup'].hide()">
+					<text class="cuIcon-back"></text>
+				</view>
 			</view>
 		</com-popup>
 		<!-- END 左侧列表弹窗 -->
@@ -301,11 +305,18 @@
 				showDownload: true,
 				bannerIndex: 0,
 				scrollTime: 15,
+				currentSupplierId: 'all', // 当前选中的供应商ID，默认为'全部'
 				info: {
 					banner: [],
 					notice: '',
 					list: [],
 					supplier: []
+				},
+				userInfo: {
+					avatar: '',
+					username: '',
+					nickname: '',
+					balance: 0
 				},
 				// 活动列表
 				activityList:[],
@@ -335,6 +346,7 @@
 				console.log('home lond');
 				this.$emit('showLoading');
 				await this.getIndexData();
+				await this.getUserInfo();
 				this.$emit('hideLoading');
 				this.scrollTextSpeed();
 			},
@@ -342,6 +354,21 @@
 				console.log('home show');
 				this.showDownload = true;
 				this.getActivityData();
+				if(this.getToken()) {
+					this.getUserInfo();
+				}
+			},
+			// 获取用户信息
+			async getUserInfo() {
+				if(!this.getToken()) return;
+				try {
+					let result = await this.userApi.getUserInfo();
+					if(result.status && result.data) {
+						this.userInfo = result.data;
+					}
+				} catch(e) {
+					console.error('获取用户信息失败', e);
+				}
 			},
 			// 获取首页数据
 			async getIndexData() {
@@ -427,6 +454,16 @@
 				if (type && !this.getToken()) return this.$refs['loginPopup'].show();
 				this.$refs['firstRechargePopup'].hide();
 				this.goPage(url);
+			},
+			// 选择供应商
+			selectSupplier(id) {
+				this.currentSupplierId = id;
+				this.$refs['listPopup'].hide();
+				if (id === 'all') {
+					this.goPage('/pages/game/supplierGame');
+				} else {
+					this.goPage('/pages/game/supplierGame?id=' + id);
+				}
 			},
 		}
 	};
@@ -547,6 +584,33 @@
 				justify-content: space-between;
 				align-items: center;
 				gap: 25rpx;
+
+				.auth-buttons {
+					display: flex;
+					align-items: center;
+					gap: 15rpx;
+
+					.auth-button {
+						padding: 8rpx 20rpx;
+						border-radius: 30rpx;
+						font-size: 24rpx;
+						line-height: 1;
+						font-weight: 600;
+						white-space: nowrap;
+
+						&.login {
+							background: linear-gradient(to right, #FF6B6B 0%, #FF8E53 100%);
+							color: #fff;
+							box-shadow: 0 2rpx 8rpx rgba(255, 107, 107, 0.4);
+						}
+
+						&.register {
+							background: linear-gradient(to right, #4ECDC4 0%, #44A08D 100%);
+							color: #fff;
+							box-shadow: 0 2rpx 8rpx rgba(78, 205, 196, 0.4);
+						}
+					}
+				}
 
 				.icon-box {
 					position: relative;
@@ -686,7 +750,108 @@
 			}
 		}
 	}
-
+	
+	
+	// 用户信息卡片样式
+	.user-info-card {
+		display: flex;
+		padding: 30rpx;
+		
+		.left-section {
+			display: flex;
+			align-items: center;
+			gap: 20rpx;
+			flex: 1;
+			min-width: 0;
+			
+			.avatar {
+				width: 100rpx;
+				height: 100rpx;
+				border-radius: 50%;
+				border: 3rpx solid rgba(255, 255, 255, 0.8);
+				box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+				flex-shrink: 0;
+			}
+			
+			.user-details {
+				flex: 1;
+				min-width: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 8rpx;
+				
+				.user-id {
+					font-size: 28rpx;
+					color: #fff;
+					font-weight: 600;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+				
+				.balance {
+					font-size: 24rpx;
+					color: rgba(255, 255, 255, 0.9);
+					
+					.label {
+						font-size: 24rpx;
+					}
+					
+					.value {
+						font-size: 32rpx;
+						font-weight: 700;
+						color: #FFD700;
+						text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+					}
+				}
+			}
+		}
+		
+		.right-section {
+			display: flex;
+			flex-direction: column;
+			gap: 15rpx;
+			flex-shrink: 0;
+			margin-left: 20rpx;
+			
+			.action-btn {
+				padding: 16rpx 28rpx;
+				border-radius: 50rpx;
+				font-size: 24rpx;
+				font-weight: 600;
+				display: flex;
+				align-items: center;
+				gap: 8rpx;
+				white-space: nowrap;
+				box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+				transition: all 0.3s ease;
+				
+				text {
+					font-size: 28rpx;
+				}
+				
+				&.recharge-btn {
+					background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+					color: #fff;
+					
+					&:active {
+						transform: scale(0.95);
+						box-shadow: 0 2rpx 8rpx rgba(245, 87, 108, 0.4);
+					}
+				}
+				
+				&.withdraw-btn {
+					background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+					color: #fff;
+					
+					&:active {
+						transform: scale(0.95);
+						box-shadow: 0 2rpx 8rpx rgba(79, 172, 254, 0.4);
+					}
+				}
+			}
+		}
+	}
 	.supplier-box {
 		margin: 25rpx;
 		height: 68rpx;
@@ -852,9 +1017,11 @@
 	}
 
 	.list-popup {
-		height: 100%;
+		// width: 180rpx;
+		min-height: 100vh;
 		padding: 25rpx;
 		box-sizing: border-box;
+		position: relative;
 
 		scroll-view {
 			height: 100%;
@@ -865,96 +1032,59 @@
 			width: 100%;
 		}
 
-		.logo-box {
-			display: flex;
-			justify-content: flex-start;
-			align-items: center;
-
-			image {
-				width: 130rpx;
-				height: 60rpx;
-				margin-right: 15rpx;
-			}
-
-			.title {
-				font-weight: 600;
-				display: inline-block;
-				background-image: linear-gradient(to right bottom, #FDF13C, #FF8133);
-				-webkit-background-clip: text;
-				color: transparent;
-			}
+		.close-btn {
+			position: absolute;
+			right: -50rpx;
+			top: 50%;
+			transform: translateY(-60%);
+			width: 50rpx;
+			height: 120rpx;
+			line-height: 120rpx;
+			text-align: center;
+			background: #363849;
+			border-radius: 0 40rpx 40rpx 0;
+			color: #E5E5E5;
+			font-size: 32rpx;
+			z-index: 10;
 		}
 
-		.buttons {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			gap: 30rpx;
+		.supplier-list {
 			margin-top: 30rpx;
 
-			view {
-				width: 100%;
-				line-height: 60rpx;
-				background: linear-gradient(to right bottom, #D68B21 0%, #C17E1F 100%);
-				border-radius: 100rpx;
-
-				&.withdraw {
-					background: linear-gradient(to right bottom, #4B4BFF 0%, #3434C1 100%);
-				}
-			}
-		}
-
-		.activity {
-			margin-top: 30rpx;
-
-			.title {
-				text-align: left;
-			}
-
-			.list {
+			.supplier-item {
 				display: flex;
-				justify-content: space-between;
+				flex-direction: column;
 				align-items: center;
-				flex-wrap: wrap;
-				gap: 10rpx;
-				margin-top: 20rpx;
+				justify-content: center;
+				padding: 20rpx 15rpx;
+				margin-bottom: 15rpx;
+				background: #363849;
+				border-radius: 10rpx;
+				transition: all 0.3s;
 
-				image {
-					width: calc((100% - 10rpx) / 2 - 4rpx);
-					height: 100rpx;
-					border-radius: 12rpx;
-				}
-			}
-		}
-
-		.menu-list {
-			margin-top: 30rpx;
-
-			.item {
-				position: relative;
-				display: flex;
-				justify-content: flex-start;
-				padding: 20rpx 0;
-
-				&::after {
-					content: '';
-					display: block;
-					width: 100%;
-					height: 2rpx;
-					background: linear-gradient(to right, transparent 0%, #212434 50%, transparent 100%);
-					position: absolute;
-					bottom: -1rpx;
-					left: 0;
-				}
-
-				&:last-child::after {
-					display: none;
+				&:last-child {
+					margin-bottom: 0;
 				}
 
 				image {
-					width: 46rpx;
-					height: 46rpx;
-					margin-right: 15rpx;
+					width: 100rpx;
+					height: 50rpx;
+					margin-bottom: 10rpx;
+				}
+
+				text {
+					color: #E5E5E5;
+					font-size: 26rpx;
+					text-align: center;
+				}
+
+				&.active {
+					background: linear-gradient(135deg, #FDF13C, #FF8133);
+
+					text {
+						color: #fff;
+						font-weight: bold;
+					}
 				}
 			}
 		}
@@ -1274,5 +1404,10 @@
 			/* 可选：添加过渡效果 */
 			transition: transform 0.3s ease;
 		}
+	}
+
+	// 覆盖左侧抽屉弹窗的margin-right样式,仅在当前页面生效
+	::v-deep .cu-modal.drawer-modal.justify-start .cu-dialog {
+		margin-right: 75% !important;
 	}
 </style>

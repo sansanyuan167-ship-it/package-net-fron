@@ -34,7 +34,7 @@
 					</view>
 					<view class="data-panel">
 						<view class="item" @click="goPage('/pages/mine/wallet')">
-							<view class="key">邀请奖励</view>
+							<view class="key">{{getLanguage('邀请奖励')}}</view>
 							<view class="value bold text-orange">{{info.wallet}}</view>
 						</view>
 						<view class="item">
