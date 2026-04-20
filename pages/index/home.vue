@@ -38,7 +38,7 @@
 		</view>
 		<scroll-view class="scroll-view" scroll-y refresher-enabled :refresher-threshold="80"
 			refresher-background="#363948" :refresher-triggered="refreshStatus" @refresherrefresh="refreshHandle"
-			@scrolltolower="bottomHandle">
+			@scrolltolower="bottomHandle" :scroll-into-view="scrollIntoView" scroll-with-animation>
 			<view class="is-content">
 				<!--START 轮播图-->
 				<view class="uni-padding-wrap banner">
@@ -91,13 +91,14 @@
 				</view>
 				<view class="supplier-box">
 					<view class="scroll-box">
-						<view class="image-box" v-for="(item,index) in info.supplier" :key="index"
-							@click="goPageCheck('/pages/game/supplierGame?id='+item.id)">
+						<view class="image-box" v-for="(item,index) in info.list" :key="index"
+							@click="scrollToCategory(item.id)">
 							<image :src="item.icon" mode="aspectFill"></image>
+							<view>{{item.name}}</view>
 						</view>
 					</view>
 				</view>
-				<view class="group-box" v-for="(v,i) in info.list" :key="i">
+				<view class="group-box" v-for="(v,i) in info.list" :key="i" :id="'category-' + v.id">
 					<view class="title-box">
 						<image :src="v.icon"></image>
 						<view class="title bold">{{v.name}}</view>
@@ -126,7 +127,7 @@
 			</view>
 		</scroll-view>
 
-		<view class="ranking" @click="goPageCheck('/pages/game/ranking')">
+		<!-- <view class="ranking" @click="goPageCheck('/pages/game/ranking')">
 			<image class="icon rotate" src="/static/activity/activity-ranking.png"></image>
 			<view class="text scale bold">排行奖励</view>
 		</view>
@@ -134,6 +135,9 @@
 		<view class="lottery" @click="goPageCheck('/pages/lottery/lottery')">
 			<image class="icon rotate" src="/static/activity/activity-lottery.png"></image>
 			<view class="text scale bold">转盘抽奖</view>
+		</view> -->
+		<view class="service-fixed" @click="goPageCheck('/pages/mine/service')">
+			<image class="icon" src="/static/service.png" mode="widthFix"></image>
 		</view>
 
 		<!-- START 左侧列表弹窗 -->
@@ -306,6 +310,7 @@
 				bannerIndex: 0,
 				scrollTime: 15,
 				currentSupplierId: 'all', // 当前选中的供应商ID，默认为'全部'
+				scrollIntoView: '', // 用于锚点滚动
 				info: {
 					banner: [],
 					notice: '',
@@ -328,6 +333,8 @@
 		},
 		async mounted() {
 			this.pageTitleHeight = await this.getPageTitleHeight();
+			// 初始化鼠标拖拽滚动功能
+			this.initDragScroll();
 		},
 		methods: {
 			// 获取手机语言
@@ -422,6 +429,42 @@
 					}
 				}).exec();
 			},
+			// 初始化鼠标拖拽滚动功能
+			initDragScroll() {
+				// #ifdef H5
+				const scrollBox = document.querySelector('.supplier-box .scroll-box');
+				if (!scrollBox) return;
+				
+				let isDown = false;
+				let startX;
+				let scrollLeft;
+				
+				scrollBox.addEventListener('mousedown', (e) => {
+					isDown = true;
+					scrollBox.classList.add('active');
+					startX = e.pageX - scrollBox.offsetLeft;
+					scrollLeft = scrollBox.scrollLeft;
+				});
+				
+				scrollBox.addEventListener('mouseleave', () => {
+					isDown = false;
+					scrollBox.classList.remove('active');
+				});
+				
+				scrollBox.addEventListener('mouseup', () => {
+					isDown = false;
+					scrollBox.classList.remove('active');
+				});
+				
+				scrollBox.addEventListener('mousemove', (e) => {
+					if (!isDown) return;
+					e.preventDefault();
+					const x = e.pageX - scrollBox.offsetLeft;
+					const walk = (x - startX) * 2; // 滚动速度倍数
+					scrollBox.scrollLeft = scrollLeft - walk;
+				});
+				// #endif
+			},
 			// 操作收藏
 			async actionGameCollect(index1, index2) {
 				if (!this.getToken()) return this.$refs['loginPopup'].show();
@@ -471,6 +514,10 @@
 				} else {
 					this.goPage('/pages/game/supplierGame?id=' + id);
 				}
+			},
+			// 滚动到对应分类区域
+			scrollToCategory(categoryId) {
+				this.scrollIntoView = 'category-' + categoryId;
 			},
 		}
 	};
@@ -863,22 +910,50 @@
 	}
 	.supplier-box {
 		margin: 25rpx;
-		height: 68rpx;
+		height: auto;
+		min-height: 68rpx;
 		overflow: hidden;
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		background: #212434;
 
 		.scroll-box {
 			white-space: nowrap;
-			overflow-x: scroll;
+			overflow-x: auto;
+			overflow-y: hidden;
 			padding-bottom: 50rpx;
 			font-size: 0;
+			/* 确保可以滚动 */
+			-webkit-overflow-scrolling: touch;
+			/* 鼠标样式提示可滚动 */
+			cursor: grab;
+			
+			/* 隐藏滚动条 - Webkit浏览器（Chrome, Safari等） */
+			&::-webkit-scrollbar {
+				display: none;
+				width: 0;
+				height: 0;
+			}
+			/* 隐藏滚动条 - Firefox */
+			scrollbar-width: none;
+			/* 隐藏滚动条 - IE/Edge */
+			-ms-overflow-style: none;
 
 			.image-box {
-				display: inline-block;
+				display: inline-flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
 				width: 140rpx;
-				height: 65rpx;
 				background: #363849;
 				margin-right: 20rpx;
 				border-radius: 10rpx;
+				padding: 10rpx;
+				vertical-align: top;
+				/* 防止文字选中影响拖动体验 */
+				user-select: none;
+				-webkit-user-select: none;
 
 				&:last-child {
 					margin-right: 0;
@@ -886,9 +961,22 @@
 
 				image {
 					width: 100%;
-					height: 100%;
+					height: 65rpx;
 					display: block;
-					margin: 0 auto;
+					flex-shrink: 0;
+					pointer-events: none;
+				}
+
+				view {
+					font-size: 24rpx;
+					color: #ffffff;
+					text-align: center;
+					line-height: 1.2;
+					word-break: break-word;
+					padding-top: 8rpx;
+					min-width: 0;
+					flex-shrink: 1;
+					pointer-events: none;
 				}
 			}
 		}
@@ -966,7 +1054,18 @@
 		padding: 0 25rpx;
 		box-sizing: border-box;
 	}
-
+	.service-fixed{
+		position: absolute;
+		width: 110rpx;
+		height: 120rpx;
+		bottom: 180rpx;
+		right: 25rpx;
+		.icon {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+	}
 	.ranking {
 		position: absolute;
 		width: 110rpx;
