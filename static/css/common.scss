@@ -17,7 +17,6 @@ page {
 }
 
 .page-container {
-	position:relative;
 	font-size: 30rpx;
 	line-height: 40rpx;
 	color: #F5F7FC;
@@ -38,6 +37,7 @@ page {
 
 @media screen and (min-width: 768px) {
 	.page-container {
+		position:relative;
 		background:#212434;
 	    max-width: 500px !important;
 		padding-bottom:40rpx !important;
