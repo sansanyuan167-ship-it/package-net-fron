@@ -36,10 +36,16 @@
 				</view>
 			</view>
 		</view>
+		<!-- #ifdef H5 -->
+		<div class="scroll-view" ref="scrollView" @scroll="handleScroll">
+			<view class="is-content">
+		<!-- #endif -->
+		<!-- #ifndef H5 -->
 		<scroll-view class="scroll-view" scroll-y refresher-enabled :refresher-threshold="80"
 			refresher-background="#363948" :refresher-triggered="refreshStatus" @refresherrefresh="refreshHandle"
 			@scrolltolower="bottomHandle" :scroll-into-view="scrollIntoView" scroll-with-animation>
 			<view class="is-content">
+		<!-- #endif -->
 				<!--START 轮播图-->
 				<view class="uni-padding-wrap banner">
 					<view class="bg"></view>
@@ -125,7 +131,12 @@
 					@click="goPageCheck('/pages/game/supplierGame')"></image>
 				<view class="tab-bar-place"></view>
 			</view>
+		<!-- #ifndef H5 -->
 		</scroll-view>
+		<!-- #endif -->
+		<!-- #ifdef H5 -->
+		</div>
+		<!-- #endif -->
 
 		<!-- <view class="ranking" @click="goPageCheck('/pages/game/ranking')">
 			<image class="icon rotate" src="/static/activity/activity-ranking.png"></image>
@@ -432,37 +443,84 @@
 			// 初始化鼠标拖拽滚动功能
 			initDragScroll() {
 				// #ifdef H5
+				// 1. 为供应商列表添加横向拖拽功能
 				const scrollBox = document.querySelector('.supplier-box .scroll-box');
-				if (!scrollBox) return;
+				if (scrollBox) {
+					let isDown = false;
+					let startX;
+					let scrollLeft;
+					
+					scrollBox.addEventListener('mousedown', (e) => {
+						isDown = true;
+						scrollBox.classList.add('active');
+						startX = e.pageX - scrollBox.offsetLeft;
+						scrollLeft = scrollBox.scrollLeft;
+					});
+					
+					scrollBox.addEventListener('mouseleave', () => {
+						isDown = false;
+						scrollBox.classList.remove('active');
+					});
+					
+					scrollBox.addEventListener('mouseup', () => {
+						isDown = false;
+						scrollBox.classList.remove('active');
+					});
+					
+					scrollBox.addEventListener('mousemove', (e) => {
+						if (!isDown) return;
+						e.preventDefault();
+						const x = e.pageX - scrollBox.offsetLeft;
+						const walk = (x - startX) * 2; // 滚动速度倍数
+						scrollBox.scrollLeft = scrollLeft - walk;
+					});
+				}
 				
-				let isDown = false;
-				let startX;
-				let scrollLeft;
+				// 2. 为主滚动区域添加纵向拖拽功能（使用原生div）
+				const scrollView = this.$refs.scrollView;
+				if (!scrollView) return;
 				
-				scrollBox.addEventListener('mousedown', (e) => {
-					isDown = true;
-					scrollBox.classList.add('active');
-					startX = e.pageX - scrollBox.offsetLeft;
-					scrollLeft = scrollBox.scrollLeft;
-				});
+				let isDragging = false;
+				let startY;
+				let startScrollTop;
 				
-				scrollBox.addEventListener('mouseleave', () => {
-					isDown = false;
-					scrollBox.classList.remove('active');
-				});
-				
-				scrollBox.addEventListener('mouseup', () => {
-					isDown = false;
-					scrollBox.classList.remove('active');
-				});
-				
-				scrollBox.addEventListener('mousemove', (e) => {
-					if (!isDown) return;
+				scrollView.addEventListener('mousedown', (e) => {
+					// 如果点击的是可交互元素（按钮、链接等），不启动拖拽
+					if (e.target.closest('button, a, input, select, textarea, [role="button"], .auth-button, .icon-box, .action-btn, .collect, .more, .close, .download-button, .item image')) {
+						return;
+					}
+					
+					isDragging = true;
+					scrollView.style.cursor = 'grabbing';
+					startY = e.pageY;
+					startScrollTop = scrollView.scrollTop;
 					e.preventDefault();
-					const x = e.pageX - scrollBox.offsetLeft;
-					const walk = (x - startX) * 2; // 滚动速度倍数
-					scrollBox.scrollLeft = scrollLeft - walk;
 				});
+				
+				document.addEventListener('mousemove', (e) => {
+					if (!isDragging) return;
+					e.preventDefault();
+					const y = e.pageY;
+					const walk = (y - startY) * 1.5; // 滚动速度倍数
+					scrollView.scrollTop = startScrollTop - walk;
+				});
+				
+				document.addEventListener('mouseup', () => {
+					if (isDragging) {
+						isDragging = false;
+						scrollView.style.cursor = 'grab';
+					}
+				});
+				
+				scrollView.addEventListener('mouseleave', () => {
+					if (isDragging) {
+						isDragging = false;
+						scrollView.style.cursor = 'grab';
+					}
+				});
+				
+				// 设置初始光标样式
+				scrollView.style.cursor = 'grab';
 				// #endif
 			},
 			// 操作收藏
@@ -518,7 +576,26 @@
 			// 滚动到对应分类区域
 			scrollToCategory(categoryId) {
 				this.scrollIntoView = 'category-' + categoryId;
+				// #ifdef H5
+				// H5端使用原生DOM滚动
+				setTimeout(() => {
+					const targetElement = document.getElementById('category-' + categoryId);
+					if (targetElement && this.$refs.scrollView) {
+						targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}
+				}, 100);
+				// #endif
 			},
+			// #ifdef H5
+			// H5端处理滚动事件
+			handleScroll(e) {
+				// 可以在这里添加滚动监听逻辑，如触底加载等
+				const target = e.target;
+				if (target.scrollHeight - target.scrollTop <= target.clientHeight + 50) {
+					this.bottomHandle();
+				}
+			},
+			// #endif
 		}
 	};
 </script>
@@ -535,6 +612,30 @@
 		flex: 1;
 		height: 0;
 	}
+	
+	/* #ifdef H5 */
+	.scroll-view {
+		overflow-y: auto;
+		overflow-x: hidden;
+		cursor: grab;
+		user-select: none;
+		-webkit-user-select: none;
+		
+		&:active {
+			cursor: grabbing;
+		}
+		
+		/* 隐藏滚动条 */
+		&::-webkit-scrollbar {
+			display: none !important;
+			width: 0 !important;
+			height: 0 !important;
+			background: transparent !important;
+		}
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+	/* #endif */
 	
 	@media screen and (min-width: 768px) {
 		.scroll-view {
