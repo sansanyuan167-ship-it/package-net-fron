@@ -1023,7 +1023,8 @@
 			white-space: nowrap;
 			overflow-x: auto;
 			overflow-y: hidden;
-			padding-bottom: 50rpx;
+			padding-bottom: 20rpx;
+			padding-top: 20rpx;
 			font-size: 0;
 			/* 确保可以滚动 */
 			-webkit-overflow-scrolling: touch;
@@ -1094,7 +1095,7 @@
 			image {
 				width: 90rpx;
 				height: 90rpx;
-				margin-right: 5rpx;
+				margin-right: 10rpx;
 			}
 
 			.title {
