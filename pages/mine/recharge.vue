@@ -18,6 +18,10 @@
 		</view>
 		<view class="title-box">
 			<view class="title bold">{{getLanguage('自定义充值金额')}}</view>
+			<view class="records text-red" @click="goPage('/pages/game/activityDetail?id=1')">
+				<text>{{getLanguage('活动规则')}} </text>
+				<text class="question cuIcon-question"></text>
+			</view>
 		</view>
 		<view class="input-box">
 			<input class="panel-bg" v-model="amount"  @input="inputChange" type="text" :placeholder="getLanguage('请输入充值金额')" placeholder-style="color:#9D9B9B;">

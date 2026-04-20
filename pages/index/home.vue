@@ -67,24 +67,24 @@
 					</view>
 				</view>
 				<!-- 用户信息卡片 -->
-				<view class="user-info-card panel-item" v-if="getToken()">
+				<view class="user-info-card panel-item" @click="handleUserInfoClick">
 					<view class="left-section">
-						<image class="avatar" :src="userInfo.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
+						<image class="avatar" :src="userInfo.avatar || '/static/avatar.png'" mode="aspectFill"></image>
 						<view class="user-details">
-							<view class="user-id">{{userInfo.username || userInfo.nickname || getLanguage('用户')}}</view>
+							<view class="user-id">{{userInfo.phone}}</view>
 							<view class="balance">
-								<text class="label">{{getLanguage('余额')}}：</text>
-								<text class="value">{{userInfo.balance || 0}}</text>
+								<text class="label">{{getLanguage('我的余额')}}：</text>
+								<text class="value">{{info.coin || '0.00'}}</text>
 							</view>
 						</view>
 					</view>
 					<view class="right-section">
-						<view class="action-btn recharge-btn" @click="goPageCheck('/pages/mine/recharge', true)">
+						<view class="action-btn recharge-btn" @click.stop="goPageCheck('/pages/mine/recharge', true)">
 							<text class="cuIcon-moneybag"></text>
 							<text>{{getLanguage('充值')}}</text>
 						</view>
-						<view class="action-btn withdraw-btn" @click="goPageCheck('/pages/mine/withdraw', true)">
-							<text class="cuIcon-wallet"></text>
+						<view class="action-btn withdraw-btn" @click.stop="goPageCheck('/pages/mine/withdraw', true)">
+							<text class="cuIcon-moneybagfill"></text>
 							<text>{{getLanguage('提现')}}</text>
 						</view>
 					</view>
@@ -439,6 +439,13 @@
 				if (type && !this.getToken()) return this.$refs['loginPopup'].show();
 				this.goPage(url);
 			},
+			// 处理用户信息卡片点击
+			handleUserInfoClick() {
+				if (!this.getToken()) {
+					return this.$refs['loginPopup'].show();
+					this.goPage('/pages/base/login', 'reLaunch');
+				}
+			},
 			// 显示首次充值弹窗
 			showFirstRechargePopup() {
 				this.$refs['activePopup'].hide();
@@ -756,6 +763,8 @@
 	.user-info-card {
 		display: flex;
 		padding: 30rpx;
+		position: relative;
+		z-index: 1;
 		
 		.left-section {
 			display: flex;
@@ -831,7 +840,7 @@
 				}
 				
 				&.recharge-btn {
-					background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+					background: linear-gradient(to right bottom, #D68B21 0%, #C17E1F 100%);
 					color: #fff;
 					
 					&:active {
@@ -841,7 +850,7 @@
 				}
 				
 				&.withdraw-btn {
-					background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+					background: linear-gradient(to right bottom, #4B4BFF 0%, #3434C1 100%);
 					color: #fff;
 					
 					&:active {

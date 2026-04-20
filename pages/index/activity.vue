@@ -10,7 +10,7 @@
 				</view>
 				<view class="item" :class="{
 					'shine-gradient':item.is_hot
-				}" v-for="(item,index) in list" :key="index" @click="goPage('/pages/game/activityDetail?id='+item.id)">
+				}" v-for="(item,index) in list" :key="index"  @click="index === 0 ? goPage('/pages/mine/recharge') : goPage('/pages/game/activityDetail?id='+item.id)">
 					<image class="cover" :src="item.image" mode="aspectFill"></image>
 					<image class="hot" src="/static/activity-hot.png" v-if="item.is_hot"></image>
 					<view class="title">{{item.title}}</view>
