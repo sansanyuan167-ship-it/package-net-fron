@@ -80,7 +80,7 @@
 							<view class="user-id">{{userInfo.phone}}</view>
 							<view class="balance">
 								<text class="label">{{getLanguage('我的余额')}}：</text>
-								<text class="value">{{info.coin || '0.00'}}</text>
+								<text class="value">{{userInfo.coin || '0.00'}}</text>
 							</view>
 						</view>
 					</view>

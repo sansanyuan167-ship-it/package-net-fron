@@ -88,12 +88,115 @@ Vue.prototype.getToken = function() {
  * 获取对应语言文字
  */
 Vue.prototype.getLanguage = function(key,replace) {
-	let languageKey = uni.getStorageSync('language') || 'zh-CN';
+	// 优先从本地存储获取，如果没有则自动检测系统语言
+	let languageKey = uni.getStorageSync('language');
+	
+	// 如果本地没有存储语言设置，自动检测系统语言
+	if (!languageKey) {
+		languageKey = this.getSystemLanguage();
+		// 将检测到的系统语言保存到本地存储
+		uni.setStorageSync('language', languageKey);
+	}
+	
 	let str = this.languageText[languageKey][key];
 	if(replace && str) str = str.replace('@REPLACE@',replace);
 	return str;
 }
 
+
+/*
+ * 获取系统语言
+ */
+Vue.prototype.getSystemLanguage = function() {
+	// #ifdef H5
+	if (typeof navigator !== 'undefined' && typeof navigator.language === 'string') {
+		const lang = navigator.language.toLowerCase();
+		// 处理常见的语言代码格式，映射到项目支持的语言
+		if (lang.startsWith('zh')) {
+			if (lang === 'zh-cn' || lang === 'zh') {
+				return 'zh-CN'; // 简体中文
+			} else if (lang === 'zh-tw' || lang === 'zh-hk' || lang === 'zh-mo') {
+				return 'zh-HK'; // 繁体中文
+			}
+		} else if (lang.startsWith('en')) {
+			return 'en'; // 英语
+		} else if (lang.startsWith('ja')) {
+			return 'ja'; // 日语
+		} else if (lang.startsWith('ko')) {
+			return 'ko'; // 韩语
+		} else if (lang.startsWith('vi')) {
+			return 'vi'; // 越南语
+		} else if (lang.startsWith('th')) {
+			return 'th'; // 泰语
+		} else if (lang.startsWith('id')) {
+			return 'id'; // 印尼语
+		} else if (lang.startsWith('ms')) {
+			return 'ms'; // 马来语
+		} else if (lang.startsWith('pt')) {
+			return 'pt'; // 葡萄牙语
+		} else if (lang.startsWith('es')) {
+			return 'en'; // 西班牙语（项目中没有，使用英语）
+		} else if (lang.startsWith('fr')) {
+			return 'fr'; // 法语
+		} else if (lang.startsWith('de')) {
+			return 'de'; // 德语
+		} else if (lang.startsWith('ru')) {
+			return 'ru'; // 俄语
+		} else if (lang.startsWith('ar')) {
+			return 'ar'; // 阿拉伯语
+		}
+		// 如果检测到其他不支持的语言，返回默认语言（简体中文）
+		return 'zh-CN';
+	}
+	// #endif
+	
+	// #ifndef H5
+	try {
+		const systemInfo = uni.getSystemInfoSync();
+		const lang = systemInfo.language ? systemInfo.language.toLowerCase() : '';
+		
+		// 处理常见的语言代码格式，映射到项目支持的语言
+		if (lang.startsWith('zh')) {
+			if (lang === 'zh-cn' || lang === 'zh') {
+				return 'zh-CN'; // 简体中文
+			} else if (lang === 'zh-tw' || lang === 'zh-hk' || lang === 'zh-mo') {
+				return 'zh-HK'; // 繁体中文
+			}
+		} else if (lang.startsWith('en')) {
+			return 'en'; // 英语
+		} else if (lang.startsWith('ja')) {
+			return 'ja'; // 日语
+		} else if (lang.startsWith('ko')) {
+			return 'ko'; // 韩语
+		} else if (lang.startsWith('vi')) {
+			return 'vi'; // 越南语
+		} else if (lang.startsWith('th')) {
+			return 'th'; // 泰语
+		} else if (lang.startsWith('id')) {
+			return 'id'; // 印尼语
+		} else if (lang.startsWith('ms')) {
+			return 'ms'; // 马来语
+		} else if (lang.startsWith('pt')) {
+			return 'pt'; // 葡萄牙语
+		} else if (lang.startsWith('es')) {
+			return 'en'; // 西班牙语（项目中没有，使用英语）
+		} else if (lang.startsWith('fr')) {
+			return 'fr'; // 法语
+		} else if (lang.startsWith('de')) {
+			return 'de'; // 德语
+		} else if (lang.startsWith('ru')) {
+			return 'ru'; // 俄语
+		} else if (lang.startsWith('ar')) {
+			return 'ar'; // 阿拉伯语
+		}
+		// 如果检测到其他不支持的语言，返回默认语言（简体中文）
+		return 'zh-CN';
+	} catch (e) {
+		console.error('获取系统语言失败', e);
+		return 'zh-CN';
+	}
+	// #endif
+}
 
 /*
  * 返回上级页面
