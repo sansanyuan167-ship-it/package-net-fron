@@ -304,6 +304,15 @@
 			</view>
 		</com-popup>
 		<!-- END 抽奖弹窗 -->
+		<!-- START 未曾充值弹窗 -->
+		<com-popup ref="rechargePopup" model="middle" :maskClosable="false">
+			<view class="lottery-popup">
+				<text class="close cuIcon-close" @click="hideRechargePopup();"></text>
+				<image class="bg" src="/static/activity/lottery-popup.png"></image>
+				<view class="button" @click="goPageCheck('/pages/lottery/lotteryRecharge')">{{getLanguage('充值赠送转盘')}}</view>
+			</view>
+		</com-popup>
+		<!-- END 未曾充值弹窗 -->
 		<com-login-popup ref="loginPopup" @onCancel="$refs['loginPopup'].hide()"
 			@onConfirm="goPage('/pages/base/login','reLaunch')" />
 	</view>
@@ -344,6 +353,8 @@
 		},
 		async mounted() {
 			this.pageTitleHeight = await this.getPageTitleHeight();
+			// 初始化时检查是否需要隐藏充值弹窗
+			this.checkRechargePopupStatus();
 			// 初始化鼠标拖拽滚动功能
 			this.initDragScroll();
 		},
@@ -412,6 +423,14 @@
 						this.lotteryTime = dateTime;
 					}else{
 						this.$refs['lotteryPopup'].hide();
+					}
+				}
+				if( this.activityData.free_lottery && this.getToken() && parseFloat(this.activityData.total_recharge) < 1){
+					// 检查是否在30分钟隐藏期内
+					const hideUntil = uni.getStorageSync('rechargePopupHideUntil');
+					const now = Date.now();
+					if (!hideUntil || now > hideUntil) {
+						this.$refs['rechargePopup'].show();
 					}
 				}
 			},
@@ -596,6 +615,24 @@
 				}
 			},
 			// #endif
+			// 检查充值弹窗状态
+			checkRechargePopupStatus() {
+				const hideUntil = uni.getStorageSync('rechargePopupHideUntil');
+				if (hideUntil && Date.now() < hideUntil) {
+					// 如果还在隐藏期内，确保弹窗不显示
+					this.$nextTick(() => {
+						if (this.$refs['rechargePopup']) {
+							this.$refs['rechargePopup'].hide();
+						}
+					});
+				}
+			},
+			// 关闭充值弹窗并设置30分钟隐藏期
+			hideRechargePopup() {
+				const hideUntil = Date.now() + 30 * 60 * 1000; // 当前时间 + 30分钟
+				uni.setStorageSync('rechargePopupHideUntil', hideUntil);
+				this.$refs['rechargePopup'].hide();
+			},
 		}
 	};
 </script>

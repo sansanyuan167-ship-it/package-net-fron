@@ -10,7 +10,7 @@
 				</view>
 				<view class="item" :class="{
 					'shine-gradient':item.is_hot
-				}" v-for="(item,index) in list" :key="index"  @click="index === 0 ? goPage('/pages/mine/recharge') : goPage('/pages/game/activityDetail?id='+item.id)">
+				}" v-for="(item,index) in list" :key="index"  @click="handleItemClick(item)">
 					<image class="cover" :src="item.image" mode="aspectFill"></image>
 					<image class="hot" src="/static/activity-hot.png" v-if="item.is_hot"></image>
 					<view class="title">{{item.title}}</view>
@@ -61,6 +61,23 @@ export default {
 			}else{
 				this.bgColor = 'transparent';
 				this.showShadow = false;
+			}
+		},
+		handleItemClick(item){
+			if(item.button_path){
+				// 判断是否为需要特殊处理的页面(vip、share等自定义tabBar页面)
+				const customTabPaths = ['pages/index/vip', 'pages/index/share'];
+				const isCustomTabPage = customTabPaths.some(path => item.button_path.includes(path));
+				
+				if(isCustomTabPage){
+					const pageName = item.button_path.split('/').pop();
+					// 跳转到主容器页面,并通过参数指定显示哪个子页面
+					this.goPage(`/pages/index/index?name=${pageName}`, 'reLaunch');
+				}else{
+					this.goPage(item.button_path);
+				}
+			}else{
+				this.goPage('/pages/game/activityDetail?id='+item.id);
 			}
 		}
 	}

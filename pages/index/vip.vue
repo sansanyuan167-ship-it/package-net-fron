@@ -19,6 +19,9 @@
 					</view>
 					<view class="info text-gray">{{getLanguage('通过投注，您可以提高您的ViP级别。 等级越高，返现越多，升级奖励和各种特权越多，还有你可以享受的福利！')}}</view>
 					<view class="see-detail text-green" @click="goPage('/pages/mine/vipDetail')">{{getLanguage('查看 VIP 特权的详细信息')}}</view>
+					<view class="current-vip-level" v-if="info.vip_id">
+						<view class="vip-level-text">{{getLanguage('当前：')}}{{currentActualVip.name}}</view>
+					</view>
 				</view>
 				<view class="current-vip shine-gradient" v-if="currentVip.id">
 					<image class="bg" :src="currentVip.bg_image"></image>
@@ -56,6 +59,29 @@
 						<view class="button finish" v-if="(parseFloat(info.total_recharge) >= parseFloat(currentVip.recharge_amount)) && (parseFloat(info.total_bet) >= parseFloat(currentVip.bet_amount))">{{getLanguage('已解锁')}}</view>
 				<view class="button" v-if="parseFloat(info.total_recharge) < parseFloat(currentVip.recharge_amount)" @click="goPageCheck('/pages/mine/recharge',true)">{{getLanguage('立即充值')}}</view>
 				<view class="button" v-if="parseFloat(info.total_bet) < parseFloat(currentVip.bet_amount)" @click="goPage('/pages/game/categoryGame')">{{getLanguage('去投注')}}</view>
+					</view>
+				</view>
+				<view class="benefits-container">
+					<view class="benefit-box">
+						<image class="box-bg" src="/static/vip-frame.png"></image>
+						<view class="benefit-content">
+							<image class="benefit-icon" src="/static/vip-A.png"></image>
+							<view class="benefit-text">{{getLanguage('A级好友分佣')}}:{{retainDecimals((currentVip.level_a_rate * 100).toFixed(5),2)}}%</view>
+						</view>
+					</view>
+					<view class="benefit-box">
+						<image class="box-bg" src="/static/vip-frame.png"></image>
+						<view class="benefit-content">
+							<image class="benefit-icon" src="/static/vip-B.png"></image>
+							<view class="benefit-text">{{getLanguage('B级好友分佣')}}:{{retainDecimals((currentVip.level_b_rate * 100).toFixed(5),2)}}%</view>
+						</view>
+					</view>
+					<view class="benefit-box">
+						<image class="box-bg" src="/static/vip-frame.png"></image>
+						<view class="benefit-content">
+							<image class="benefit-icon" src="/static/vip-C.png"></image>
+							<view class="benefit-text">{{getLanguage('提现手续费')}}:{{retainDecimals(currentVip.withdrawal_fee * 100,2)}}%</view>
+						</view>
 					</view>
 				</view>
 				<view class="vip-list">
@@ -140,6 +166,18 @@ export default {
 	},
 	async mounted(){
 		this.pageTitleHeight = await this.getPageTitleHeight();
+	},
+	computed: {
+			currentActualVip() {
+				if (this.info.list && this.info.list.length > 0 && this.info.vip_id) {
+					const vipItem = this.info.list.find(item => String(item.id) === String(this.info.vip_id));
+					if (vipItem) {
+						return vipItem;
+					}
+					return this.info.list[0];
+				}
+				return {};
+			}
 	},
 	methods: {
 		async pageOnLoad(){
@@ -259,6 +297,21 @@ export default {
 			margin-top:20rpx;
 			text-decoration: underline;
 		}
+		.current-vip-level{
+			position:relative;
+			display:flex;
+			justify-content: center;
+			align-items: center;
+			margin-top:20rpx;
+			gap:15rpx;
+			.vip-level-text{
+				font-size:44rpx;
+				font-weight:600;
+				background-image: linear-gradient(to right, #F5D38B,#FCFCF7,#F5D38B);
+				-webkit-background-clip: text;
+				color: transparent;
+			}
+		}
 	}
 	.current-vip{
 		position:relative;
@@ -342,6 +395,49 @@ export default {
 			}
 		}
 	}
+	.benefits-container{
+			display:flex;
+			justify-content: space-between;
+			align-items: center;
+			padding:25rpx;
+			gap:15rpx;
+		}
+	    .benefit-box{
+		    position:relative;
+		    flex:1;
+		    height:180rpx;
+		    border-radius:20rpx;
+		    overflow: hidden;
+		    .box-bg{
+			    position:absolute;
+			    width:100%;
+			    height:100%;
+			    top:0;
+			    left:0;
+		    }
+		    .benefit-content{
+			    position:relative;
+			    z-index:10;
+			    height:100%;
+			    display:flex;
+		        flex-direction:column;
+		        justify-content: center;
+		        align-items: center;
+		        padding:0 15rpx;
+		        text-align:center;
+		        .benefit-icon{
+		        	width: 110rpx;
+					height: 90rpx;
+					margin-bottom: 15rpx;
+		        }
+		        .benefit-text{
+		        	font-size:24rpx;
+		        	font-weight:520;
+		        	color:#fff;
+		        }
+			}
+	    }
+
 	.vip-list{
 		display:flex;
 		justify-content: flex-start;
