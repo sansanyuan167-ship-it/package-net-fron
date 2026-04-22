@@ -215,7 +215,7 @@
 					// 检查奖品类型是否为提现卡（不是 WALLET 或 COIN）
 					if(currentPrize && currentPrize.type !== 'WALLET' && currentPrize.type !== 'COIN'){
 						console.log('点击了提现卡')
-						this.showMsg('邀请好友获得提现卡，立即提现！',3000);
+						this.showMsg(this.getLanguage('邀请好友获得提现卡，立即提现！'),3000);
 					}
 				}
 			}
