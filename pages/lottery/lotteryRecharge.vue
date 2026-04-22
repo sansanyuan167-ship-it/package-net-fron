@@ -1,6 +1,13 @@
 <template>
 	<view class="page-container has-bottom">
-		<com-page-title :title="getLanguage('充值赠送转盘')" bgColor="rgba(33,47,63,0.6)" />
+		<com-page-title :title="getLanguage('充值赠送转盘')" bgColor="rgba(33,47,63,0.6)">
+			<template #right>
+				<view class="activity-rule-btn" @click="goPage('/pages/game/activityDetail?id='+activityId)">
+					<text>{{getLanguage('活动规则')}}</text>
+					<text class="question cuIcon-question"></text>
+				</view>
+			</template>
+		</com-page-title>
 		<view class="bg">
 			<image src="/static/activity/lottery-bg.png" mode="aspectFill"></image>
 		</view>
@@ -84,6 +91,7 @@
 		},
 		data() {
 			return {
+				activityId: 1,
 				pageTitleHeight:96,
 				sound:true,
 				info: {},
@@ -97,6 +105,7 @@
 			};
 		},
 		async onLoad(options) {
+			this.activityId = options.activityId || 1;
 			let sound = uni.getStorageSync('sound');
 			this.sound = sound === '' ? true : sound;
 			this.pageTitleHeight = await this.getPageTitleHeight();
@@ -206,6 +215,23 @@
 </script>
 
 <style lang="scss" scoped>
+
+	// 活动规则按钮样式 - 定位在页面标题栏右侧
+	.activity-rule-btn{
+		position:absolute;
+		top:0;
+		right:25rpx;
+		height:96rpx;
+		line-height:96rpx;
+		font-size:28rpx;
+		display:flex;
+		align-items:center;
+		gap:8rpx;
+		z-index: 10;
+		.question{
+			font-size:32rpx;
+		}
+	}
 	.bg{
 		position:absolute;
 		top:0;

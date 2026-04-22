@@ -7,7 +7,7 @@
 					<text class="question cuIcon-question"></text>
 				</view>
 			</template>
-		</com-page-title>
+		</com-page-title>		
 		<view class="bg">
 			<image src="/static/activity/lottery-bg.png" mode="aspectFill"></image>
 		</view>
@@ -22,7 +22,8 @@
 				:prizeList="prizeList" :prizeIndex="prizeIndex" @reset-index="prizeIndex = -1"
 				@draw-before="handleDrawBefore" @draw-start="handleDrawStart" @draw-end="handleDrawEnd"
 				@finish="handleDrawFinish" :duration="5" :ringCount="5" :selfRotaty="false" :selfTime="2000"
-				actionBg="/static/activity/go.png" lotteryBg="/static/activity/lottery-panel.png" v-if="prizeList.length" />
+				actionBg="/static/activity/go.png" lotteryBg="/static/activity/lottery-panel.png" v-if="prizeList.length"
+				@click="handleLotteryClick" />
 		</view>
 		<view class="info">
 			<view class="item">
@@ -69,7 +70,7 @@
 						'/static/activity/lottery-wallet.png' :
 						currentItem.type == 'COIN' ?
 						'/static/activity/lottery-coin.png' :
-						'/static/activity/lottery-card.png'
+						'/static/activity/lottery-group.png'
 					"></image>
 					<view class="name">{{getLanguage('已获得')}}<text>{{currentItem.amount}}</text></view>
 				</view>
@@ -136,7 +137,7 @@
 					return {
 						prizeId:item.id,
 						prizeName:item.amount,
-						prizeImage:item.type == 'WALLET' ? '/static/activity/lottery-wallet.png' : item.type == 'COIN' ? '/static/activity/lottery-coin.png' : '/static/activity/lottery-card.png',
+						prizeImage:item.type == 'WALLET' ? '/static/activity/lottery-wallet.png' : item.type == 'COIN' ? '/static/activity/lottery-coin.png' : '/static/activity/lottery-group.png',
 						type:item.type,
 						amount:item.amount
 					}
@@ -202,6 +203,20 @@
 					this.sound = true;
 					this.playAudio('/static/activity/lottery-bg.mp3', true);
 					uni.setStorageSync('sound',true);
+				}
+			},
+			// 处理转盘点击事件
+			handleLotteryClick(data){
+				console.log('接收到点击事件:', data)
+				// 检查点击的奖品是否为 lottery-card.png
+				if(data && data.prizeIndex !== undefined && data.prizeList.length > 0){
+					let currentPrize = data.prizeList[data.prizeIndex];
+					console.log('当前奖品:', currentPrize)
+					// 检查奖品类型是否为提现卡（不是 WALLET 或 COIN）
+					if(currentPrize && currentPrize.type !== 'WALLET' && currentPrize.type !== 'COIN'){
+						console.log('点击了提现卡')
+						this.showMsg('邀请好友获得提现卡，立即提现！',3000);
+					}
 				}
 			}
 		}

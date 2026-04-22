@@ -1,6 +1,6 @@
 <template>
   <view class="almost-lottery">
-    <view class="almost-lottery__wrap" :style="{ width: lotterySize + 'rpx', height: lotterySize + 'rpx' }">
+    <view class="almost-lottery__wrap" :style="{ width: lotterySize + 'rpx', height: lotterySize + 'rpx' }" @click="handleWrapClick">
       <view class="lottery-action" :style="{ width: actionSize + 'rpx', height: actionSize + 'rpx', left: canvasMarginOutside + 'rpx' }"></view>
       <view class="str-margin-outside" :style="{ left: strMarginOutside + 'rpx' }"></view>
       <view class="img-margin-str" :style="{ left: imgMarginStr + 'rpx' }"></view>
@@ -44,7 +44,7 @@
             transform: `rotate(${actionAngle + targetActionAngle}deg)`,
             transitionDuration: `${transitionDuration}s`
           }"
-          @click="handleActionStart"
+          @click.stop="handleActionStart"
         ></image>
       </template>
     </view>
@@ -990,6 +990,69 @@
           	this.initCanvasDraw()
           }
         }, 50)
+      },
+      // 处理转盘区域点击事件
+      handleWrapClick(e){
+        console.log('点击事件数据:', e)
+        // 获取点击事件的坐标
+        const query = uni.createSelectorQuery().in(this)
+        query.select('.almost-lottery__wrap').boundingClientRect((rect) => {
+          if(rect){
+            console.log('转盘区域信息:', rect)
+            // 计算点击位置相对于转盘中心的坐标
+            const centerX = rect.left + rect.width / 2
+            const centerY = rect.top + rect.height / 2
+            
+            // 尝试多种方式获取点击坐标
+            let clickX, clickY
+            if(e.detail && e.detail.x !== undefined){
+              clickX = e.detail.x
+              clickY = e.detail.y
+            } else if(e.touches && e.touches.length > 0){
+              clickX = e.touches[0].clientX
+              clickY = e.touches[0].clientY
+            } else if(e.changedTouches && e.changedTouches.length > 0){
+              clickX = e.changedTouches[0].clientX
+              clickY = e.changedTouches[0].clientY
+            } else {
+              console.log('无法获取点击坐标')
+              return
+            }
+            
+            console.log('点击坐标:', clickX, clickY)
+            console.log('转盘中心:', centerX, centerY)
+            
+            // 计算点击位置相对于中心的角度（弧度）
+            const deltaX = clickX - centerX
+            const deltaY = clickY - centerY
+            const angle = Math.atan2(deltaY, deltaX)
+            
+            // 将弧度转换为角度，并调整为从0开始（从右边开始顺时针）
+            let degrees = angle * (180 / Math.PI)
+            if(degrees < 0) degrees += 360
+            
+            console.log('点击角度:', degrees)
+            console.log('转盘初始角度:', this.canvasAngle)
+            console.log('转盘当前旋转角度:', this.targetAngle)
+            
+            // 考虑转盘的旋转角度（需要减去转盘的旋转角度）
+            const currentRotation = (this.canvasAngle + this.targetAngle) % 360
+            const adjustedDegrees = (degrees - currentRotation + 360) % 360
+            
+            console.log('调整后的角度:', adjustedDegrees)
+            
+            // 计算点击的是哪个奖品
+            const prizeCount = this.prizeList.length
+            const prizeAngle = 360 / prizeCount
+            const prizeIndex = Math.floor(adjustedDegrees / prizeAngle)
+            
+            console.log('点击的奖品索引:', prizeIndex)
+            console.log('奖品列表:', this.prizeList)
+            
+            // 传递点击事件到父组件，并带上点击的奖品索引
+            this.$emit('click', { prizeIndex: prizeIndex, prizeList: this.prizeList })
+          }
+        }).exec()
       }
     },
     mounted() {

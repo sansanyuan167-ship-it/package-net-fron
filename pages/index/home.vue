@@ -1009,7 +1009,7 @@
 			margin-left: 20rpx;
 			
 			.action-btn {
-				padding: 16rpx 28rpx;
+				padding: 5rpx 20rpx;
 				border-radius: 50rpx;
 				font-size: 24rpx;
 				font-weight: 600;
