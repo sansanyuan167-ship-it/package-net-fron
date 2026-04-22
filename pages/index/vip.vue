@@ -2,7 +2,14 @@
 	<view>
 		<scroll-view class="scroll-view" scroll-y @scroll="scroll">
 			<view class="is-content">
-				<com-page-title :title="getLanguage('vip')" :showBack="false" :bgColor="bgColor" :showShadow="showShadow" />
+				<com-page-title :title="getLanguage('vip')" :showBack="false" :bgColor="bgColor" :showShadow="showShadow">
+					<template #right>
+						<view class="activity-rule-btn" @click="goPage('/pages/game/activityDetail?id='+activityId)">
+							<text>{{getLanguage('活动规则')}}</text>
+							<text class="question cuIcon-question"></text>
+						</view>
+					</template>
+				</com-page-title>
 				<view class="header-box">
 					<image class="bg" src="/static/vip-icons/vip-bg.png" :style="{
 						top:`-${pageTitleHeight}rpx`
@@ -161,7 +168,8 @@ export default {
 			bgColor:'transparent',
 			showShadow:false,
 			currentVip:{},
-			info:{}
+			info:{},
+			activityId: 3 // 活动ID，用于跳转到活动规则页面
 		};
 	},
 	async mounted(){
@@ -310,7 +318,24 @@ export default {
 				background-image: linear-gradient(to right, #F5D38B,#FCFCF7,#F5D38B);
 				-webkit-background-clip: text;
 				color: transparent;
+				height:44rpx;
 			}
+		}
+	}
+	// 活动规则按钮样式 - 定位在页面标题栏右侧
+	.activity-rule-btn{
+		position:absolute;
+		top:0;
+		right:25rpx;
+		height:96rpx;
+		line-height:96rpx;
+		font-size:28rpx;
+		display:flex;
+		align-items:center;
+		gap:8rpx;
+		z-index: 10;
+		.question{
+			font-size:32rpx;
 		}
 	}
 	.current-vip{

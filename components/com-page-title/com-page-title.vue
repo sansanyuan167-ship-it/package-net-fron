@@ -38,6 +38,9 @@
 				</view>
 				<!--END 搜索框-->
 				<view class="right-text" v-if="rightText" @click="$emit('rightTextClick')">{{rightText}}</view>
+				<!--START 右侧自定义内容插槽-->
+				<slot name="right"></slot>
+				<!--END 右侧自定义内容插槽-->
 			</view>
 		</view>
 		<view class="status_bar">

@@ -72,9 +72,9 @@ export default {
 				if(isCustomTabPage){
 					const pageName = item.button_path.split('/').pop();
 					// 跳转到主容器页面,并通过参数指定显示哪个子页面
-					this.goPage(`/pages/index/index?name=${pageName}`, 'reLaunch');
+					this.goPage(`/pages/index/index?name=${pageName}&activityId=${item.id}`, 'reLaunch');
 				}else{
-					this.goPage(item.button_path);
+					this.goPage(item.button_path+'?activityId='+item.id);
 				}
 			}else{
 				this.goPage('/pages/game/activityDetail?id='+item.id);

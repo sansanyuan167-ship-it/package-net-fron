@@ -34,7 +34,7 @@
 			</view>
 			
 			<view class="game-list">
-				<view class="item" v-for="(item,index) in list" :key="index" @click="goPageCheck('/pages/game/gameView?id='+item.id,true)">
+				<view class="item" v-for="(item,index) in list" :key="index" @click="goPageCheck('/pages/game/gameView?id='+item.game_id,true)">
 					<view class="image-box">
 						<image class="image-bg" :src="item.cover" mode="aspectFill"></image>
 						<view class="collect text-gray cuIcon-likefill" :class="{'text-red':item.is_collect}" @click.stop="actionGameCollect(index)"></view>

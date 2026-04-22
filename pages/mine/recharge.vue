@@ -18,7 +18,7 @@
 		</view>
 		<view class="title-box">
 			<view class="title bold">{{getLanguage('自定义充值金额')}}</view>
-			<view class="records text-red" @click="goPage('/pages/game/activityDetail?id=1')">
+			<view class="records text-red" @click="goPage('/pages/game/activityDetail?id='+activityId)">
 				<text>{{getLanguage('活动规则')}} </text>
 				<text class="question cuIcon-question"></text>
 			</view>
@@ -48,6 +48,7 @@ export default {
 	data() {
 		return {
 			id:null,
+			activityId:5,
 			// 自定义充值金额
 			amount:'',
 			have_empty:false,
@@ -60,6 +61,7 @@ export default {
 	},
 	async onLoad(options) {
 		this.id = options.id || null;
+		this.activityId = options.activityId || 5;
 		await this.getRechargeItems();
 		this.$nextTick(() => {
 			this.$refs['pageLoading'].hide();
