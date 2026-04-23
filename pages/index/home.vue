@@ -1308,8 +1308,11 @@
 		scroll-view {
 			flex: 1;
 			height: 0;
+			
 		}
-
+		::v-deep .uni-scroll-view {
+			scrollbar-width: none !important;
+		}
 		.status_bar {
 			height: var(--status-bar-height);
 			width: 100%;
