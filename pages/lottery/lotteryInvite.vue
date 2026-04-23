@@ -1,8 +1,8 @@
 <template>
 	<view class="page-container has-bottom">
 		<com-page-title :title="getLanguage('邀请好友转盘')" bgColor="rgba(33,47,63,0.6)">
-			<template #right>
-				<view class="activity-rule-btn" @click="goPage('/pages/game/activityDetail?id='+activityId)">
+			<template #right v-if="info.invite_activity_id">
+				<view class="activity-rule-btn" @click="goPage('/pages/game/activityDetail?id='+info.invite_activity_id)">
 					<text>{{getLanguage('活动规则')}}</text>
 					<text class="question cuIcon-question"></text>
 				</view>
@@ -92,7 +92,6 @@
 		},
 		data() {
 			return {
-				activityId: 1,
 				pageTitleHeight:96,
 				sound:true,
 				info:{},
@@ -106,7 +105,6 @@
 			};
 		},
 		async onLoad(options) {
-			this.activityId = options.activityId || 1;
 			let sound = uni.getStorageSync('sound');
 			this.sound = sound === '' ? true : sound;
 			this.pageTitleHeight = await this.getPageTitleHeight();

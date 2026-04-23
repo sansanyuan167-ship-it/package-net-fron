@@ -7,6 +7,10 @@
 		<view class="tabs panel-item" :class="'tab-index-' + current">
 			<tui-tab :current="current" :tabs="tabs" @change="change" backgroundColor="rgba(33,47,63,0.6)"></tui-tab>
 		</view>
+		<view class="rule-question text-red" v-if="rank_activity_id" @click="goPage('/pages/game/activityDetail?id='+rank_activity_id)">
+			<!-- <text>{{getLanguage('活动规则')}} </text> -->
+			<text class="question cuIcon-question"></text>
+		</view>
 		<view class="cup-container">
 			<image src="/static/ranking/ranking-cup.png" mode="aspectFit"></image>
 		</view>
@@ -55,7 +59,7 @@
 			</view>
 			<view style="height:140rpx;"></view>
 			<view class="my-ranking">
-				<view class="num" v-if="info.ranking">{{info.ranking}}</view>
+				<!-- <view class="num" v-if="info.ranking">{{info.ranking}}</view> -->
 				<image :src="info.avatar"></image>
 				<view class="info">
 					<view class="key-value">
@@ -92,6 +96,7 @@
 export default {
 	data() {
 		return {
+			rank_activity_id:null,
 			type:'RECHARGE',
 			pageTitleHeight:96,
 			refresherStatusText: this.getLanguage('继续下拉刷新'),
@@ -137,6 +142,7 @@ export default {
 			});
 			this.list = result.data.list;
 			this.info = result.data.user;
+			this.rank_activity_id = result.data.rank_activity_id;
 			this.$refs.paging.complete();
 			this.$refs['pageLoading'].hide();
 			this.noData = !this.list.length;
@@ -244,7 +250,13 @@ export default {
 			}
 		}
 	}
-	
+	.rule-question{
+		margin: 0 24rpx;
+		position: relative;
+		z-index: 1;
+		display: flex;
+		justify-content: flex-end;
+	}
 	.cup-container {
 		position: absolute;
 		top: 34rpx;
@@ -366,17 +378,16 @@ export default {
 			margin-right:20rpx;
 		}
 		image{
-			width:80rpx;
-			height:80rpx;
-			border-radius:100rpx;
+			width:94rpx;
+			height:94rpx;
+			border-radius:50%;
 			margin-right:20rpx;
 			border:3rpx solid rgba(236,218,33,0.6);
 			box-sizing: border-box;
 		}
 		.info{
-			font-size:28rpx;
 			color: #ffffff;
-			font-size:44rpx;
+			font-size:32rpx;
 			font-weight: bold;
 			.key-value{
 				display:flex;

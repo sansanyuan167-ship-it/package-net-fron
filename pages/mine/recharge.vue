@@ -18,7 +18,7 @@
 		</view>
 		<view class="title-box">
 			<view class="title bold">{{getLanguage('自定义充值金额')}}</view>
-			<view class="records text-red" @click="goPage('/pages/game/activityDetail?id='+activityId)">
+			<view class="records text-red" v-if="activityId" @click="goPage('/pages/game/activityDetail?id='+activityId)">
 				<text>{{getLanguage('活动规则')}} </text>
 				<text class="question cuIcon-question"></text>
 			</view>
@@ -48,7 +48,7 @@ export default {
 	data() {
 		return {
 			id:null,
-			activityId:5,
+			activityId:null,
 			// 自定义充值金额
 			amount:'',
 			have_empty:false,
@@ -61,7 +61,6 @@ export default {
 	},
 	async onLoad(options) {
 		this.id = options.id || null;
-		this.activityId = options.activityId || 5;
 		await this.getRechargeItems();
 		this.$nextTick(() => {
 			this.$refs['pageLoading'].hide();
@@ -91,6 +90,7 @@ export default {
 			let result = await this.assetApi.rechargeItems();
 			this.isFirstRecharge = result.data.is_first_recharge;
 			this.mini_recharge_amount=result.data.mini_recharge_amount;
+			this.activityId = result.data.recharge_activity_id;
 			this.items = result.data.list;
 			let activeItem = this.items.find(item => item.id == this.id);
 			if(!activeItem) activeItem = this.items[0];

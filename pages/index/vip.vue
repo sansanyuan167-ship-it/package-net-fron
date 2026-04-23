@@ -3,8 +3,8 @@
 		<scroll-view class="scroll-view" scroll-y @scroll="scroll">
 			<view class="is-content">
 				<com-page-title :title="getLanguage('vip')" :showBack="false" :bgColor="bgColor" :showShadow="showShadow">
-					<template #right>
-						<view class="activity-rule-btn" @click="goPage('/pages/game/activityDetail?id='+activityId)">
+					<template #right v-if="info.vip_activity_id">
+						<view class="activity-rule-btn" @click="goPage('/pages/game/activityDetail?id='+info.vip_activity_id)">
 							<text>{{getLanguage('活动规则')}}</text>
 							<text class="question cuIcon-question"></text>
 						</view>
@@ -168,8 +168,7 @@ export default {
 			bgColor:'transparent',
 			showShadow:false,
 			currentVip:{},
-			info:{},
-			activityId: 3 // 活动ID，用于跳转到活动规则页面
+			info:{}
 		};
 	},
 	async mounted(){
