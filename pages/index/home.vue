@@ -2,15 +2,18 @@
 	<view class="home-page">
 		<view class="header">
 			<view class="status_bar"></view>
-			<view class="download-box" v-show="showDownload">
+			<!-- <view class="download-box" v-show="showDownload">
 				<view class="title">{{getLanguage('下载APP，享受更多优惠')}}</view>
 				<view class="download-button scale">{{getLanguage('立即下载')}}</view>
 				<text class="close cuIcon-close" @click="showDownload = false"></text>
-			</view>
+			</view> -->
 			<view class="content">
 				<view class="left">
-					<image class="more" src="/static/more-list.png" @click="$refs['listPopup'].show()"></image>
-					<image class="logo" src="/static/logo.png"></image>
+					<view class="su-menu" @click="$refs['listPopup'].show()">
+						<image src="/static/more-list.png"></image>
+						<text>{{getLanguage('菜单')}}</text>
+					</view>
+					<view class="download-button scale">{{getLanguage('立即下载')}}</view>
 				</view>
 				<view class="right">
 					<!-- 登录和注册按钮 -->
@@ -154,7 +157,7 @@
 		<!-- START 左侧列表弹窗 -->
 		<com-popup ref="listPopup" model="left">
 			<view class="list-popup panel-bg">
-				<scroll-view scroll-y>
+				<scroll-view scroll-y="true">
 					<view class="status_bar"></view>
 					<view class="supplier-list">
 						<view class="supplier-item" 
@@ -600,7 +603,18 @@
 				setTimeout(() => {
 					const targetElement = document.getElementById('category-' + categoryId);
 					if (targetElement && this.$refs.scrollView) {
-						targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+						// 获取目标元素的位置信息
+						const rect = targetElement.getBoundingClientRect();
+						const scrollView = this.$refs.scrollView;
+						
+						// 计算需要滚动到的位置：当前滚动位置 + 目标元素相对视口的位置 - header高度 - 额外偏移
+						const scrollTop = scrollView.scrollTop + rect.top - this.pageTitleHeight - 33;
+						
+						// 平滑滚动到计算后的位置
+						scrollView.scrollTo({
+							top: scrollTop,
+							behavior: 'smooth'
+						});
 					}
 				}, 100);
 				// #endif
@@ -755,6 +769,14 @@
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
+				gap: 15rpx;
+				.su-menu{
+					display: flex;
+					align-items: center;
+					text{
+						font-size: 24rpx;
+					}
+				}
 
 				image {
 					width: 50rpx;
@@ -762,12 +784,18 @@
 					padding: 5rpx;
 					box-sizing: border-box;
 
-					&.logo {
-						width: 140rpx;
-						height: 60rpx;
-						padding: 0;
-						margin-left: 15rpx;
-					}
+					
+				}
+				.download-button {
+					padding: 8rpx 20rpx;
+					border-radius: 30rpx;
+					font-size: 24rpx;
+					line-height: 1;
+					font-weight: 600;
+					white-space: nowrap;
+					color: #B00326;
+					background: #FFEA96;
+					background: linear-gradient(to right bottom, #FFEA96 0%, #F2D86F 100%);
 				}
 			}
 
@@ -1080,42 +1108,37 @@
 			-ms-overflow-style: none;
 
 			.image-box {
+				width: 112rpx;
+				height: 112rpx;
 				display: inline-flex;
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
-				width: 140rpx;
 				background: #363849;
 				margin-right: 20rpx;
 				border-radius: 10rpx;
-				padding: 10rpx;
+				padding: 10rpx 16rpx;
 				vertical-align: top;
 				/* 防止文字选中影响拖动体验 */
 				user-select: none;
 				-webkit-user-select: none;
+				gap: 6rpx;
 
 				&:last-child {
 					margin-right: 0;
 				}
 
 				image {
-					width: 100%;
-					height: 65rpx;
+					width: 68rpx;
+					height: 68rpx;
 					display: block;
 					flex-shrink: 0;
 					pointer-events: none;
 				}
 
 				view {
-					font-size: 24rpx;
+					font-size: 28rpx;
 					color: #ffffff;
-					text-align: center;
-					line-height: 1.2;
-					word-break: break-word;
-					padding-top: 8rpx;
-					min-width: 0;
-					flex-shrink: 1;
-					pointer-events: none;
 				}
 			}
 		}
@@ -1265,13 +1288,16 @@
 
 	.list-popup {
 		// width: 180rpx;
-		min-height: 100vh;
+		height: 100vh;
 		padding: 25rpx;
 		box-sizing: border-box;
 		position: relative;
+		display: flex;
+		flex-direction: column;
 
 		scroll-view {
-			height: 100%;
+			flex: 1;
+			height: 0;
 		}
 
 		.status_bar {
@@ -1280,7 +1306,7 @@
 		}
 
 		.close-btn {
-			position: absolute;
+			position: fixed;
 			right: -50rpx;
 			top: 50%;
 			transform: translateY(-60%);
@@ -1296,8 +1322,6 @@
 		}
 
 		.supplier-list {
-			margin-top: 30rpx;
-
 			.supplier-item {
 				display: flex;
 				flex-direction: column;
@@ -1314,8 +1338,8 @@
 				}
 
 				image {
-					width: 100rpx;
-					height: 50rpx;
+					width: 120rpx;
+					height: 60rpx;
 					margin-bottom: 10rpx;
 				}
 
