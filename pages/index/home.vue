@@ -100,7 +100,10 @@
 				</view>
 				<view class="supplier-box">
 					<view class="scroll-box">
-						<view class="image-box" v-for="(item,index) in info.list" :key="index"
+						<view class="image-box" 
+							v-for="(item,index) in info.list" 
+							:key="index"
+							:class="{'active': currentCategoryId === item.id}"
 							@click="scrollToCategory(item.id)">
 							<image :src="item.icon" mode="aspectFill"></image>
 							<view>{{item.name}}</view>
@@ -333,6 +336,7 @@
 				bannerIndex: 0,
 				scrollTime: 15,
 				currentSupplierId: 'all', // 当前选中的供应商ID，默认为'全部'
+				currentCategoryId: null, // 当前选中的分类ID
 				scrollIntoView: '', // 用于锚点滚动
 				info: {
 					banner: [],
@@ -597,6 +601,7 @@
 			},
 			// 滚动到对应分类区域
 			scrollToCategory(categoryId) {
+				this.currentCategoryId = categoryId;
 				this.scrollIntoView = 'category-' + categoryId;
 				// #ifdef H5
 				// H5端使用原生DOM滚动
@@ -1122,15 +1127,20 @@
 				/* 防止文字选中影响拖动体验 */
 				user-select: none;
 				-webkit-user-select: none;
-				gap: 6rpx;
+				gap: 1rpx;
+				transition: background-color 0.3s ease;
+
+				&.active {
+					background: #930DF3;
+				}
 
 				&:last-child {
 					margin-right: 0;
 				}
 
 				image {
-					width: 68rpx;
-					height: 68rpx;
+					width: 76rpx;
+					height: 76rpx;
 					display: block;
 					flex-shrink: 0;
 					pointer-events: none;
