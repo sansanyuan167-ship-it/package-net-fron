@@ -123,7 +123,7 @@ export default {
 			let status = this.list[index].is_collect;
 			let action = status ? 'remove' : 'add';
 			let result = await this.userApi.actionGameCollect({
-				id:this.list[index].id,
+				id:this.list[index].game_id,
 				type:'COLLECT',
 				action:action
 			});

@@ -127,7 +127,7 @@ export default {
 		// 确认删除
 		async remove(index){
 			let result = await this.userApi.actionGameCollect({
-				id:this.list[index].id,
+				id:this.list[index].game_id,
 				type:'COLLECT',
 				action:'remove'
 			});

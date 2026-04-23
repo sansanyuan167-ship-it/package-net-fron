@@ -555,7 +555,7 @@
 				let status = this.info.list[index1].game_list[index2].is_collect;
 				let action = status ? 'remove' : 'add';
 				let result = await this.userApi.actionGameCollect({
-					id: this.info.list[index1].game_list[index2].id,
+					id: this.info.list[index1].game_list[index2].game_id,
 					type: 'COLLECT',
 					action: action
 				});
