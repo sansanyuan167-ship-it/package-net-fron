@@ -108,9 +108,9 @@
 			this.sound = sound === '' ? true : sound;
 			this.pageTitleHeight = await this.getPageTitleHeight();
 			this.getLotteryList();
-			if (this.getToken()) this.lotteryInfo();
 		},
 		onShow() {
+			if (this.getToken()) this.lotteryInfo();
 			this.playAudio('/static/activity/lottery-bg.mp3', true);
 		},
 		onHide(){

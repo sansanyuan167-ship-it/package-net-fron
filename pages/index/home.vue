@@ -80,7 +80,8 @@
 					<view class="left-section">
 						<image class="avatar" :src="userInfo.avatar || '/static/avatar.png'" mode="aspectFill"></image>
 						<view class="user-details">
-							<view class="user-id">{{userInfo.phone}}</view>
+							<view class="user-name">{{userInfo.username}}</view>
+							<view class="user-id">ID:{{userInfo.id}}</view>
 							<view class="balance">
 								<text class="label">{{getLanguage('我的余额')}}：</text>
 								<text class="value">{{userInfo.coin || '0.00'}}</text>
@@ -1005,15 +1006,18 @@
 				min-width: 0;
 				display: flex;
 				flex-direction: column;
-				gap: 8rpx;
 				
-				.user-id {
+				.user-name {
 					font-size: 28rpx;
 					color: #fff;
 					font-weight: 600;
 					white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;
+				}
+				.user-id {
+					font-size: 24rpx;
+					height: 28rpx;
 				}
 				
 				.balance {
