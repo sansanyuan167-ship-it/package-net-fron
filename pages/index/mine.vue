@@ -30,7 +30,7 @@
 							<image v-if="info.vip_info" :src="info.vip_info.icon"></image>
 						</view>
 						<view class="phone text-gray">{{info.phone}}</view>
-						<view style="font-size:24rpx;">{{info.username}}【ID:{{info.id}}】</view>
+						<view style="font-size:24rpx;">{{info.username}}</view>
 					</view>
 					<text class="open cuIcon-right"></text>
 				</view>

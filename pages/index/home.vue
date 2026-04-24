@@ -81,7 +81,6 @@
 						<image class="avatar" :src="userInfo.avatar || '/static/avatar.png'" mode="aspectFill"></image>
 						<view class="user-details">
 							<view class="user-name">{{userInfo.username}}</view>
-							<view class="user-id">ID:{{userInfo.id}}</view>
 							<view class="balance">
 								<text class="label">{{getLanguage('我的余额')}}：</text>
 								<text class="value">{{userInfo.coin || '0.00'}}</text>
