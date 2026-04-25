@@ -207,11 +207,18 @@
 			},
 			// 获取验证码
 			async getCode(){
-				if(!this.info.phone) return this.showMsg(this.getLanguage('请输入手机号'));
-				let result = await this.loginApi.getPhoneCode({"phone":this.info.phone,"scene":"REGISTER"});
 				if(this.isDis) return false;
 				this.isDis = true;
 				this.setTime();
+				if(!this.selectedCountry.key) return this.showMsg(this.getLanguage('请选择国家'));
+				if(!this.info.phone) return this.showMsg(this.getLanguage('请输入手机号'));
+				let result = await this.loginApi.getPhoneCode({"phone":this.selectedCountry.code+this.info.phone,"scene":"REGISTER"});
+				if(!result.status){
+					this.isDis = false;
+					this.time = 0;
+					this.buttonText = this.getLanguage('获取验证码');
+					return this.showMsg(result.msg);
+				}
 			},
 			// 注册
 			async register(){

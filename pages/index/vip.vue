@@ -25,7 +25,7 @@
 						</view>
 					</view>
 					<view class="info text-gray">{{getLanguage('通过投注，您可以提高您的ViP级别。 等级越高，返现越多，升级奖励和各种特权越多，还有你可以享受的福利！')}}</view>
-					<view class="see-detail text-green" @click="goPage('/pages/mine/vipDetail')">{{getLanguage('查看 VIP 特权的详细信息')}}</view>
+					<!-- <view class="see-detail text-green" @click="goPage('/pages/mine/vipDetail')">{{getLanguage('查看 VIP 特权的详细信息')}}</view> -->
 					<view class="current-vip-level" v-if="info.vip_id">
 						<view class="vip-level-text">{{getLanguage('当前：')}}{{currentActualVip.name}}</view>
 					</view>

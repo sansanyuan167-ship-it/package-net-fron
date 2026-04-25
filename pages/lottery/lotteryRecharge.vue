@@ -414,4 +414,7 @@
 			transform: rotate(360deg) scale(2.3);
 		}
 	}
+	::v-deep .cu-modal {
+		scrollbar-width: none !important;
+	}
 </style>
