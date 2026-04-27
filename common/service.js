@@ -9,7 +9,8 @@ export let service = {
 		let token = uni.getStorageSync('token');
 		// 获取当前选择语言
 		let language = uni.getStorageSync('language') || 'zh-CN';
-		// 获取当前选择国家
+		// 获取当前选择国家(如果是邀请链接直接邀请，则国家id根据邀请者在user表得到国家id，负责跳转到选择国家页面)
+		let invite_code = uni.getStorageSync('invite_code');
 		let country = uni.getStorageSync('country') || 'China';
 		//拼接请求地址
 		params.url = BASE_URL + options.url;
@@ -22,7 +23,8 @@ export let service = {
 			'Content-type': options.header || 'application/json',
 			'user-token': token,
 			'user-language': language,
-			'user-country': country
+			'user-country': country,
+			'user-invite-code': invite_code
 		};
 		return new Promise((resolved, rejected) => {
 			//成功

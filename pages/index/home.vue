@@ -366,18 +366,6 @@
 			this.initDragScroll();
 		},
 		methods: {
-			// 获取手机语言
-			getSystemLanguage() {
-				if (typeof navigator.language === 'string') {
-					return navigator.language;
-				} else {
-					try {
-						return uni.getSystemInfoSync().language;
-					} catch (e) {
-						return 'zh-CN'; // 默认语言
-					}
-				}
-			},
 			async pageOnLoad() {
 				console.log('home lond');
 				this.$emit('showLoading');
