@@ -15,15 +15,12 @@
 			}
 			
 			// 检查URL中是否含有code参数
-			const hasCode = this.checkUrlForCode();
-			console.log('URL contains code:', hasCode);
+			const code = this.checkUrlForCode();
+			console.log('URL code value:', code);
 			
-			// 如果有code参数，直接进入首页；否则检查是否需要选择国家
-			if (hasCode) {
-				uni.setStorageSync('invite_code', hasCode);
-				// uni.reLaunch({
-				// 	url: '/pages/index/index'
-				// });
+			// 如果有code参数，保存邀请码；否则检查是否需要选择国家
+			if (code) {
+				uni.setStorageSync('invite_code', code);
 			} else {
 				let country = uni.getStorageSync('country');
 				console.log('Country from storage:', country);
@@ -62,24 +59,24 @@
 			console.log('App Hide');
 		},
 		methods: {
-			// 检查URL中是否含有code参数
+			// 检查URL中是否含有code参数，并返回code值
 			checkUrlForCode() {
 				try {
 					// H5端
 					// #ifdef H5
 					const urlParams = new URLSearchParams(window.location.search);
-					return urlParams.has('code');
+					return urlParams.get('code') || null;
 					// #endif
 					
 					// 小程序/APP端
 					// #ifndef H5
 					const launchOptions = uni.getLaunchOptionsSync();
 					const query = launchOptions.query || {};
-					return !!query.code;
+					return query.code || null;
 					// #endif
 				} catch (e) {
 					console.error('Check URL code error:', e);
-					return false;
+					return null;
 				}
 			},
 			// 获取并设置系统语言
