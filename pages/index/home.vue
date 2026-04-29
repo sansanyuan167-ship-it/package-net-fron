@@ -701,7 +701,7 @@
 		width: 100%;
 		top: 0;
 		z-index: 50;
-		background: #512033;
+		background: var(--skin-home-top);
 
 		.status_bar {
 			height: var(--status-bar-height);
@@ -869,7 +869,7 @@
 			left: 0;
 			width: 100%;
 			height: 500rpx;
-			background: linear-gradient(to bottom, #512033 0%, transparent 100%);
+			background: linear-gradient(to bottom, var(--skin-home-top) 0%, transparent 100%);
 		}
 
 		swiper {
@@ -1078,7 +1078,7 @@
 		position: sticky;
 		top: 0;
 		z-index: 10;
-		background: #212434;
+		background: var(--skin-bg-color);
 
 		.scroll-box {
 			white-space: nowrap;
@@ -1110,7 +1110,7 @@
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
-				background: #363849;
+				background: var(--skin-home-supplier);
 				margin-right: 20rpx;
 				border-radius: 10rpx;
 				padding: 10rpx 16rpx;
@@ -1318,7 +1318,7 @@
 			height: 120rpx;
 			line-height: 120rpx;
 			text-align: center;
-			background: #363849;
+			background: var(--skin-home-supplier);
 			border-radius: 0 40rpx 40rpx 0;
 			color: #E5E5E5;
 			font-size: 32rpx;
@@ -1333,7 +1333,7 @@
 				justify-content: center;
 				padding: 20rpx 15rpx;
 				margin-bottom: 15rpx;
-				background: #363849;
+				background: var(--skin-home-supplier);
 				border-radius: 10rpx;
 				transition: all 0.3s;
 

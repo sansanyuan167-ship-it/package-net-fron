@@ -1,4 +1,5 @@
 	<script>
+	import { skinConfigs } from '@/static/js/skinConfig.js';
 	import { baseApi } from '@/api/baseApi.js'
 	
 	export default {
@@ -8,6 +9,8 @@
 		},
 		async onLaunch() {
 			console.log('App Launch');
+			// 加载用户选择的皮肤
+			this.loadSkin();
 			
 			// 获取并缓存系统语言
 			if(!uni.getStorageSync('language')){
@@ -59,6 +62,21 @@
 			console.log('App Hide');
 		},
 		methods: {
+			// 加载皮肤
+			loadSkin() {
+				const currentSkin = uni.getStorageSync('currentSkin') || 'default';
+				console.log('Loading skin:', currentSkin);
+				
+				// 应用皮肤配置
+				const config = skinConfigs[currentSkin];
+				if (config) {
+					const root = document.documentElement;
+					for (const [key, value] of Object.entries(config)) {
+						root.style.setProperty(key, value);
+					}
+					console.log('Skin applied:', currentSkin);
+				}
+			},
 			// 检查URL中是否含有code参数，并返回code值
 			checkUrlForCode() {
 				try {

@@ -1,7 +1,7 @@
 /* #ifdef H5 */
 .system-header {
 	//background:linear-gradient(to right bottom,#0A9FF1 0%,#336BFF 100%);
-	background: #336BFF;
+	background: var(--skin-primary-color);
 	/* 自定义颜色 */
 }
 /* #endif */
@@ -10,8 +10,8 @@
 page {
 	font-size: 30rpx;
 	line-height: 40rpx;
-	color: #F5F7FC;
-	background: #212434;
+	color: var(--skin-text-color);
+	background: var(--skin-bg-color);
 	-webkit-overflow-scrolling: touch;
 	font-family: 'PingFang SC-Medium';
 }
@@ -19,7 +19,7 @@ page {
 .page-container {
 	font-size: 30rpx;
 	line-height: 40rpx;
-	color: #F5F7FC;
+	color: var(--skin-text-color);
 	padding-bottom: 40rpx;
 	padding-bottom:calc(40rpx + constant(safe-area-inset-bottom));
 	padding-bottom:calc(40rpx + env(safe-area-inset-bottom));
@@ -38,7 +38,7 @@ page {
 @media screen and (min-width: 768px) {
 	.page-container {
 		position:relative;
-		background:#212434;
+		background:var(--skin-bg-color);
 	    max-width: 500px !important;
 		padding-bottom:40rpx !important;
 		box-sizing: border-box;
@@ -156,7 +156,7 @@ input,textarea{
 }
 
 .panel-bg {
-	background: #2C2F3E;
+	background: var(--skin-panel-bg);
 }
 
 /**字体加粗 颜色**/
@@ -166,12 +166,12 @@ input,textarea{
 
 /**下边框**/
 .border-bottom {
-	border-bottom: 1rpx solid #212434;
+	border-bottom: 1rpx solid var(--skin-border-color);
 }
 
 /**上边框**/
 .border-top {
-	border-top: 1rpx solid #212434;
+	border-top: 1rpx solid var(--skin-border-color);
 }
 
 /**溢出省略号**/
@@ -208,7 +208,7 @@ input,textarea{
 .panel-item{
 	margin:25rpx;
 	border-radius:20rpx;
-	background:#2C2F3E;
+	background:var(--skin-panel-item);
 	overflow: hidden;
 }
 
@@ -225,8 +225,8 @@ input,textarea{
 	z-index: 2;
 	font-size:20rpx;
 	text-align:center;
-	background:#CD4B49;
-	color:#F5F7FC;
+	background:var(--skin-dot-bg);
+	color:var(--skin-text-color);
 	min-width:32rpx;
 	line-height:32rpx;
 	padding:0 8rpx;
@@ -237,13 +237,13 @@ input,textarea{
 /**块级按钮**/
 .btn-block {
 	padding: 0;
-	background: #FBE82F;
-	background: linear-gradient(to right bottom, #FBE82F 0%, #E5D31A 100%);
-	color: #333333;
+	background: var(--skin-btn-primary);
+	background: var(--skin-btn-gradient);
+	color: var(--skin-btn-text);
 	text-align: center;
 	line-height: 80rpx;
 	margin: 60rpx 25rpx 20rpx 25rpx;
-	box-shadow: 3rpx 3rpx 10rpx 0 #CEBC17;
+	box-shadow: 3rpx 3rpx 10rpx 0 var(--skin-btn-shadow);
 	font-size: 32rpx;
 	border-radius:16rpx;
 	display:flex;
@@ -268,18 +268,18 @@ input,textarea{
 	height:calc(120rpx + env(safe-area-inset-bottom));
 	padding:0 30rpx;
 	box-sizing: border-box;
-	background: #212F3F;
+	background: var(--skin-bottom-bg);
 	text-align: center;
 	left: 0;
 	bottom: 0;
-	border-top: 1rpx solid #212F3F;
+	border-top: 1rpx solid var(--skin-bottom-bg);
 	z-index: 50;
 
 	view , button {
 		line-height: 80rpx;
 		margin: 20rpx auto;
-		background: #FBE82F;
-		background: linear-gradient(to right bottom, #A41BE5 0%, #7C1AF1 100%);
+		background: var(--skin-btn-primary);
+		background: var(--skin-bottom-btn-gradient);
 		color: #fff;
 		font-size: 30rpx;
 		border-radius:16rpx;
@@ -432,7 +432,7 @@ input,textarea{
 	}
 	view{
 		font-size:32rpx;
-		color:#F7F7E0;
+		color:var(--skin-title-text-color);
 	}
 }
 
