@@ -309,10 +309,11 @@
 				<view class="button" @click="goPageCheck('/pages/lottery/lotteryRegister')">{{getLanguage('立即免费抽奖')}}</view>
 			</view> -->
 			<view class="lottery-popup">
+				<view class="loading"></view>
 				<text class="close cuIcon-close" @click="handleCloseLotteryPopup"></text>
-				<almost-lottery v-if="showLotteryCanvas && prizeList.length" :lotterySize="600" :actionSize="150" :imgWidth="120" :imgHeight="120" :stroked="true"
+				<almost-lottery v-if="showLotteryCanvas && prizeList.length" :lotterySize="520" :actionSize="150" :imgWidth="120" :imgHeight="120" :stroked="true"
 					:strMarginOutside="25" :strFontSize="34" :imgMarginStr="5" :colors="['#434DD6','#FBCA03']"
-					:strFontColors="['#FFFFFF']" :prizeSize="550" :prizeList="prizeList" :prizeIndex="prizeIndex"
+					:strFontColors="['#FFFFFF']" :prizeList="prizeList" :prizeIndex="prizeIndex"
 					@reset-index="prizeIndex = -1" @draw-before="handleDrawBefore" @draw-start="handleDrawStart"
 					@draw-end="handleDrawEnd" @finish="handleDrawFinish" :duration="5" :ringCount="5" :selfRotaty="false"
 					:selfTime="2000" actionBg="/static/activity/go.png" lotteryBg="/static/activity/lottery-index-panel.png" />
@@ -1718,7 +1719,30 @@
 		top:-60rpx;
 		margin: 0 50rpx;
 		height: 600rpx;
+		
+		.loading {
+			position: absolute;
+			left:calc(50% - 30rpx);
+			top:calc(300rpx - 30rpx);
+			width: 60rpx;
+			height: 60rpx;
+			box-sizing: border-box;
+			border-radius:100rpx;
+			border-width:5rpx;
+			border-style:solid;
+			border-color:transparent #ffffff transparent #ffffff;
+			animation: rotateAnimation 1.2s linear infinite;
+			-webkit-animation: rotateAnimation 1.2s linear infinite;
+		}
+		@keyframes rotateAnimation {
+			from {
+				transform: rotate(0deg);
+			}
 
+			to {
+				transform: rotate(360deg);
+			}
+		}
 		.bg {
 			position: absolute;
 			display: block;
@@ -1760,6 +1784,14 @@
 			transform-origin: top right;
 			/* 可选：添加过渡效果 */
 			transition: transform 0.3s ease;
+		}
+		
+		::v-deep .almost-lottery__bg{
+			scale: 1.18;
+		}
+		::v-deep .almost-lottery__canvas-img-other{
+			margin-top: -8rpx;
+			margin-left: 2rpx;
 		}
 	}
 
