@@ -94,7 +94,15 @@ export let userApi = {
 	// 获取VIP列表
 	async getVipList(data = {}) {
 		return await service.get({
-			url: '/user?cmd=get_vip_list',
+			url: '/user?cmd=get_uvip_list',
+			data: data
+		})
+	},
+	
+	// 获取俱乐部列表
+	async getClubList(data = {}) {
+		return await service.get({
+			url: '/user?cmd=get_club_list',
 			data: data
 		})
 	},

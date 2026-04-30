@@ -3,7 +3,8 @@
 		<home ref="home" v-show="current == 'home'" @showLoading="showLoading" @hideLoading="hideLoading"
 			@showLanguage="showLanguage" />
 		<activity ref="activity" v-show="current == 'activity'" @showLoading="showLoading" @hideLoading="hideLoading" />
-		<share ref="share" v-show="current == 'share'" @showLoading="showLoading" @hideLoading="hideLoading" />
+		<!-- <share ref="share" v-show="current == 'share'" @showLoading="showLoading" @hideLoading="hideLoading" /> -->
+		<club ref="club" v-show="current == 'club'" @showLoading="showLoading" @hideLoading="hideLoading" />
 		<vip ref="vip" v-show="current == 'vip'" @showLoading="showLoading" @hideLoading="hideLoading" />
 		<mine ref="mine" v-show="current == 'mine'" @showLoading="showLoading" @hideLoading="hideLoading"
 			@showLanguage="showLanguage" />
@@ -11,7 +12,7 @@
 		<view class="tab-bar">
 			<view class="tab-bar-item" :class="{
 				'active':current == item.name,
-				'center':item.name == 'share'
+				'center':item.name == 'club'
 			}" v-for="(item,index) in tabBar" :key="index" @click="clickTab(index)">
 				<view class="image-box">
 					<image :src="item.iconPath"></image>
@@ -43,6 +44,7 @@
 	import home from './home.vue';
 	import activity from './activity.vue';
 	import share from './share.vue';
+	import club from './club.vue';
 	import vip from './vip.vue';
 	import mine from './mine.vue';
 	export default {
@@ -51,6 +53,7 @@
 			home,
 			activity,
 			share,
+			club,
 			vip,
 			mine
 		},
@@ -71,9 +74,9 @@
 						iconPath: '/static/tab-bar-icon/activity.png'
 					},
 					{
-						name: 'share',
-						text: this.getLanguage('分享赚钱'),
-						iconPath: '/static/tab-bar-icon/share-icon.png'
+						name: 'club',
+						text: this.getLanguage('俱乐部'),
+						iconPath: '/static/tab-bar-icon/share.png'
 					},
 					{
 						name: 'vip',
@@ -90,7 +93,7 @@
 				tabBarStatus: {
 					home: false,
 					activity: false,
-					share: false,
+					club: false,
 					vip: false,
 					mine: false
 				},
