@@ -18,8 +18,8 @@
 
             <!-- 转盘区域 -->
             <view class="wheel-container">
-                
-			    <view class="loading"></view>
+                <image class="circle-bg" src="/static/club/club-circle.png" mode="aspectFit"></image>
+                <view class="loading"></view>
                 
                 <almost-lottery :lotterySize="600" :actionSize="150" :imgWidth="120" :imgHeight="120" :stroked="true"
                         :strMarginOutside="25" :strFontSize="34" :imgMarginStr="5" :colors="['#434DD6','#FBCA03']"
@@ -32,46 +32,59 @@
 
             <!-- 提现卡 -->
             <view class="card-section">
-                <view class="section-title">提现卡</view>
-                <view class="card-list">
-                    <view class="card-item" v-for="amt in [100, 200, 300]" :key="amt">
-                        <text>{{ amt }}</text>
+                <view class="card-header">
+                    <view class="section-title">{{getLanguage('提现卡')}}</view>
+                    <view class="card-list">
+                        <view class="card-item" v-for="amt in [100, 200, 300]" :key="amt">
+                            <text>{{ amt }}</text>
+                        </view>
                     </view>
                 </view>
-                <view class="btn-primary" @click="withdraw">提现</view>
-                <view>
-                <button class="btn-secondary" @click="shareCard">分享获得提现卡</button>
-                <text class="question cuIcon-question"></text>
+				
+                <view class="btn-row">
+                    <view class="btn-primary" @click="withdraw">
+                        <text>{{getLanguage('提现')}}</text>
+                    </view>
+                    <image class="club-record" src="/static/club/club-record.png"></image>
+                </view>
+                <view class="btn-row">
+                    <button class="btn-secondary" @click="shareCard">
+                        <text>{{getLanguage('分享获得提现卡')}}</text>
+                    </button>
+                    <text class="question cuIcon-question"></text>
                 </view>
             </view>
 
             <!-- 我的俱乐部 -->
             <view class="club-section">
                 <view class="section-header">
-                    <text class="title">我的俱乐部</text>
-                    <text class="cuIcon-question" style="font-size: 28rpx; margin-left: 10rpx;"></text>
+                    <text class="title">{{getLanguage('我的俱乐部')}}</text>
                 </view>
 
                 <view class="club-info">
-                    <view class="info-row">
-                        <text>俱乐部星级：</text>
+                    <view class="info-row info-row-star">
+                        <text>{{getLanguage('俱乐部星级：')}}</text>
                         <view class="stars">
-                            <text class="cuIcon-starfill" style="color: #FFD700;"></text>
-                            <text class="cuIcon-starfill" style="color: #FFD700;"></text>
-                            <text class="cuIcon-star" style="color: #ccc;"></text>
+                            <image src="/static/club/club_star.png" mode="aspectFit"></image>
+                            <image src="/static/club/club_star.png" mode="aspectFit"></image>
                         </view>
+                        <text class="question cuIcon-question"></text>
                     </view>
                     <view class="info-row">
-                        <text>俱乐部人数：</text>
+                        <text>{{getLanguage('俱乐部人数：')}}</text>
                         <view class="progress">
-                            <view class="progress-bar" :style="{ width: '20%' }"></view>
+                            <view class="progress-bar-wrap">
+                                <view class="progress-bar" :style="{ width: '20%' }"></view>
+                            </view>
                             <text class="progress-text">1/5</text>
                         </view>
                     </view>
                     <view class="info-row">
-                        <text>洗码量：</text>
+                        <text>{{getLanguage('洗码量：')}}</text>
                         <view class="progress">
-                            <view class="progress-bar" :style="{ width: '0%' }"></view>
+                            <view class="progress-bar-wrap">
+                                <view class="progress-bar" :style="{ width: '0%' }"></view>
+                            </view>
                             <text class="progress-text">0/1261456</text>
                         </view>
                     </view>
@@ -80,29 +93,40 @@
 
             <!-- 邀请奖励 -->
             <view class="reward-item">
-                <view class="reward-icon">
-                    <text class="cuIcon-hand"></text>
+                <view class="reward-left">
+                    <view class="reward-icon">
+                        <image src="/static/club/club_invite.png" mode="aspectFit"></image>
+                    </view>
+                    <text class="reward-title">{{getLanguage('邀请奖励')}}</text>
                 </view>
-                <view class="reward-content">
-                    <text>邀请奖励</text>
-                    <view class="btn-small" @click="claim">领取</view>
+                <view class="btn-wrap">
+                    <view class="btn-small" @click="claim">
+                        <text>{{getLanguage('领取')}}</text>
+                    </view>
+                    <image class="claim-icon" src="/static/club/club-record.png" mode="aspectFit"></image>
                 </view>
             </view>
 
             <!-- 返佣 -->
             <view class="reward-item">
-                <view class="reward-icon">
-                    <text class="cuIcon-gift"></text>
+                <view class="reward-left">
+                    <view class="reward-icon">
+                        <image src="/static/club/club_return.png" mode="aspectFit"></image>
+                    </view>
+                    <text class="reward-title">{{getLanguage('返佣')}}</text>
                 </view>
-                <view class="reward-content">
-                    <text>返佣</text>
-                    <view class="btn-small" @click="claim">领取</view>
+                <view class="btn-wrap">
+                    <view class="btn-small" @click="claim">
+                        <text>{{getLanguage('领取')}}</text>
+                    </view>
+                    <image class="claim-icon" src="/static/club/club-record.png" mode="aspectFit"></image>
                 </view>
             </view>
 
             <!-- 分享按钮 -->
             <view class="share-btn" @click="shareToPoster">
-                分享到海报
+                <image class="btn-bg" src="/static/club/shareCard_bg.png" mode="aspectFill"></image>
+                <text>{{getLanguage('分享到海报')}}</text>
             </view>
         </view>
 		<!-- START 中奖弹窗 -->
@@ -230,16 +254,16 @@
             onPageScroll(e) {
             },
             withdraw() {
-                uni.showToast({ title: '提现功能待开发', icon: 'none' });
+                uni.showToast({ title: this.getLanguage('提现功能待开发'), icon: 'none' });
             },
             shareCard() {
-                uni.showToast({ title: '分享成功', icon: 'success' });
+                uni.showToast({ title: this.getLanguage('分享成功'), icon: 'success' });
             },
             claim() {
-                uni.showToast({ title: '已领取', icon: 'success' });
+                uni.showToast({ title: this.getLanguage('已领取'), icon: 'success' });
             },
             shareToPoster() {
-                uni.showToast({ title: '生成海报中...', icon: 'loading' });
+                uni.showToast({ title: this.getLanguage('生成海报中...'), icon: 'loading' });
             }
         }
     };
@@ -265,7 +289,7 @@
 .club-content{
 	position: relative;
     min-height: 100vh;
-	padding-bottom: 40rpx;
+	padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
 }
 .coin-box {
 	display: flex;
@@ -301,6 +325,16 @@
     position: relative;
     height:600rpx;
     margin: 80rpx 25rpx 50rpx 25rpx;
+    .circle-bg {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 680rpx;
+        height: 680rpx;
+        z-index: 0;
+        pointer-events: none;
+    }
     .loading {
         position: absolute;
         left:calc(50% - 30rpx);
@@ -315,6 +349,10 @@
         animation: rotateAnimation 1.2s linear infinite;
         -webkit-animation: rotateAnimation 1.2s linear infinite;
     }
+    :deep(.almost-lottery) {
+        position: relative;
+        z-index: 1;
+    }
 }
 
 // 提现卡区域
@@ -322,96 +360,199 @@
 	padding: 30rpx;
 	color: #fff;
 
-	.section-title {
-		font-size: 30rpx;
+	.card-header {
+		display: flex;
+		align-items: center;
+		gap: 20rpx;
 		margin-bottom: 20rpx;
+	}
+
+	.section-title {
+		font-weight: 400;
+		font-size: 32rpx;
+		color: #FFFFFF;
+		flex-shrink: 0;
 	}
 
 	.card-list {
 		display: flex;
-		gap: 20rpx;
-		margin-bottom: 20rpx;
+		gap: 15rpx;
+		flex: 1;
 
 		.card-item {
+			position: relative;
 			flex: 1;
-			background: rgba(255, 255, 255, 0.1);
-			border-radius: 12rpx;
-			padding: 20rpx;
-			text-align: center;
-			font-size: 28rpx;
-			font-weight: bold;
-			color: #FFD700;
-			border: 1px solid rgba(255, 255, 255, 0.2);
+			height: 80rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 14rpx;
+			overflow: hidden;
+			background: url("/static/club/card_bg.png")center center no-repeat;
+	        background-size:100% 100%;
+
+
+			text {
+				position: relative;
+				z-index: 1;
+				font-weight: 500;
+				font-size: 28rpx;
+				color: #FFFFFF;
+			}
 		}
+	}
+
+	.btn-row {
+		display: flex;
+		align-items: center;
+		margin-bottom: 20rpx;
 	}
 
 	.btn-primary,
 	.btn-secondary {
-		width: 100%;
+		position: relative;
+		flex: 1;
 		height: 80rpx;
-		line-height: 80rpx;
-		text-align: center;
-		border-radius: 40rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 20rpx;
 		font-size: 32rpx;
 		font-weight: bold;
-		margin-bottom: 20rpx;
-	}
+		overflow: hidden;
 
-	.btn-primary {
-		background: linear-gradient(135deg, #FFA500, #FFD700);
-		color: #1a1e2d;
-		box-shadow: 0 6rpx 20rpx rgba(255, 215, 0, 0.5);
+		text {
+			font-weight: 500;
+			font-size: 32rpx;
+			color: #F5E5B8;
+			text-shadow: 0px 8px 8px rgba(0,0,0,0.25);
+			position: relative;
+			z-index: 1;
+		}
+	}
+	.btn-primary{
+		background: url("/static/club/withdraw_bg.png")center center no-repeat;
+		background-size:100% 100%;
+		
 	}
 
 	.btn-secondary {
-		background: rgba(255, 255, 255, 0.1);
-		color: #fff;
-		border: 1px solid rgba(255, 255, 255, 0.3);
+		background: url("/static/club/shareCard_bg.png")center center no-repeat;
+		background-size:100% 100%;
+		text {
+			font-weight: 500;
+			font-size: 32rpx;
+			color: #F5E5B8;
+			text-shadow: 0px 8px 8px rgba(0,0,0,0.25);
+		}
+	}
+
+	.club-record {
+		width: 40rpx;
+		height: 40rpx;
+		margin-left: 20rpx;
+	}
+
+	.question {
+		margin-left: 20rpx;
+		font-size: 40rpx;
+		background: linear-gradient( 180deg, #FFFCD2 0%, #B98542 100%);
+		background-clip: text;
+		-webkit-background-clip: text;
+		color: transparent;
 	}
 }
 
 // 俱乐部区域
 .club-section {
-	padding: 30rpx;
-	background: rgba(255, 255, 255, 0.05);
-	border-radius: 20rpx;
+	position: relative;
+	padding: 20rpx 40rpx 20rpx 20rpx;
 	margin: 30rpx;
 	color: #fff;
+	overflow: hidden;
+    background: url("/static/club/myclub_bg.png")center center no-repeat;
+	background-size:100% 100%;
 
 	.section-header {
+		position: relative;
+		z-index: 1;
 		display: flex;
 		align-items: center;
-		margin-bottom: 30rpx;
-		font-size: 32rpx;
-		font-weight: bold;
+		margin-bottom: 36rpx;
+		
+		.title{
+			font-weight: 500;
+			font-size: 36rpx;
+			background: linear-gradient(270deg, #FFE81A 0%, #FDB008 100%);
+			-webkit-background-clip: text;
+		    color: transparent;
+		}
 	}
 
 	.club-info {
+		position: relative;
+		z-index: 1;
 		.info-row {
 			display: flex;
 			align-items: center;
-			margin-bottom: 20rpx;
-			font-size: 28rpx;
+			margin-bottom: 16rpx;
+			font-weight: 400;
+			font-size: 30rpx;
+			color: #FFFFFF;
+
+			&.info-row-star {
+				margin-bottom: 36rpx;
+			}
 
 			text {
-				flex: 1;
+				flex-shrink: 0;
+			}
+
+			.stars {
+				display: flex;
+				align-items: center;
+				gap: 8rpx;
+				margin-left: 10rpx;
+
+				image {
+					width: 64rpx;
+					height: 64rpx;
+				}
+			}
+
+			.question {
+				margin-left: 20rpx;
+				font-size: 40rpx;
+				background: linear-gradient( 180deg, #FFFCD2 0%, #B98542 100%);
+				background-clip: text;
+				-webkit-background-clip: text;
+				color: transparent;
 			}
 
 			.progress {
-				flex: 2;
+				flex: 1;
 				display: flex;
 				align-items: center;
-				gap: 10rpx;
+				gap: 15rpx;
 
-				.progress-bar {
-					height: 12rpx;
-					background: linear-gradient(90deg, #FFA500, #FFD700);
-					border-radius: 6rpx;
+				.progress-bar-wrap {
+					flex: 1;
+					height: 16rpx;
+					background: rgba(255, 255, 255, 0.2);
+					border-radius: 8rpx;
+					overflow: hidden;
+
+					.progress-bar {
+						height: 100%;
+						background: linear-gradient(90deg, #FFD700, #FFA500);
+						border-radius: 8rpx;
+					}
 				}
 
 				.progress-text {
-					font-size: 24rpx;
-					color: #aaa;
+					font-size: 26rpx;
+					color: rgba(255, 255, 255, 0.8);
+					flex-shrink: 0;
 				}
 			}
 		}
@@ -420,48 +561,81 @@
 
 // 奖励项
 .reward-item {
+	position: relative;
 	display: flex;
 	align-items: center;
-	padding: 24rpx 30rpx;
-	background: rgba(255, 255, 255, 0.05);
-	border-radius: 20rpx;
-	margin: 0 30rpx 20rpx;
-	color: #fff;
+	justify-content: space-between;
+	padding: 20rpx 58rpx 20rpx 68rpx;
+	border-radius: 24rpx;
+	margin: 0 30rpx 24rpx;
+    background: url("/static/club/attachs_bg.png")center center no-repeat;
+	background-size:100% 100%;
+
+	.reward-left {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 16rpx;
+		flex-shrink: 0;
+	}
 
 	.reward-icon {
-		width: 80rpx;
-		height: 80rpx;
+		width: 130rpx;
+		height: 130rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 50rpx;
-		background: rgba(255, 255, 255, 0.1);
-		border-radius: 50%;
-		margin-right: 20rpx;
+		image {
+			width: 120rpx;
+			height: 120rpx;
+		}
 	}
 
-	.reward-content {
-		flex: 1;
+	.reward-title {
+		font-weight: 400;
+		font-size: 32rpx;
+		color: #FFFFFF;
+		text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+	}
+
+	.btn-wrap {
+		position: relative;
+		z-index: 1;
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		gap: 20rpx;
+		flex-shrink: 0;
+	}
+
+	.btn-small {
+		position: relative;
+		width: 168rpx;
+		height: 60rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		border: 3rpx solid rgba(255, 215, 0, 0.6);
+		box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
+		border-radius: 12rpx;
+		background: url("/static/club/shareCard_bg.png")center center no-repeat;
+	    background-size:100% 100%;
+
 
 		text {
-			font-size: 30rpx;
-			font-weight: bold;
+			position: relative;
+			z-index: 1;
+			font-weight: 400;
+			font-size: 28rpx;
+			color: #FFFFFF;
 		}
+	}
 
-		.btn-small {
-			width: 120rpx;
-			height: 60rpx;
-			line-height: 60rpx;
-			text-align: center;
-			background: rgba(255, 255, 255, 0.1);
-			border-radius: 30rpx;
-			font-size: 26rpx;
-			color: #fff;
-			border: 1px solid rgba(255, 255, 255, 0.3);
-		}
+	.claim-icon {
+		width: 50rpx;
+		height: 50rpx;
 	}
 }
 
@@ -472,11 +646,30 @@
 	line-height: 80rpx;
 	text-align: center;
 	background: linear-gradient(135deg, #2a2a4a, #1a1a30);
-	border-radius: 40rpx;
 	color: #fff;
 	font-size: 32rpx;
 	font-weight: bold;
 	margin: 40rpx auto;
 	box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.5);
+	position: relative;
+	border-radius: 20rpx;
+	overflow: hidden;
+	
+	.btn-bg {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 0;
+	}
+	text {
+		font-weight: 500;
+		font-size: 32rpx;
+		color: #F5E5B8;
+		text-shadow: 0px 8px 8px rgba(0,0,0,0.25);
+		position: relative;
+		z-index: 1;
+	}
 }
 </style>

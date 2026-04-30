@@ -303,10 +303,19 @@
 		<!-- END 首充赠送列表弹窗 -->
 		<!-- START 抽奖弹窗 -->
 		<com-popup ref="lotteryPopup" model="middle" :maskClosable="false">
-			<view class="lottery-popup">
+			<!-- <view class="lottery-popup">
 				<text class="close cuIcon-close" @click="$refs['lotteryPopup'].hide();"></text>
 				<image class="bg" src="/static/activity/lottery-popup.png"></image>
 				<view class="button" @click="goPageCheck('/pages/lottery/lotteryRegister')">{{getLanguage('立即免费抽奖')}}</view>
+			</view> -->
+			<view class="lottery-popup">
+				<text class="close cuIcon-close" @click="handleCloseLotteryPopup"></text>
+				<almost-lottery v-if="showLotteryCanvas && prizeList.length" :lotterySize="600" :actionSize="150" :imgWidth="120" :imgHeight="120" :stroked="true"
+					:strMarginOutside="25" :strFontSize="34" :imgMarginStr="5" :colors="['#434DD6','#FBCA03']"
+					:strFontColors="['#FFFFFF']" :prizeSize="550" :prizeList="prizeList" :prizeIndex="prizeIndex"
+					@reset-index="prizeIndex = -1" @draw-before="handleDrawBefore" @draw-start="handleDrawStart"
+					@draw-end="handleDrawEnd" @finish="handleDrawFinish" :duration="5" :ringCount="5" :selfRotaty="false"
+					:selfTime="2000" actionBg="/static/activity/go.png" lotteryBg="/static/activity/lottery-index-panel.png" />
 			</view>
 		</com-popup>
 		<!-- END 抽奖弹窗 -->
@@ -325,7 +334,11 @@
 </template>
 
 <script>
+	import AlmostLottery from '@/uni_modules/almost-lottery/components/almost-lottery/almost-lottery.vue';
 	export default {
+		components: {
+            AlmostLottery
+        },
 		data() {
 			return {
 				// 显示过新人抽奖弹窗时间
@@ -355,7 +368,16 @@
 				firstRechargeId: null,
 				activityData: {
 					first_recharge_items: []
-				}
+				},
+				
+                // 以下是奖品配置数据
+                // 奖品数据
+                prizeList: [],
+                // 中奖下标
+                prizeIndex: -1,
+                currentItem: {},
+				// 控制转盘组件渲染时机，解决弹窗动画导致的尺寸问题
+				showLotteryCanvas: false
 			};
 		},
 		async mounted() {
@@ -369,6 +391,7 @@
 			async pageOnLoad() {
 				console.log('home lond');
 				this.$emit('showLoading');
+			    this.getLotteryList();
 				await this.getIndexData();
 				await this.getUserInfo();
 				this.$emit('hideLoading');
@@ -415,9 +438,15 @@
 						let dateTime = Math.floor(Date.now() / 1000);
 						if((dateTime - this.lotteryTime) < 60) return false;
 						this.$refs['lotteryPopup'].show();
+						// com-popup 的 CSS 动画时长为 300ms
+						// 等待动画完成后再渲染转盘，确保 DOM 尺寸稳定
+						setTimeout(() => {
+							this.showLotteryCanvas = true;
+						}, 400);
 						this.lotteryTime = dateTime;
 					}else{
 						this.$refs['lotteryPopup'].hide();
+						this.showLotteryCanvas = false;
 					}
 				}
 				if( this.activityData.free_lottery && this.getToken() && parseFloat(this.activityData.total_recharge) < 1){
@@ -640,6 +669,59 @@
 				uni.setStorageSync('rechargePopupHideUntil', hideUntil);
 				this.$refs['rechargePopup'].hide();
 			},
+			// 关闭抽奖弹窗
+			handleCloseLotteryPopup() {
+				this.$refs['lotteryPopup'].hide();
+				this.showLotteryCanvas = false;
+			},
+			// 获取奖品列表
+			async getLotteryList() {
+				let result = await this.activityApi.getLotteryList({
+					scene: 'RECHARGE'
+				});
+				this.prizeList = result.data.map((item, index) => {
+					return {
+						prizeId: item.id,
+						prizeName: item.amount,
+						prizeImage: item.type == 'WALLET' ? '/static/activity/lottery-wallet.png' : item.type ==
+							'COIN' ? '/static/activity/lottery-coin.png' : '/static/activity/lottery-card.png',
+						type: item.type,
+						amount: item.amount
+					}
+				});
+			},
+			// 本次抽奖开始之前
+			async handleDrawBefore(callback) {
+				// 这里需要处理你抽奖之前的逻辑
+				// 请查看示例项目中的代码
+				// 必须调用 callback 并传递一个布尔值，布尔值为 true 时，转盘才会开始旋转
+				callback(true);
+			},
+			// 本次抽奖开始
+			async handleDrawStart() {
+				if (!this.getToken() && uni.getStorageSync('register_wallet')) {
+					return this.showMsg(this.getLanguage('你获得奖励，注册后生效'));
+				}
+				let result = await this.activityApi.getLotteryId({
+					scene: 'RECHARGE'
+				});
+				if (!result.status) return this.showMsg(result.msg);
+				this.prizeIndex = this.prizeList.findIndex(item => item.prizeId == result.data);
+				this.currentItem = this.prizeList[this.prizeIndex];
+				console.log(this.prizeIndex);
+			},
+			// 本次抽奖结束
+			handleDrawEnd() {
+				// 完成抽奖后，这里处理你拿到结果后的逻辑
+				// 请查看示例项目中的代码
+				this.prizeIndex = -1;
+			},
+			// 抽奖转盘绘制完成
+			handleDrawFinish(res) {
+				// 抽奖转盘准备就绪后，这里处理你的逻辑
+				// 请查看示例项目中的代码
+				console.log('抽奖转盘绘制完成', res)
+			}
 		}
 	};
 </script>
