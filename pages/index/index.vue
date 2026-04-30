@@ -76,7 +76,7 @@
 					{
 						name: 'club',
 						text: this.getLanguage('俱乐部'),
-						iconPath: '/static/tab-bar-icon/share.png'
+						iconPath: '/static/tab-bar-icon/share-icon.png'
 					},
 					{
 						name: 'vip',

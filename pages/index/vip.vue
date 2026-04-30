@@ -9,16 +9,12 @@
 			></image>
 			<view class="is-content">
 				<view class="header-box">
-					<view class="not-login text-orange" v-if="!getToken()" @click="goPage('/pages/base/login','reLaunch')">
-						<text>{{getLanguage('你暂未登录，请先登录哦')}}</text>
-						<text class="open cuIcon-right"></text>
-					</view>
-					<view class="current-vip-level" v-if="info.vip_id">
+					<view class="tray"><image src="/static/vip-icons/tray.png"></image></view>
+					<view class="current-vip-level">
 						<image src="/static/vip-icons/wing-left.png"></image>
-						<view class="vip-level-text">{{currentActualVip.vip_level}}</view>
+						<view class="vip-level-text">{{currentActualVip.vip_level || 'VIP0'}}</view>
 						<image src="/static/vip-icons/wing-right.png"></image>
 					</view>
-					<view class="tray"><image src="/static/vip-icons/tray.png"></image></view>
 					
 				</view>
 				<view class="current-vip shine-gradient" v-if="currentVip.id">
@@ -37,8 +33,8 @@
 								</view>
 								<view class="msg-box">
 									<view class="msg">{{getLanguage('当前：')}}{{retainDecimals(info.total_recharge,2)}}</view>
-					<view class="msg text-red" v-if="(currentVip.recharge_amount - info.total_recharge) > 0">{{getLanguage('剩余：')}}{{retainDecimals(currentVip.recharge_amount - info.total_recharge,2)}}</view>
-					<view class="msg text-green" v-else>{{getLanguage('已达标')}}</view>
+									<view class="msg text-red" v-if="(currentVip.recharge_amount - info.total_recharge) > 0">{{getLanguage('剩余：')}}{{retainDecimals(currentVip.recharge_amount - info.total_recharge,2)}}</view>
+									<view class="msg text-green" v-else>{{getLanguage('已达标')}}</view>
 								</view>
 							</view>
 							<view class="progress-item">
@@ -50,14 +46,14 @@
 								</view>
 								<view class="msg-box">
 									<view class="msg">{{getLanguage('当前：')}}{{retainDecimals(info.total_bet,2)}}</view>
-					<view class="msg text-red" v-if="(currentVip.bet_amount - info.total_bet) > 0">{{getLanguage('剩余：')}}{{retainDecimals(currentVip.bet_amount - info.total_bet,2)}}</view>
-					<view class="msg text-green" v-else>{{getLanguage('已达标')}}</view>
+									<view class="msg text-red" v-if="(currentVip.bet_amount - info.total_bet) > 0">{{getLanguage('剩余：')}}{{retainDecimals(currentVip.bet_amount - info.total_bet,2)}}</view>
+									<view class="msg text-green" v-else>{{getLanguage('已达标')}}</view>
 								</view>
 							</view>
 						</view>
 						<view class="button finish" v-if="(parseFloat(info.total_recharge) >= parseFloat(currentVip.recharge_amount)) && (parseFloat(info.total_bet) >= parseFloat(currentVip.bet_amount))">{{getLanguage('已解锁')}}</view>
-				<view class="button" v-if="parseFloat(info.total_recharge) < parseFloat(currentVip.recharge_amount)" @click="goPageCheck('/pages/mine/recharge',true)">{{getLanguage('立即充值')}}</view>
-				<view class="button" v-if="parseFloat(info.total_bet) < parseFloat(currentVip.bet_amount)" @click="goPage('/pages/game/categoryGame')">{{getLanguage('去投注')}}</view>
+						<view class="button" v-if="parseFloat(info.total_recharge) < parseFloat(currentVip.recharge_amount)" @click="goPageCheck('/pages/mine/recharge',true)">{{getLanguage('立即充值')}}</view>
+						<view class="button" v-if="parseFloat(info.total_bet) < parseFloat(currentVip.bet_amount)" @click="goPage('/pages/game/categoryGame')">{{getLanguage('去投注')}}</view>
 					</view>
 				</view>
 				<view class="benefits-container">
@@ -82,7 +78,7 @@
 						<view class="benefit-content">
 							<image class="benefit-icon" src="/static/vip-icons/charge.png"></image>
 							<view class="benefit-text">{{getLanguage('提现手续费')}}</view>
-							<view class="benefit-text">{{currentVip.withdrawal_fee}}</view>
+							<view class="benefit-text">{{(currentVip.withdrawal_fee * 100).toFixed(2)}}%</view>
 						</view>
 					</view>
 					<view class="benefit-box">
@@ -118,7 +114,7 @@
 					</view>
 					<view class="line" v-for="(item,index) in info.list" :key="index">
 						<view class="item">
-							<view>{{getLanguage('贵宾')}}{{item.id}}</view>
+							<view>{{item.vip_level}}</view>
 						</view>
 						<view class="item">
 							<view>{{item.bet_amount}}</view>
@@ -213,7 +209,7 @@ export default {
 <style lang="scss" scoped>
 	scroll-view{
 		position: relative;
-		height:100vh;
+		min-height:100vh;
 	}
 	// 背景图
 	.bg-image {
@@ -241,93 +237,41 @@ export default {
 	}
 	.header-box{
 		position:relative;
-		.bg{
-			display:block;
+		width: 730rpx;
+		height: 164rpx;
+		margin: 90rpx auto 0rpx auto;
+		.tray{
 			position:absolute;
-			width:100%;
-			height: 380rpx;
-			top:-96rpx;
-			left:0;
-			border-radius:0 0 30rpx 30rpx;
+			z-index: 0;
 			image{
-				display:block;
-				width:100%;
-				height:100%;
+				height: 164rpx;
+				width: 730rpx;
 			}
-		}
-		.not-login{
-			position:relative;
-			z-index:10;
-			display:flex;
-			justify-content: space-between;
-			align-items: center;
-			padding:25rpx;
-			background:rgba(255,255,255,0.2);
-		}
-		.vip-club{
-			position:relative;
-			width:600rpx;
-			height:230rpx;
-			margin:0 auto;
-			.club-image{
-				display:block;
-				width:100%;
-				height:100%;
-			}
-			.text{
-				position:absolute;
-				width:100%;
-				left:0;
-				bottom:60rpx;
-				display:flex;
-				justify-content:center;
-				align-items:center;
-				view{
-					font-weight:600;
-					background-image: linear-gradient(to right, #F5D38B,#FCFCF7,#F5D38B);
-					-webkit-background-clip: text;
-					color: transparent;
-				}
-			}
-		}
-		.info{
-			position:relative;
-			font-size:28rpx;
-			padding:0 25rpx;
-			text-align:center;
-		}
-		.see-detail{
-			position:relative;
-			text-align:center;
-			margin-top:20rpx;
-			text-decoration: underline;
 		}
 		.current-vip-level{
 			position:relative;
+			z-index: 1;
 			display:flex;
 			justify-content: center;
 			align-items: center;
-			margin-top:20rpx;
 			gap:15rpx;
 			image{
 				width: 66rpx;
 				height: 58rpx;
 			}
 			.vip-level-text{
-				font-size:44rpx;
-				font-weight:600;
-				background-image: linear-gradient(to right, #F5D38B,#FCFCF7,#F5D38B);
+				font-weight: bold;
+				font-size: 64rpx;
+				text-align: center;
+				font-style: normal;
+				text-transform: none;
+				background: linear-gradient(180deg, #F1C776 0%, #FFFFFF 50%, #BA8036 75%, #E6BC5D 100%);
 				-webkit-background-clip: text;
 				color: transparent;
-				height:44rpx;
-			}
-		}
-		.tray{
-			
-			margin-top: -60rpx;
-			image{
-				height: 164rpx;
-				width: 729rpx;
+				filter: drop-shadow(0px 8rpx 4rpx #632600);
+				height: 60rpx;
+				line-height: 60rpx;
+				transform: skewX(-10deg);
 			}
 		}
 	}
@@ -534,16 +478,19 @@ export default {
 	    }
 
 	.vip-list{
-		display:flex;
-		justify-content: flex-start;
-		align-items: center;
-		gap:20rpx;
-		flex-wrap: wrap;
-		padding:25rpx;
+		// display:flex;
+		// justify-content: flex-start;
+		// align-items: center;
+		// gap:20rpx;
+		// flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 20rpx;
+		margin:0 25rpx;
 		.item{
 			background: rgba(153,115,62,0.12);
 			border-radius:20rpx;
-			width:calc((100% - 80rpx) / 5 - 0rpx);
+			// width:calc((100% - 80rpx) / 5 - 0rpx);
 			position: relative;  // 添加相对定位
 			 
 			 // 渐变边框
@@ -570,11 +517,9 @@ export default {
 			   pointer-events: none;
 			 }
 			.image-box{
-				width:100%;
-				height:125rpx;
-				padding:6rpx;
-				box-sizing: border-box;
-				overflow: hidden;
+				width:110rpx;
+				height:110rpx;
+				margin:0 auto;
 				
 				image{
 					display:block;
@@ -587,6 +532,7 @@ export default {
 				font-weight: 400;
 				font-size: 28rpx;
 				color: #FFFFFF;
+				padding-bottom:20rpx;
 			}
 			&.active{
 				&::before {
@@ -598,8 +544,7 @@ export default {
 	}
 	.table{
 		position:relative;
-		margin:30rpx 25rpx;
-		border:1rpx solid #F2DF26;
+		margin:0 32rpx;
 		//border-radius:0 0 20rpx 20rpx;
 		background:rgba(255,255,255,0.01);
 		.title{
@@ -607,6 +552,7 @@ export default {
 			justify-content: space-between;
 			align-items: center;
 			text-align:center;
+			border: 1px solid #FDB008;
 			view{
 				width:40%;
 				box-sizing: border-box;
@@ -628,12 +574,25 @@ export default {
 			display:flex;
 			justify-content: space-between;
 			text-align:center;
-			border-top:1rpx solid #F2DF26;
+			position: relative;
+			height: 54rpx;
+			
+			&::after {
+				content: '';
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background: linear-gradient(to right, rgba(253, 176, 8, 0) 0%, #FDB008 50%, rgba(253, 176, 8, 0) 100%);
+				transform: scaleY(0.2);
+				transform-origin: center bottom;
+			}
+			
 			.item{
 				width:40%;
 				box-sizing: border-box;
 				padding:0rpx 8rpx;
-				border-right:1rpx solid #F2DF26;
 				display:flex;
 				justify-content: center;
 				align-items: center;
@@ -659,11 +618,11 @@ export default {
 		padding:30rpx;
 		image{
 			width: 128rpx;
-			height: 48rpx;
+			height: 40rpx;
 		}
 		view{
 			font-weight: 500;
-			font-size: 40rpx;
+			font-size: 32rpx;
 			text-align: center;
 			font-style: normal;
 			text-transform: none;
