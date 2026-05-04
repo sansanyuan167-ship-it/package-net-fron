@@ -310,13 +310,19 @@
 			</view> -->
 			<view class="lottery-popup">
 				<view class="loading"></view>
-				<text class="close cuIcon-close" @click="handleCloseLotteryPopup"></text>
+				<view class="almost-title">
+					<text v-for="(char, index) in getLanguage('新人注册抽奖转盘').split('')" :key="index" :style="getCharStyle(index, getLanguage('新人注册抽奖转盘').length)">{{ char }}</text>
+				</view>
 				<almost-lottery v-if="showLotteryCanvas && prizeList.length" :lotterySize="520" :actionSize="150" :imgWidth="120" :imgHeight="120" :stroked="true"
 					:strMarginOutside="25" :strFontSize="34" :imgMarginStr="5" :colors="['#434DD6','#FBCA03']"
 					:strFontColors="['#FFFFFF']" :prizeList="prizeList" :prizeIndex="prizeIndex"
 					@reset-index="prizeIndex = -1" @draw-before="handleDrawBefore" @draw-start="handleDrawStart"
 					@draw-end="handleDrawEnd" @finish="handleDrawFinish" :duration="5" :ringCount="5" :selfRotaty="false"
 					:selfTime="2000" actionBg="/static/activity/go.png" lotteryBg="/static/activity/lottery-index-panel.png" />
+				<view class="join-now">
+					<text>{{getLanguage('立即参与')}}</text>
+				</view>
+				<text class="close cuIcon-close" @click="handleCloseLotteryPopup"></text>
 			</view>
 		</com-popup>
 		<!-- END 抽奖弹窗 -->
@@ -389,6 +395,38 @@
 			this.initDragScroll();
 		},
 		methods: {
+			// 计算圆形标题每个字符的样式 - 每个字的底部正对圆心
+			getCharStyle(index, total) {
+				// 转盘直径520rpx,半径260rpx
+				const lotteryRadius = 300;
+				// 文字距离转盘边缘的距离(向外偏移)
+				const offsetFromEdge = -8;
+				// 文字所在圆弧的半径(从转盘圆心到文字的距离)
+				const textRadius = lotteryRadius + offsetFromEdge;
+				
+				// 固定每个字符的角度间隔
+				const angleStep = 12;
+				// 计算起始角度（让文字组居中对齐）
+				const startAngle = -(total - 1) * angleStep / 2;
+				// 当前字符的位置角度（从圆心指向字符的方向）
+				const positionAngle = startAngle + index * angleStep;
+				
+				// 将角度转换为弧度用于三角函数计算
+				const radian = (positionAngle * Math.PI) / 180;
+				
+				// 计算字符在圆上的位置坐标
+				const translateX = Math.sin(radian) * textRadius;
+				const translateY = -Math.cos(radian) * textRadius;
+				
+				// 关键：每个字符独立旋转，让文字底部指向圆心
+				// 默认文字是竖直向上的，旋转positionAngle+90°后，文字底部指向圆心
+				const rotateAngle = positionAngle + 0;
+				
+				return {
+					// 注意旋转和位移的顺序：先位移到指定位置，再旋转文字方向
+					transform: `translate(${translateX}rpx, ${translateY}rpx) rotate(${rotateAngle}deg) translate(-50%, -50%)`
+				};
+			},
 			async pageOnLoad() {
 				console.log('home lond');
 				this.$emit('showLoading');
@@ -1743,6 +1781,71 @@
 				transform: rotate(360deg);
 			}
 		}
+		.almost-title {
+			position: absolute;
+			left: 230rpx;
+			top: 224rpx; // 位于转盘上方合适位置
+			z-index: 2;
+			
+			
+			text {
+				position: absolute;
+				left: 50%; // 所有字符从中心点开始
+				top: 50%;  // 所有字符从中心点开始
+				font-size: 60rpx;
+				font-weight: bold;
+				line-height: 60rpx;
+				transform-origin: center center; // 旋转中心在字符自身中心
+				color:#FDFEEA;
+				text-shadow: 
+					-2rpx -2rpx 0 #A41C0C,
+					2rpx -2rpx 0 #A41C0C,
+					-2rpx 2rpx 0 #A41C0C,
+					2rpx 2rpx 0 #A41C0C;
+				filter: drop-shadow(0rpx 4rpx 0rpx #B32804);
+			}
+		}
+		.join-now{
+			height: 98rpx;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 0 70rpx;
+			position: absolute;
+    		z-index: 2;
+			// margin: 0 auto;
+			left: 50%;
+			transform: translateX(-50%);
+			bottom: 18rpx;
+			
+			&::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background-image: url('/static/home/join-bg.png');
+				background-size: 100% 100%;
+				background-position: center;
+				z-index: -1;
+			}
+			
+			text{
+				font-weight: 800;
+				font-size: 43rpx;
+				color:#FDFEEA;
+				text-shadow: 
+					-2rpx -2rpx 0 #A41C0C,
+					2rpx -2rpx 0 #A41C0C,
+					-2rpx 2rpx 0 #A41C0C,
+					2rpx 2rpx 0 #A41C0C;
+				filter: drop-shadow(0rpx 8rpx 4rpx #B10326);
+				white-space: nowrap;
+				height: 98rpx;
+				line-height: 82rpx;
+			}
+		}
 		.bg {
 			position: absolute;
 			display: block;
@@ -1788,10 +1891,15 @@
 		
 		::v-deep .almost-lottery__bg{
 			scale: 1.18;
+			z-index: 1;
 		}
 		::v-deep .almost-lottery__canvas-img-other{
 			margin-top: -8rpx;
 			margin-left: 2rpx;
+			z-index: 0;
+		}
+		::v-deep .almost-lottery__action-bg{
+			z-index: 2;
 		}
 	}
 

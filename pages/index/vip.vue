@@ -550,11 +550,12 @@ export default {
 		.title{
 			display:flex;
 			justify-content: space-between;
-			align-items: center;
+			align-items: stretch;
 			text-align:center;
 			border: 1px solid #FDB008;
 			view{
 				width:40%;
+				min-width: 0;
 				box-sizing: border-box;
 				color:#632600;
 				background: #FBE82F;
@@ -562,6 +563,10 @@ export default {
 				line-height:80rpx;
 				font-size:24rpx;
 				border-right:1rpx solid #F2DF26;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				word-break: break-word;
 				&:nth-child(1){
 					width:20%;
 				}
