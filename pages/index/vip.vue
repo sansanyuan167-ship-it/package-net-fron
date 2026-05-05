@@ -25,30 +25,32 @@
 					    <image class="vip-level-icon" :src="currentVip.vip_level_icon"></image>
 						<view class="progress-panel">
 							<view class="progress-item">
-								<view class="key">{{getLanguage('总充值')}} {{retainDecimals(currentVip.recharge_amount,2)}}</view>
+								<view class="key">{{getLanguage('总充值')}}</view>
 								<view class="progress-box">
 									<view :style="{
 										width:`${currentVip.recharge_amount == 0 || (info.total_recharge / currentVip.recharge_amount) >= 1 ? 100 : ((info.total_recharge / currentVip.recharge_amount) * 100)}%`
 									}"></view>
 								</view>
-								<view class="msg-box">
+								<view style="font-size:24rpx;" class="text-red">{{retainDecimals(info.total_recharge,2)}}/{{retainDecimals(currentVip.recharge_amount,2)}}</view>
+								<!-- <view class="msg-box">
 									<view class="msg">{{getLanguage('当前：')}}{{retainDecimals(info.total_recharge,2)}}</view>
 									<view class="msg text-red" v-if="(currentVip.recharge_amount - info.total_recharge) > 0">{{getLanguage('剩余：')}}{{retainDecimals(currentVip.recharge_amount - info.total_recharge,2)}}</view>
 									<view class="msg text-green" v-else>{{getLanguage('已达标')}}</view>
-								</view>
+								</view> -->
 							</view>
 							<view class="progress-item">
-								<view class="key">{{getLanguage('洗码量')}} {{retainDecimals(currentVip.bet_amount,2)}}</view>
+								<view class="key">{{getLanguage('月投注')}}</view>
 								<view class="progress-box">
 									<view :style="{
-										width:`${currentVip.bet_amount == 0 || (info.total_bet / currentVip.bet_amount) >= 1 ? 100 : ((info.total_bet / currentVip.bet_amount) * 100)}%`
+										width:`${currentVip.bet_amount == 0 || (info.cur_month_bet / currentVip.bet_amount) >= 1 ? 100 : ((info.cur_month_bet / currentVip.bet_amount) * 100)}%`
 									}"></view>
 								</view>
-								<view class="msg-box">
+								<view style="font-size:24rpx;" class="text-red">{{info.cur_month_bet || 0}}/{{retainDecimals(currentVip.bet_amount,2)}}</view>
+								<!-- <view class="msg-box">
 									<view class="msg">{{getLanguage('当前：')}}{{retainDecimals(info.total_bet,2)}}</view>
 									<view class="msg text-red" v-if="(currentVip.bet_amount - info.total_bet) > 0">{{getLanguage('剩余：')}}{{retainDecimals(currentVip.bet_amount - info.total_bet,2)}}</view>
 									<view class="msg text-green" v-else>{{getLanguage('已达标')}}</view>
-								</view>
+								</view> -->
 							</view>
 						</view>
 						<view class="button finish" v-if="(parseFloat(info.total_recharge) >= parseFloat(currentVip.recharge_amount)) && (parseFloat(info.total_bet) >= parseFloat(currentVip.bet_amount))">{{getLanguage('已解锁')}}</view>
@@ -62,7 +64,7 @@
 						<view class="benefit-content">
 							<image class="benefit-icon" src="/static/vip-icons/bonus.png"></image>
 							<view class="benefit-text">{{getLanguage('升级奖金')}}</view>
-							<view class="benefit-text">{{currentVip.upgrade_income}}</view>
+							<view class="benefit-num">{{currentVip.upgrade_income}}</view>
 						</view>
 					</view>
 					<view class="benefit-box">
@@ -70,7 +72,7 @@
 						<view class="benefit-content">
 							<image class="benefit-icon" src="/static/vip-icons/month.png"></image>
 							<view class="benefit-text">{{getLanguage('月奖金')}}</view>
-							<view class="benefit-text">{{currentVip.month_income}}</view>
+							<view class="benefit-num">{{currentVip.month_income}}</view>
 						</view>
 					</view>
 					<view class="benefit-box">
@@ -78,7 +80,7 @@
 						<view class="benefit-content">
 							<image class="benefit-icon" src="/static/vip-icons/charge.png"></image>
 							<view class="benefit-text">{{getLanguage('提现手续费')}}</view>
-							<view class="benefit-text">{{(currentVip.withdrawal_fee * 100).toFixed(2)}}%</view>
+							<view class="benefit-num">{{(currentVip.withdrawal_fee * 100).toFixed(2)}}%</view>
 						</view>
 					</view>
 					<view class="benefit-box">
@@ -86,7 +88,7 @@
 						<view class="benefit-content">
 							<image class="benefit-icon" src="/static/vip-icons/traffic.png"></image>
 							<view class="benefit-text">{{getLanguage('提现上限')}}</view>
-							<view class="benefit-text">{{currentVip.day_withdrawal_limit}}</view>
+							<view class="benefit-num">{{currentVip.day_withdrawal_limit}}</view>
 						</view>
 					</view>
 				</view>
@@ -422,7 +424,6 @@ export default {
 	    .benefit-box{
 		    position:relative;
 		    flex:1;
-		    height:160rpx;
 		    border-radius:20rpx;
 		    overflow: hidden;
 		    .box-bg{
@@ -465,15 +466,23 @@ export default {
 		        padding:0 15rpx;
 		        text-align:center;
 		        .benefit-icon{
-		        	width: 70rpx;
-					height: 70rpx;
-					// margin-bottom: 15rpx;
+		        	width: 64rpx;
+					height: 64rpx;
+					margin-top: 15rpx;
 		        }
 		        .benefit-text{
 		        	font-weight: 400;
 		        	font-size: 24rpx;
 		        	color: #F4EBBE;
+					line-height: 20rpx;
+					margin:5rpx;
 		        }
+				.benefit-num{
+		        	font-weight: 400;
+		        	font-size: 24rpx;
+		        	color: #F4EBBE;
+					margin-bottom: 5rpx;
+				}
 			}
 	    }
 
@@ -560,7 +569,8 @@ export default {
 				color:#632600;
 				background: #FBE82F;
 				background: linear-gradient(to right, #FFEBBF 0%, #EAC064 50%, #FFEBBF 100%);
-				line-height:80rpx;
+				// line-height:80rpx;
+				min-height: 54rpx;
 				font-size:24rpx;
 				border-right:1rpx solid #F2DF26;
 				display: flex;

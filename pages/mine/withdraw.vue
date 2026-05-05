@@ -41,7 +41,7 @@
 				<view class="key bold">{{getLanguage('金额')}}</view>
 				<input v-model="amount" type="text" :placeholder="getLanguage('请输入提现金额')" placeholder-style="color:#9D9B9B;">
 			</view>
-			<view class="notice text-red">{{getLanguage('提现手续费为 @REPLACE@').replace('@REPLACE@', (bankInfo.withdrawal_fee * 100).toFixed(2) + '%')}}</view>
+			<view class="notice text-red">{{getLanguage('提现手续费为 @REPLACE@').replace('@REPLACE@', ((bankInfo.withdrawal_fee || 0) * 100).toFixed(2) + '%')}}</view>
 		</view>
 <!-- 		<view class="remark text-gray">
 			<view class="title">描述说明：</view>

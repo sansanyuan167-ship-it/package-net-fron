@@ -12,7 +12,7 @@
             <view class="coin-box">
                 <view class="coin-balance">
                     <image src="/static/club/club-coin.png"></image>
-                    <text>1234</text>
+                    <text>{{info.user_wallet || 0.00}}</text>
                 </view>
             </view>
 
@@ -27,16 +27,16 @@
                         @reset-index="prizeIndex = -1" @draw-before="handleDrawBefore" @draw-start="handleDrawStart"
                         @draw-end="handleDrawEnd" @finish="handleDrawFinish" :duration="5" :ringCount="5" :selfRotaty="false"
                         :selfTime="2000" actionBg="/static/activity/go.png" lotteryBg="/static/activity/lottery-panel.png"
-                        v-if="prizeList.length" />
+                        v-if="prizeList.length" @click="handleLotteryClick" />
             </view>
 
             <!-- 提现卡 -->
             <view class="card-section">
                 <view class="card-header">
-                    <view class="section-title">{{getLanguage('提现卡')}}</view>
+                    <!-- <view class="section-title">{{getLanguage('提现卡')}}</view> -->
                     <view class="card-list">
-                        <view class="card-item" v-for="amt in [100, 200, 300]" :key="amt">
-                            <text>{{ amt }}</text>
+                        <view class="card-item" v-for="(count, amt) in withdrawCardsList" :key="amt">
+                            <text>{{ amt }} × {{ count }}</text>
                         </view>
                     </view>
                 </view>
@@ -162,6 +162,7 @@
         },
         data() {
             return {
+				info:{},
                 // 以下是奖品配置数据
                 // 奖品数据
                 prizeList: [],
@@ -169,6 +170,23 @@
                 prizeIndex: -1,
                 currentItem: {}
             };
+        },
+        computed: {
+            // 提现卡列表（根据登录状态显示不同数据）
+            withdrawCardsList() {
+                // 如果已登录且有withdraw_cards数据
+                if (this.info.withdraw_cards && Object.keys(this.info.withdraw_cards).length > 0) {
+                    return this.info.withdraw_cards;
+                }
+                
+                // 未登录时，从prizeList中提取CARD类型的数据
+                const cardPrizes = this.prizeList.filter(item => item.type === 'CARD');
+                const cardsObj = {};
+                cardPrizes.forEach(item => {
+                    cardsObj[item.amount] = 0; // 未登录时数量都为0
+                });
+                return cardsObj;
+            }
         },
         methods: {
             async pageOnLoad(){
@@ -264,7 +282,21 @@
             },
             shareToPoster() {
                 uni.showToast({ title: this.getLanguage('生成海报中...'), icon: 'loading' });
-            }
+            },
+			// 处理转盘点击事件
+			handleLotteryClick(data){
+				console.log('接收到点击事件:', data)
+				// 检查点击的奖品是否为 lottery-card.png
+				if(data && data.prizeIndex !== undefined && data.prizeList.length > 0){
+					let currentPrize = data.prizeList[data.prizeIndex];
+					console.log('当前奖品:', currentPrize)
+					// 检查奖品类型是否为提现卡（不是 WALLET 或 COIN）
+					if(currentPrize && currentPrize.type !== 'WALLET' && currentPrize.type !== 'COIN'){
+						console.log('点击了提现卡')
+						this.showMsg(this.getLanguage('邀请好友获得提现卡，立即提现！'),3000);
+					}
+				}
+			}
         }
     };
 </script>

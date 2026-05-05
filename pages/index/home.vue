@@ -309,18 +309,25 @@
 				<view class="button" @click="goPageCheck('/pages/lottery/lotteryRegister')">{{getLanguage('立即免费抽奖')}}</view>
 			</view> -->
 			<view class="lottery-popup">
-				<view class="loading"></view>
-				<view class="almost-title">
-					<text v-for="(char, index) in getLanguage('新人注册抽奖转盘').split('')" :key="index" :style="getCharStyle(index, getLanguage('新人注册抽奖转盘').length)">{{ char }}</text>
+				<view class="almost-box" v-if="!registerAmount">
+					<view class="loading"></view>
+					<view class="almost-title">
+						<text v-for="(char, index) in getLanguage('新人注册抽奖转盘').split('')" :key="index" :style="getCharStyle(index, getLanguage('新人注册抽奖转盘').length)">{{ char }}</text>
+					</view>
+					<almost-lottery v-if="showLotteryCanvas && prizeList.length" :lotterySize="520" :actionSize="150" :imgWidth="120" :imgHeight="120" :stroked="true"
+						:strMarginOutside="25" :strFontSize="34" :imgMarginStr="5" :colors="['#434DD6','#FBCA03']"
+						:strFontColors="['#FFFFFF']" :prizeList="prizeList" :prizeIndex="prizeIndex"
+						@reset-index="prizeIndex = -1" @draw-before="handleDrawBefore" @draw-start="handleDrawStart"
+						@draw-end="handleDrawEnd" @finish="handleDrawFinish" :duration="5" :ringCount="5" :selfRotaty="false"
+						:selfTime="2000" actionBg="/static/activity/go.png" lotteryBg="/static/activity/lottery-index-panel.png" />
+					<view class="join-now" @click="handleDrawStart">
+						<text>{{getLanguage('立即参与')}}</text>
+					</view>
 				</view>
-				<almost-lottery v-if="showLotteryCanvas && prizeList.length" :lotterySize="520" :actionSize="150" :imgWidth="120" :imgHeight="120" :stroked="true"
-					:strMarginOutside="25" :strFontSize="34" :imgMarginStr="5" :colors="['#434DD6','#FBCA03']"
-					:strFontColors="['#FFFFFF']" :prizeList="prizeList" :prizeIndex="prizeIndex"
-					@reset-index="prizeIndex = -1" @draw-before="handleDrawBefore" @draw-start="handleDrawStart"
-					@draw-end="handleDrawEnd" @finish="handleDrawFinish" :duration="5" :ringCount="5" :selfRotaty="false"
-					:selfTime="2000" actionBg="/static/activity/go.png" lotteryBg="/static/activity/lottery-index-panel.png" />
-				<view class="join-now">
-					<text>{{getLanguage('立即参与')}}</text>
+				<view class="register-amount" v-if="registerAmount && !getToken()">
+					<view class="value scale">{{registerAmount}}</view>
+					<view class="title">{{getLanguage('您已抽奖成功获得')}}</view>
+					<view class="register" @click="goPage('/pages/base/register','redirect')">{{getLanguage('注册生效')}}</view>
 				</view>
 				<text class="close cuIcon-close" @click="handleCloseLotteryPopup"></text>
 			</view>
@@ -384,7 +391,8 @@
                 prizeIndex: -1,
                 currentItem: {},
 				// 控制转盘组件渲染时机，解决弹窗动画导致的尺寸问题
-				showLotteryCanvas: false
+				showLotteryCanvas: false,
+				registerAmount:''
 			};
 		},
 		async mounted() {
@@ -443,6 +451,12 @@
 				if(this.getToken()) {
 					this.getUserInfo();
 				}
+				if(this.getToken()){
+					let result = this.activityApi.lotteryInfo();
+					this.registerAmount = result.data?.register_amount;
+				}else{
+					this.registerAmount = uni.getStorageSync('register_coin') || 0;
+				}
 			},
 			// 获取用户信息
 			async getUserInfo() {
@@ -484,8 +498,15 @@
 						}, 400);
 						this.lotteryTime = dateTime;
 					}else{
-						this.$refs['lotteryPopup'].hide();
-						this.showLotteryCanvas = false;
+						if(!this.getToken()){
+							let dateTime = Math.floor(Date.now() / 1000);
+							if((dateTime - this.lotteryTime) < 60) return false;
+							this.$refs['lotteryPopup'].show();
+							this.lotteryTime = dateTime;
+						}else{
+							this.$refs['lotteryPopup'].hide();
+							this.showLotteryCanvas = false;
+						}
 					}
 				}
 				if( this.activityData.free_lottery && this.getToken() && parseFloat(this.activityData.total_recharge) < 1){
@@ -716,7 +737,7 @@
 			// 获取奖品列表
 			async getLotteryList() {
 				let result = await this.activityApi.getLotteryList({
-					scene: 'RECHARGE'
+					scene: 'REGISTER'
 				});
 				this.prizeList = result.data.map((item, index) => {
 					return {
@@ -742,7 +763,7 @@
 					return this.showMsg(this.getLanguage('你获得奖励，注册后生效'));
 				}
 				let result = await this.activityApi.getLotteryId({
-					scene: 'RECHARGE'
+					scene: 'REGISTER'
 				});
 				if (!result.status) return this.showMsg(result.msg);
 				this.prizeIndex = this.prizeList.findIndex(item => item.prizeId == result.data);
@@ -754,6 +775,10 @@
 				// 完成抽奖后，这里处理你拿到结果后的逻辑
 				// 请查看示例项目中的代码
 				this.prizeIndex = -1;
+				if(!this.getToken()){
+					uni.setStorageSync('register_coin',this.currentItem.amount);
+				}
+				this.registerAmount = this.currentItem.amount;
 			},
 			// 抽奖转盘绘制完成
 			handleDrawFinish(res) {
@@ -1757,6 +1782,9 @@
 		top:-60rpx;
 		margin: 0 50rpx;
 		height: 600rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		
 		.loading {
 			position: absolute;
@@ -1888,7 +1916,9 @@
 			/* 可选：添加过渡效果 */
 			transition: transform 0.3s ease;
 		}
-		
+		::v-deep .almost-lottery{
+			margin-top: -80rpx;
+		}
 		::v-deep .almost-lottery__bg{
 			scale: 1.18;
 			z-index: 1;
@@ -1906,5 +1936,28 @@
 	// 覆盖左侧抽屉弹窗的margin-right样式,仅在当前页面生效
 	::v-deep .cu-modal.drawer-modal.justify-start .cu-dialog {
 		margin-right: 75% !important;
+	}
+	.register-amount{
+		position:relative;
+		text-align:center;
+		.value{
+			font-size:80rpx;
+			font-weight:600;
+			color:#FDF13C;
+		}
+		.title{
+			font-size:28rpx;
+			margin-top:50rpx;
+			color:#FBCE73;
+		}
+		.register{
+			border-radius:100rpx;
+			margin:30rpx auto;
+			color:#333;
+			font-weight:600;
+			background: #D68B21;
+			background: linear-gradient(to right bottom, #FDF13C 0%, #FF8133 100%);
+			padding: 16rpx 32rpx;
+		}
 	}
 </style>
