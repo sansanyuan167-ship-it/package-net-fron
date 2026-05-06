@@ -66,13 +66,14 @@ export default {
 		handleItemClick(item){
 			if(item.button_path){
 				// 判断是否为需要特殊处理的页面(vip、share等自定义tabBar页面)
-				const customTabPaths = ['pages/index/vip', 'pages/index/share'];
+				const customTabPaths = ['pages/index/vip', 'pages/index/club'];
 				const isCustomTabPage = customTabPaths.some(path => item.button_path.includes(path));
 				
 				if(isCustomTabPage){
 					const pageName = item.button_path.split('/').pop();
-					// 跳转到主容器页面,并通过参数指定显示哪个子页面
-					this.goPage(`/pages/index/index?name=${pageName}`, 'reLaunch');
+					// 先跳转到主容器页面
+					this.goPage('/pages/index/index', 'switchTab');
+					uni.$emit('switchTab', pageName);
 				}else{
 					this.goPage(item.button_path);
 				}

@@ -151,6 +151,7 @@
 			</view>
 		</com-popup>
 		<!-- END 中奖弹窗 -->
+		<com-login-popup ref="loginPopup" @onCancel="$refs['loginPopup'].hide()" @onConfirm="goPage('/pages/base/login','reLaunch')" />
 	</view>
 </template>
 
@@ -226,13 +227,7 @@
             // 获取俱乐部列表
             async getClubList(){
                 let result = await this.userApi.getClubList();
-                this.info = result.data;
-                if(this.info.list.length && !this.currentVip.id){
-                    let index = this.info.list.findIndex(item => item.id == this.info.vip_id);
-                    if(index < this.info.list.length - 1) index++;
-                    this.currentVip = this.info.list[index];
-                }
-                if(!this.info.list.length) this.$refs['empty'].show(this.getLanguage('暂时没有任何数据'));
+                
             },
 			// 本次抽奖开始之前
 			async handleDrawBefore(callback) {
@@ -243,9 +238,7 @@
 			},
 			// 本次抽奖开始
 			async handleDrawStart() {
-				if(!this.getToken() && uni.getStorageSync('register_wallet')){
-					return this.showMsg(this.getLanguage('你获得奖励，注册后生效'));
-				}
+				if(!this.getToken()) return this.$refs['loginPopup'].show();
 				let result = await this.activityApi.getLotteryId({
 					scene:'INVITE'
 				});
@@ -272,9 +265,10 @@
             onPageScroll(e) {
             },
             withdraw() {
-                uni.showToast({ title: this.getLanguage('提现功能待开发'), icon: 'none' });
+                if(!this.getToken()) return this.$refs['loginPopup'].show();
             },
             shareCard() {
+                if(!this.getToken()) return this.$refs['loginPopup'].show();
                 uni.showToast({ title: this.getLanguage('分享成功'), icon: 'success' });
             },
             claim() {
@@ -296,7 +290,12 @@
 						this.showMsg(this.getLanguage('邀请好友获得提现卡，立即提现！'),3000);
 					}
 				}
-			}
+			},
+			// 跳转验证
+			goPageCheck(url,type){
+				if(type && !this.getToken()) return this.$refs['loginPopup'].show();
+				this.goPage(url);
+			},
         }
     };
 </script>

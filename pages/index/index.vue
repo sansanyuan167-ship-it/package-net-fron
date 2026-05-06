@@ -109,9 +109,25 @@
 				this.tabBarStatus[this.current] = true;
 				this.$refs[this.current].pageOnShow();
 			});
+			
+			// 监听切换tab事件
+			uni.$on('switchTab', (pageName) => {
+				if (this.current == pageName) return false;
+				this.current = pageName;
+				if (!this.tabBarStatus[this.current]) {
+					this.$refs[this.current].pageOnLoad();
+					this.tabBarStatus[this.current] = true;
+				}
+				this.$refs[this.current].pageOnShow();
+			});
+			
 			this.languageKey = uni.getStorageSync('language') || 'zh-CN';
 			let result = await this.baseApi.getLanguageList();
 			this.language = result.data;
+		},
+		onUnload() {
+			// 页面卸载时移除事件监听,防止内存泄漏
+			uni.$off('switchTab');
 		},
 		onShow() {
 			this.$nextTick(() => {
